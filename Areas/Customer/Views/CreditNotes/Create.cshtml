@@ -1,0 +1,107 @@
+﻿@model CreditNoteBillsViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Créer une nouvelle note de crédit</h4>
+</div>
+
+<br />
+<form asp-action="Create" onsubmit="return jQueryAjaxPost(this);">
+   
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="ListBills" class="col-form-label text-dark h5"></label>
+                        @if (Model.ListBills.Count() > 1)
+                        {
+                            <select class="form-control" asp-for="CreditNote.BillId"
+                                    asp-items="@(new SelectList(Model.ListBills,"Id", "NumBill"))">
+                            </select>
+                        }
+                        else
+                        {
+                            <input type="hidden" asp-for="CreditNote.BillId" />
+                            <input type="hidden" asp-for="Bill.Id" />
+                            <input type="hidden" asp-for="Bill.UserId" />
+                            <input asp-for="Bill.NumBill" class="form-control" readonly />
+                        }
+
+                        <span asp-validation-for="CreditNote.BillId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="CreditNote.Montant" class="col-form-label text-dark h5"></label>
+                        <input id="saleprice" asp-for="CreditNote.Montant" class="form-control" />
+                        <span asp-validation-for="CreditNote.Montant" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="CreditNote.NoteDate" class="col-form-label text-dark h5"></label>
+                        <input id="purshaseprice" asp-for="CreditNote.NoteDate" class="form-control" />
+                        <span asp-validation-for="CreditNote.NoteDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="CreditNote.Description" class="col-form-label text-dark h5"></label>
+                        <textarea asp-for="CreditNote.Description" class="form-control"></textarea>
+                        <span asp-validation-for="CreditNote.Description" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <input id="btnAdd" type="submit" value="Ajouter" class="btn btn-primary form-control" />
+                        </div>
+                        @if (Model.CreditNote.BillId == 0)
+                        {
+                            <div class="col-md-6">
+                                <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-6">
+                                <a class="btn btn-success form-control" asp-action="Edit" asp-route-billId="@Model.CreditNote.BillId" asp-controller="Bills">Annuler</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+    </script>
+}
+

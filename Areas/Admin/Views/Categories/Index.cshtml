@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+<div class="m-5">
+    <div class="white-Background border p-2">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="text-info">Liste des catégories du produit</h3>
+            </div>
+            <div class="col-6 text-right">
+                <a onclick="showInPopup('@Url.Action("Create","Categories", null, Context.Request.Scheme)',
+                'Créer une nouvelle catégorie')"
+                   class="btn btn-primary text-white" style="cursor:pointer">
+                    <i class="fas fa-plus"></i>&nbsp; Ajouter
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (Model.Count() == 0)
+{
+    <div class="col-md-12">
+        <h4 class="text-center text-danger pt-4"> Aucune catégorie dans cette liste ... </h4>
+    </div>
+
+}
+else
+{
+    <div class="m-5">
+        <div id="view-all">
+            @await Html.PartialAsync("_ViewAll")
+        </div>
+    </div>
+}
+
+
+
+@section scripts
+    {
+
+}

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Bill>
+
+    <div class="m-5">
+        <table class="table table-striped text-center border table-hover" id="example1">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.NumBill)</th>
+                    <th>Client</th>
+                    <th>@Html.DisplayNameFor(m => m.IssueDate)</th>
+                    <th>@Html.DisplayNameFor(m => m.DueDate)</th>
+                    <th>Montant (€)</th>
+                    <th>@Html.DisplayNameFor(m => m.Status)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    var IssueDate = item.IssueDate.ToShortDateString();
+                    var DueDate = item.DueDate.ToShortDateString();
+                    var name = item.ApplicationUser.LastName + " " + item.ApplicationUser.FirstName;
+                    <tr>
+                        <td>@Html.DisplayFor(m => item.NumBill)</td>
+                        <td>@Html.DisplayFor(m => name)</td>
+                        <td>@Html.DisplayFor(m => IssueDate)</td>
+                        <td>@Html.DisplayFor(m => DueDate)</td>
+                        <td>@Html.DisplayFor(m => item.BillTotal)</td>
+                        <td>
+                            @if (item.Status == SD.StatusInProcess)
+                            {
+                                <span class="badge badge-info p-2">@Html.DisplayFor(m => item.Status)</span>
+                            }
+                            else if (item.Status == SD.StatusCanceled)
+                            {
+                                <span class="badge badge-danger p-2">@Html.DisplayFor(m => item.Status)</span>
+                            }
+                            else if (item.Status == SD.StatusCompleted)
+                            {
+                                <span class="badge badge-primary p-2">@Html.DisplayFor(m => item.Status)</span>
+                            }
+                            else if (item.Status == SD.StatusSend)
+                            {
+                                <span class="badge badge-secondary p-2">@Html.DisplayFor(m => item.Status)</span>
+                            }
+                            else if (item.Status == SD.StatusNotPaid)
+                            {
+                                <span class="badge badge-warning p-2">@Html.DisplayFor(m => item.Status)</span>
+                            }
+                            else if (item.Status == SD.StatusPrePaid)
+                            {
+                                <span class="badge badge-secondary p-2">@Html.DisplayFor(m => item.Status)</span>
+                            }
+                            else if (item.Status == SD.StatusPaid)
+                            {
+                                <span class="badge badge-success p-2">@Html.DisplayFor(m => item.Status)</span>
+                            }
+
+                        </td>
+                        <td style="width:140px">
+                            <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                                <div class="btn-group" role="group">
+                                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">
+                                        <i class="fas fa-list-ul text-white"></i>
+                                    </a>
+                                    <a class="btn btn-success" asp-action="Edit" asp-route-billId="@item.Id"><i class="far fa-edit"></i></a>
+                                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

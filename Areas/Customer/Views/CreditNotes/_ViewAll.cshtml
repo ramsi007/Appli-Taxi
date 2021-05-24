@@ -1,0 +1,48 @@
+﻿@model IEnumerable<CreeditNote>
+<div class="m-5">
+    <table class="table table-striped border table-hover" id="example1">
+        <thead>
+            <tr>
+                <th>Facture N° </th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>@Html.DisplayNameFor(m => m.Montant)</th>
+                <th>@Html.DisplayNameFor(m => m.Description)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+             {
+                var fullName = item.ApplicationUser.FirstName + " " + item.ApplicationUser.LastName;
+                var dateCredit = item.NoteDate.ToShortDateString();
+                <tr>
+
+                    <td>@Html.DisplayFor(m => item.Bill.NumBill)</td>
+                    <td>@Html.DisplayFor(m => fullName)</td>
+                    <td>@Html.DisplayFor(m => dateCredit)</td>
+                    <td>@Html.DisplayFor(m => item.Montant)</td>
+                    <td>@Html.DisplayFor(m => item.Description)</td>
+
+                    <td style="width:150px">
+
+                        <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                            <div class="btn-group">
+                                <a onclick="showInPopup('@Url.Action("Details","CreditNotes", new {id= item.Id}, Context.Request.Scheme)',
+                            'Note de crédit')"
+                                   class="btn btn-info text-white" style="cursor:pointer"><i class="fas fa-list-ul"></i></a>
+
+                                <a onclick="showInPopup('@Url.Action("Edit","CreditNotes", new {id= item.Id}, Context.Request.Scheme)', 'Note de crédit ')"
+                                   class="btn btn-success text-white" style="cursor:pointer"><i class="far fa-edit"></i></a>
+
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </form>
+
+                    </td>
+                </tr>
+             }
+        </tbody>
+    </table>
+</div>

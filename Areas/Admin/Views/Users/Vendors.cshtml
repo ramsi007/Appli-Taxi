@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ApplicationUser>
+@{
+    ViewData["Title"] = "Fournisseurs";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+
+}
+
+<div class="m-5">
+    <div class="white-Background border p-2">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="text-info">Liste des fournisseurs</h3>
+            </div>
+            <div class="col-md-6 text-right">
+                <a asp-page="/Account/Register" asp-area="Identity" class="btn btn-primary">
+                    <i class="fa fa-plus"></i>&nbsp;Nouveau compte
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (Model.Count() == 0)
+{
+    <div class="col-md-12">
+        <h4 class="text-center text-danger pt-4"> Aucun fournisseur dans cette liste ... </h4>
+    </div>
+
+}
+else
+{
+    <div id="view-all">
+        @await Html.PartialAsync("_ViewAll")
+    </div>
+}
+
+@section Scripts{
+
+}
+
+
+

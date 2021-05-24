@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Holiday>
+
+<div class="col-md-12 m-4 text-center">
+    <h4 class="text-info">Liste des congés en attente</h4>
+</div>
+@if (Model.Count() == 0)
+{
+    <div class="col-md-12">
+        <h4 class="text-center text-danger pt-4 mt-5" style="margin-bottom: 200px;"> 
+        Aucun congé en attente dans cette liste 
+        </h4>
+    </div>
+
+}
+else
+{
+    <div class="m-5">
+        <table class="table table-striped border text-center table-hover" id="example1">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => m.DemandeDate)</th>
+                    <th>@Html.DisplayNameFor(m => m.StartDate)</th>
+                    <th>@Html.DisplayNameFor(m => m.EndDate)</th>
+                    <th>Personnel</th>
+                    <th>Type de congé</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @{ var fullname = item.ApplicationUser.FirstName + " " + item.ApplicationUser.LastName;}
+                        <td>@Html.DisplayFor(m => item.DemandeDate)</td>
+                        <td>@Html.DisplayFor(m => item.StartDate)</td>
+                        <td>@Html.DisplayFor(m => item.EndDate)</td>
+                        <td>@fullname</td>
+                        <td>@Html.DisplayFor(m => item.HolidayType.Name)</td>
+                        <td>@Html.DisplayFor(m => item.Status)</td>
+                        <td style="width:150px">
+                            <div class="btn-group">
+                                @if (item.Status.Equals(SD.StatusInProcess) && (User.IsInRole(SD.ManagerUser)))
+                                {
+                                    <a onclick="showInPopup('@Url.Action("ConfirmCancelHoliday","Holidays", new {confirmId= item.Id}, Context.Request.Scheme)',
+                                        'Confirmer la demande')"
+                                       class="btn btn-info text-white" style="cursor:pointer">
+                                        Confirmer
+                                    </a>
+                                    <a onclick="showInPopup('@Url.Action("ConfirmCancelHoliday","Holidays", new {cancelId= item.Id}, Context.Request.Scheme)',
+                                            'Annuler la demande')"
+                                       class="btn btn-danger text-white" style="cursor:pointer">
+                                        Annuler
+                                    </a>
+                                }
+                                @if (item.Status.Equals(SD.StatusInProcess) && (User.IsInRole(SD.EmployeeUser)))
+                                {
+                                    <a asp-action="Details" asp-route-id="@item.Id"
+                                       class="btn btn-success text-white" style="cursor:pointer">
+                                        Détails
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+    </div>
+}
+
+<a class="font-weight-bolder ml-5" style="font-size: 20px;" asp-action="Index">Retour à la liste des Congés</a>
+

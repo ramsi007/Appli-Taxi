@@ -1,0 +1,122 @@
+﻿@model ProduitViewModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = null;
+}
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Modifier un produit</h4>
+</div>
+
+<br />
+@*<partial name="_StatusMessage" model="Model.StatusMessage" />*@
+
+<form asp-action="Edit" asp-route-id="@Model.Produit.Id" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
+    <input type="hidden" asp-for="Produit.Id" />
+    <input type="hidden" asp-for="Produit.CategoryId" />
+    <input type="hidden" asp-for="Produit.TaxId" />
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="Produit.Name" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Produit.Name" class="form-control" />
+                        <span asp-validation-for="Produit.Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="Produit.Description" class="col-form-label text-dark h5"></label>
+                        <textarea asp-for="Produit.Description" class="form-control"></textarea>
+                        <span asp-validation-for="Produit.Description" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Produit.SalePrice" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Produit.SalePrice" class="form-control txtPrice" />
+                        <span asp-validation-for="Produit.SalePrice" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Produit.PurchasePrice" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Produit.PurchasePrice" class="form-control txtPrice" />
+                        <span asp-validation-for="Produit.PurchasePrice" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="CategoriesList" class="col-form-label text-dark h5"></label>
+                        <select class="form-control" asp-for="Produit.CategoryId"
+                                asp-items="@(new SelectList(Model.CategoriesList,"Id", "Name"))" disabled>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="TaxesList" class="col-form-label text-dark h5"></label>
+                        <select id="ddlCategories" class="form-control" asp-for="Produit.TaxId"
+                                asp-items="@(new SelectList(Model.TaxesList,"Id", "Discount"))" disabled>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="Produit.TypePS" class="col-form-label text-dark h5"></label>
+                        <select id="" class="form-control" asp-for="Produit.TypePS"
+                                asp-items="@Html.GetEnumSelectList<Produit.EType>()" disabled>
+                        </select>
+                        <span asp-validation-for="Produit.TypePS"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <partial name="_UpdateAndBackToListButtonsPartial" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $('.txtPrice').keyup(function () {
+                var content = $(this).val();
+                $(this).val(content.replace(/[\.]+/g, ','));
+            });
+        });
+    </script>
+}
+
+
+

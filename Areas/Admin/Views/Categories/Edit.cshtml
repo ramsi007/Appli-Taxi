@@ -1,0 +1,64 @@
+﻿@model TypeAndCategoryViewModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = null;
+}
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Modifier une catégorie</h4>
+</div>
+
+<form asp-action="Edit" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
+    @Html.HiddenFor(m => m.Category.Id)
+    @Html.HiddenFor(m => m.Category.TypeId)
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label asp-for="ListTypes" class="col-form-label text-dark h5"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <select id="ddlCategories" class="form-control" asp-for="Category.TypeId"
+                                asp-items="@(new SelectList(Model.ListTypes,"Id", "Name"))" disabled>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label asp-for="Category.Name" class="col-form-label text-dark h5"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <input asp-for="Category.Name" class="form-control" />
+                        <span asp-validation-for="Category.Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-10 offset-md-2 pl-md-5">
+                    <partial name="_UpdateAndBackToListButtonsPartial" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
+

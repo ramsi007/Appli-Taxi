@@ -1,0 +1,140 @@
+﻿@model ProposalCartViewModel
+@{
+    ViewData["Title"] = "AddToCart";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<form asp-action="AddToCart" method="post">
+    <div class="white-Background">
+        <div class="container">
+            <div class="card">
+                <div class="card-header bg-dark text-light ml-0 row container">
+                    @{ var fullname = Model.ApplicationUser.FirstName + " " + Model.ApplicationUser.LastName;}
+                    <div class="col-md-6">
+                        <i class="fas fa-file-invoice-dollar" style="color:#A7D61C;"></i>&nbsp; &nbsp;<strong>Créer une proposition</strong>
+                        <p class="mt-3 ml-5">@DateTime.Now.ToString("dd-MMM-yyyy")</p>
+                    </div>
+                    <div class="col-md-6 text-lg-right">
+                        <span><i class="fas fa-address-card" style="color:#A7D61C;"></i>&nbsp;&nbsp;</span>
+                        <span><strong>@fullname</strong></span>
+                        <p class="m-1 ml-5">@Model.ApplicationUser.Email</p>
+                        <p class="mr-5">@Model.ApplicationUser.PhoneNumber</p>
+                    </div>
+                    <input type="hidden" asp-for="@Model.ShooppingCart.ApplicationUserId" />
+                    <input type="hidden" asp-for="@Model.Bill.Id" />
+                </div>
+
+                <div class="card-body">
+                    <div class="row col-md-12">
+                        <label asp-for="ListProduct" class="col-form-label text-dark h5"></label>
+                        <select id="ddlProduct" class="form-control" asp-for="ShooppingCart.ProduitId"
+                                asp-items="@(new SelectList(Model.ListProduct,"Id", "Name"))">
+                        </select>
+                        <span asp-validation-for="ShooppingCart.ProduitId" class="text-danger"></span>
+                    </div>
+                    <div class="row col-md-12">
+                        <label asp-for="ShooppingCart.Description" class="col-form-label text-dark h5"></label>
+                        <textarea asp-for="ShooppingCart.Description" class="form-control"></textarea>
+                        <span asp-validation-for="ShooppingCart.Description" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="ShooppingCart.ProduitId" />
+
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <label asp-for="ShooppingCart.Count" class="col-form-label text-dark h5"></label>
+                            <input id="txtCount" asp-for="ShooppingCart.Count" class="form-control" />
+                            <span asp-validation-for="ShooppingCart.Count" class="text-danger"></span>
+                        </div>
+                        <div class="row col-md-4">
+                            <label asp-for="ShooppingCart.Price" class="col-form-label text-info h5">Prix (€)</label>
+                            <input id="txtPrice" asp-for="ShooppingCart.Price" class="form-control" readonly />
+                            <span asp-validation-for="ShooppingCart.Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="col-form-label text-dark h5">Taxe</label>
+                            <input id="txtTax" asp-for="ShooppingCart.Tax" class="form-control" readonly />
+                            <span asp-validation-for="ShooppingCart.Tax" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6 col-sm-4">
+                            <label asp-for="ShooppingCart.Remise" class="col-form-label text-info h5">Remise (€)</label>
+                            <input id="txtRemise" asp-for="ShooppingCart.Remise" class="form-control" />
+                            <span asp-validation-for="ShooppingCart.Remise" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-sm-4">
+                            <label class="col-form-label text-info h5">Montant (€)</label>
+                            <input id="txtMontant" asp-for="ShooppingCart.Montant" class="form-control" readonly />
+                            <span asp-validation-for="ShooppingCart.Montant" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer" style="background: #6B7574">
+                    <div class="col-12 col-lg-4 offset-lg-8 col-md-6 offset-md-6">
+                        <button type="submit" class="btn btn-success form-control">
+                            Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function getPriceAndTax() {
+            var selectedCategory = document.getElementById("ddlProduct").value;
+            var total = 0;
+            $price = $('#txtPrice');
+            $tax = $('#txtTax');
+            $montant = $('#txtMontant')
+            $count = $('#txtCount')
+            $remise = $('#txtRemise')
+            $.ajax({
+                url: '/Customer/Proposals/getPriceAndTax/' + selectedCategory,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+
+                    $price.val(data.salePrice);
+                    $tax.val(data.tax.discount);
+                    total = ($count.val() * (parseFloat($price.val()) + (parseFloat($price.val())
+                        * parseFloat($tax.val()) / 100))) - parseFloat($remise.val())
+
+                    $montant.val(total);
+                },
+                error: function (data) {
+                    alert("erreur ...!")
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            getPriceAndTax();
+        });
+
+        $("#ddlProduct").on("change", function () {
+            getPriceAndTax();
+        });
+
+        $("#txtCount").on("change", function () {
+            getPriceAndTax();
+        });
+        $("#txtRemise").on("keypress", function () {
+            getPriceAndTax();
+        });
+        $("#txtRemise").on("keyup", function () {
+            getPriceAndTax();
+        });
+
+        $(document).ready(function () {
+            $('#txtRemise').keyup(function () {
+                var content = $(this).val();
+                $(this).val(content.replace(/[\.]+/g, ','));
+            });
+        });
+    </script>
+}

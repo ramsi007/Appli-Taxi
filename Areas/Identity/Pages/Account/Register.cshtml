@@ -1,0 +1,358 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Créer un nouveau compte</h4>
+</div>
+
+<br />
+
+<form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+
+    @if (User.IsInRole(SD.ManagerUser))
+    {
+        <div class="row m-2">
+            <div class="col-md-1"></div>
+            <div class="col-md-10 row">
+                <label class="form-check-label col-md-3">
+                    <input type="radio" value="@SD.CustomerUser" name="rdUserRole" checked id="user_Customer" /> @SD.CustomerUser
+                </label>
+
+                <label class="form-check-label col-md-3">
+                    <input type="radio" value="@SD.VendorUser" name="rdUserRole" id="user_Vendor" /> @SD.VendorUser
+                </label>
+
+                <label class="form-check-label col-md-3">
+                    <input type="radio" value="@SD.ManagerUser" name="rdUserRole" id="user_Manager" /> @SD.ManagerUser
+                </label>
+
+                <label class="form-check-label col-md-3">
+                    <input type="radio" value="@SD.EmployeeUser" name="rdUserRole" id="user_Employee" /> @SD.EmployeeUser
+                </label>
+            </div>
+        </div>
+    }
+
+    <br />
+
+    <div class="white-Background border m-3 p-2">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="text-info mb-3">
+            <i class="fas fa-info-circle"></i>&nbsp;<span style="font-size:19px;font-weight:600">
+                Information de base
+            </span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Input.FirstName" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Input.FirstName" class="form-control" />
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Input.LastName" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Input.LastName" class="form-control" />
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Input.PhoneNumber" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Input.PhoneNumber" class="form-control" />
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Input.Email" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Input.Email" class="form-control" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Input.Password" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Input.Password" class="form-control" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Input.ConfirmPassword" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Input.ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="employeeUser" style="display:none">
+            @*<div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label asp-for="Input.BirthDate" class="col-form-label text-dark h5"></label>
+                            <input type="date" asp-for="Input.BirthDate" class="form-control" />
+                            <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.HiringDate" class="col-form-label text-dark h5"></label>
+                            <input type="date" asp-for="Input.HiringDate" class="form-control" />
+                            <span asp-validation-for="Input.HiringDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="Input.EmployeeAdresse" class="col-form-label text-dark h5"></label>
+                            <textarea asp-for="Input.EmployeeAdresse" class="form-control"></textarea>
+                            <span asp-validation-for="Input.EmployeeAdresse" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="Input.EmployeeCity" class="col-form-label text-dark h5"></label>
+                            <input asp-for="Input.EmployeeCity" class="form-control" />
+                            <span asp-validation-for="Input.EmployeeCity" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.EmployeePostalCode" class="col-form-label text-dark h5"></label>
+                            <input asp-for="Input.EmployeePostalCode" class="form-control" />
+                            <span asp-validation-for="Input.EmployeePostalCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.EmployeeCountry" class="col-form-label text-dark h5"></label>
+                            <input asp-for="Input.EmployeeCountry" class="form-control" />
+                            <span asp-validation-for="Input.EmployeeCountry" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="customerVendor">
+            <div class="text-info mb-3 mt-3">
+                <i class="fas fa-address-card"></i>&nbsp;<span style="font-size:19px;font-weight:600">
+                    Adresse de facturation
+                </span>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="Input.BillingName" class="col-form-label text-dark h5"></label>
+                            <input id="bName" asp-for="Input.BillingName" class="form-control" />
+                            <span asp-validation-for="Input.BillingName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.BillingPhone" class="col-form-label text-dark h5"></label>
+                            <input id="bPhone" asp-for="Input.BillingPhone" class="form-control" />
+                            <span asp-validation-for="Input.BillingPhone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.BillingPostalCode" class="col-form-label text-dark h5"></label>
+                            <input id="bPostal" asp-for="Input.BillingPostalCode" class="form-control" />
+                            <span asp-validation-for="Input.BillingPostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="Input.BillingAdresse" class="col-form-label text-dark h5"></label>
+                            <textarea id="bAdresse" asp-for="Input.BillingAdresse" class="form-control"></textarea>
+                            <span asp-validation-for="Input.BillingAdresse" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="Input.BillingCity" class="col-form-label text-dark h5"></label>
+                            <input id="bCity" asp-for="Input.BillingCity" class="form-control" />
+                            <span asp-validation-for="Input.BillingCity" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.BillingCountry" class="col-form-label text-dark h5"></label>
+                            <input id="bCountry" asp-for="Input.BillingCountry" class="form-control" />
+                            <span asp-validation-for="Input.BillingCountry" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.BillingState" class="col-form-label text-dark h5"></label>
+                            <input id="bState" asp-for="Input.BillingState" class="form-control" />
+                            <span asp-validation-for="Input.BillingState" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="col-md-3 offset-md-9">
+                    <input id="btnCopy" class="btn-sm btn-info m-3 form-control text-center"
+                           value="Expédition identique à la facturation" style="cursor:pointer" />
+                </div>
+            </div>
+
+            <div class="text-info mb-3 mt-3">
+                <i class="fas fa-shipping-fast"></i>&nbsp;<span style="font-size:19px;font-weight:600">
+                    Adresse d'expédition
+                </span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="Input.ShippingName" class="col-form-label text-dark h5"></label>
+                            <input id="sName" asp-for="Input.ShippingName" class="form-control" />
+                            <span asp-validation-for="Input.ShippingName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.ShippingPhone" class="col-form-label text-dark h5"></label>
+                            <input id="sPhone" asp-for="Input.ShippingPhone" class="form-control" />
+                            <span asp-validation-for="Input.ShippingPhone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.ShippingPostalCode" class="col-form-label text-dark h5"></label>
+                            <input id="sPostal" asp-for="Input.ShippingPostalCode" class="form-control" />
+                            <span asp-validation-for="Input.ShippingPostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="Input.ShippingAdresse" class="col-form-label text-dark h5"></label>
+                            <textarea id="sAdresse" asp-for="Input.ShippingAdresse" class="form-control"></textarea>
+                            <span asp-validation-for="Input.ShippingAdresse" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="Input.ShippingCity" class="col-form-label text-dark h5"></label>
+                            <input id="sCity" asp-for="Input.ShippingCity" class="form-control" />
+                            <span asp-validation-for="Input.ShippingCity" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.ShippingCountry" class="col-form-label text-dark h5"></label>
+                            <input id="sCountry" asp-for="Input.ShippingCountry" class="form-control" />
+                            <span asp-validation-for="Input.ShippingCountry" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.ShippingState" class="col-form-label text-dark h5"></label>
+                            <input id="sState" asp-for="Input.ShippingState" class="form-control" />
+                            <span asp-validation-for="Input.ShippingState" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12 offset-md-2 mt-3">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <button type="submit" class="btn btn-primary form-control">Register</button>
+                        </div>
+                        <div class="col-md-4">
+                            <a class="btn btn-success form-control" asp-action="Index" asp-controller="Home"
+                               asp-area="Customer">Annuler</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 mt-4">
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <a class="btn btn-outline-info form-control" asp-action="Index">Retour à la liste</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var employee = document.getElementById("user_Employee");
+        var customer = document.getElementById("user_Customer");
+        var manager = document.getElementById("user_Manager");
+        var vendor = document.getElementById("user_Vendor");
+        var mybtn = document.getElementById("btnCopy");
+
+        function hide() {
+            document.getElementById("customerVendor").style.display = "none";
+            document.getElementById("employeeUser").style.display = "";
+            }
+
+        function show() {
+            document.getElementById("customerVendor").style.display = "";
+            document.getElementById("employeeUser").style.display = "none";
+        }
+
+        function copyToText() {
+            document.getElementById("sName").value = document.getElementById("bName").value;
+            document.getElementById("sPhone").value = document.getElementById("bPhone").value;
+            document.getElementById("sPostal").value = document.getElementById("bPostal").value;
+            document.getElementById("sAdresse").value = document.getElementById("bAdresse").value;
+            document.getElementById("sCity").value = document.getElementById("bCity").value;
+            document.getElementById("sCountry").value = document.getElementById("bCountry").value;
+            document.getElementById("sState").value = document.getElementById("bState").value;
+        }
+
+        mybtn.addEventListener('click', copyToText);
+        employee.addEventListener('click', hide);
+        customer.addEventListener('click', show);
+        manager.addEventListener('click', show);
+        vendor.addEventListener('click', show);
+
+        var mybtn = document.getElementById("btnCopy");
+
+        function copyToText() {
+            document.getElementById("sName").value = document.getElementById("bName").value;
+            document.getElementById("sPhone").value = document.getElementById("bPhone").value;
+            document.getElementById("sPostal").value = document.getElementById("bPostal").value;
+            document.getElementById("sAdresse").value = document.getElementById("bAdresse").value;
+            document.getElementById("sCity").value = document.getElementById("bCity").value;
+            document.getElementById("sCountry").value = document.getElementById("bCountry").value;
+            document.getElementById("sState").value = document.getElementById("bState").value;
+        }
+
+        mybtn.addEventListener('click', copyToText);
+    </script>
+}

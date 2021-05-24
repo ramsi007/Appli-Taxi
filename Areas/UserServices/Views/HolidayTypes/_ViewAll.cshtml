@@ -1,0 +1,33 @@
+﻿@model IEnumerable<HolidayType>
+<div class="m-5">
+    <table class="table table-striped border table-hover" id="example1">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Name)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+             {
+                <tr>
+
+                    <td>@Html.DisplayFor(m => item.Name)</td>
+                    <td style="width:150px">
+
+                        <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                            <div class="btn-group">
+                                <a onclick="showInPopup('@Url.Action("Edit","HolidayTypes", new {id= item.Id}, Context.Request.Scheme)', 'type de congé ')"
+                                   class="btn btn-success text-white" style="cursor:pointer"><i class="far fa-edit"></i></a>
+
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </form>
+
+                    </td>
+                </tr>
+             }
+        </tbody>
+    </table>
+</div>

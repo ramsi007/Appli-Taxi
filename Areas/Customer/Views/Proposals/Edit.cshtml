@@ -1,0 +1,241 @@
+﻿@model UserProposalDetailsViewModel
+@{
+    ViewData["Title"] = "Modifier";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<form method="post">
+    <div class="white-Background border m-3 p-2">
+        @Html.HiddenFor(m => m.ApplicationUser.Id)
+        @Html.HiddenFor(m => m.Proposal.Id)
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3 ">
+            <div class="row">
+                <div class="col-md-4">
+                    <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
+                    <span>
+                        Modification de la proposition
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row  about-edit-item ltr-effect">
+            @if (Model.Proposal.Status == SD.StatusInProcess)
+            {
+                <div class="col-md-4 about-item-content">
+                    <a asp-action="SendProposal"
+                       asp-route-id="@Model.Proposal.Id" class="nav-link">
+                        <span>
+                            Envoyer la proposition
+                        </span>&nbsp;&nbsp;<i class="far fa-paper-plane icon"></i>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-4 about-item-content">
+
+                </div>
+            }
+            <div class="col-md-4 about-item-content">
+
+            </div>
+            <div class="col-md-4 about-item-content">
+                <span class="d-block">
+                    status de la prposition
+                </span>
+                &nbsp;&nbsp;
+                @if (Model.Proposal.Status == SD.StatusInProcess)
+                {
+                    <span class=" badge badge-info text-center">@Model.Proposal.Status</span>
+                }
+                else if (Model.Proposal.Status == SD.StatusAccepted)
+                {
+                    <span class=" badge badge-success text-center">@Model.Proposal.Status</span>
+
+                }
+                else if (Model.Proposal.Status == SD.StatusCanceled)
+                {
+                    <span class=" badge badge-danger text-center">@Model.Proposal.Status</span>
+                }
+                else if (Model.Proposal.Status == SD.StatusCompleted)
+                {
+                    <span class=" badge badge-primary text-center">@Model.Proposal.Status</span>
+                }
+                else if (Model.Proposal.Status == SD.StatusSend)
+                {
+                    <span class=" badge badge-secondary text-center">@Model.Proposal.Status</span>
+                }
+
+            </div>
+        </div>
+        <hr />
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
+            <div class="row col-md-12">
+                <div class="col-md-6">
+                    <i class="fas fa-file-invoice-dollar text-warning"></i>&nbsp;<span>
+                        Proposition
+                    </span>
+                </div>
+
+                <div class="col-md-6 text-right">
+                    <span>@Model.Proposal.NumProposal</span>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-12 about-edit-item ltr-effect">
+            <div class="row col-md-12">
+                <div class="col-md-6 text-center about-item-title">
+                    <span>
+                        Comblé vers :
+                    </span>
+                </div>
+                <div class="col-md-6 text-center about-item-title">
+                    <span class="d-block about-item-title">Expédié à :</span>
+                </div>
+            </div>
+            <div class="row col-md-12">
+                <div class="col-md-6 about-item-content">
+                    <span class="d-block">@Model.ApplicationUser.BillingName</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingPhone</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingAdresse</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingPostalCode</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingCity</span>
+                    <span>@Model.ApplicationUser.BillingCountry</span>&nbsp;<span>@Model.ApplicationUser.BillingState</span>
+                </div>
+                <div class="col-md-6 about-item-content">
+                    <span class="d-block">@Model.ApplicationUser.ShippingName</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingPhone</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingAdresse</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingPostalCode</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingCity</span>
+                    <span>@Model.ApplicationUser.ShippingCountry</span>&nbsp;&nbsp;<span>@Model.ApplicationUser.ShippingState</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
+            <div class="row">
+                <div class="col-md-4 title-card">
+                    <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
+                    <span>
+                        Récapitulatif du produit
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-12 card-body">
+            <div class="col-md-6">
+                <span>Tous les éléments ne peuvent pas être supprimés.</span>
+            </div>
+            <div class="col-md-6 text-right">
+                <a asp-action="AddToCart" class="btn btn-primary"
+                   asp-route-id="@Model.ApplicationUser.Id" asp-route-proposalId="@Model.Proposal.Id">
+                    <i class="fas fa-plus"></i>&nbsp;Ajouter un produit
+                </a>
+            </div>
+        </div>
+        <table class="table table-striped border table-hover col-md-12" id="example1">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Produit</th>
+                    <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Count)</th>
+                    <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Price)</th>
+                    <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Remise)</th>
+                    <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Tax)</th>
+                    <th>
+                        Montant <span class="text-danger"
+                                      style="font-size:12px">Avant impôt & remise</span>
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    double total = 0;
+                    double remise = 0;
+                    double mntpartiel = 0;
+                    double tax = 0;
+
+                    @foreach (var item in Model.ProposalDetailsList)
+                    {
+
+                        var montant = Math.Round(item.Price * item.Count,2);
+                        <tr>
+                            <td>@Html.DisplayFor(m => item.ProduitId)</td>
+                            <td>@Html.DisplayFor(m => item.Name)</td>
+                            <td>
+                                <button type="submit" asp-action="Minus" class="btn-minus"
+                                        asp-route-id="@item.ProduitId">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                @Html.DisplayFor(m => item.Count)
+                                <button type="submit" asp-action="Plus" class="btn-plus"
+                                        asp-route-id="@item.ProduitId">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </td>
+                            <td>@Html.DisplayFor(m => item.Price)</td>
+                            <td>@Html.DisplayFor(m => item.Remise)</td>
+                            <td>@Html.DisplayFor(m => item.Tax) %</td>
+                            <td style="width:200px">@montant</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="submit" asp-action="Remove" class="btn btn-danger" asp-route-id="@item.ProduitId"><i class="fas fa-trash"></i></button>
+                                </div>
+
+                            </td>
+                        </tr>
+                        total += montant;
+                        remise += item.Remise;
+                        mntpartiel += (item.Price * item.Count) + ((item.Price * item.Count) * item.Tax / 100);
+                    }
+                    tax = ((mntpartiel - total) / total) * 100;
+                }
+            </tbody>
+        </table>
+
+        <div class="col-md-12 form-group mt-5">
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Total Partiel (€):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="">@Math.Round(Model.Proposal.ProposalTotalOrginal, 2)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Remise (€):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class=""> @Model.Proposal.Remise</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Tax (%):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class=""> @Math.Round(tax, 2)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Total (€):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="">@Math.Round(Model.Proposal.ProposalTotal, 2)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

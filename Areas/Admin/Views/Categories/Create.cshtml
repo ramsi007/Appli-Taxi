@@ -1,0 +1,70 @@
+﻿@model TypeAndCategoryViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Créer une nouvelle catégorie</h4>
+</div>
+
+<br />
+
+<form asp-action="Create" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
+
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label asp-for="ListTypes" class="col-form-label text-dark h5"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <select id="ddlCategories" class="form-control" asp-for="Category.TypeId"
+                                asp-items="@(new SelectList(Model.ListTypes,"Id", "Name"))">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label asp-for="Category.Name" class="col-form-label text-dark h5"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <input asp-for="Category.Name" class="form-control" />
+                        <span asp-validation-for="Category.Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-8 offset-md-4">
+                    <partial name="_CreateAndBackToListButtonsPartial" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8 ml-4">
+        <div class="row form-group">
+            <div class="col-md-6">
+                <a class="btn btn-outline-info form-control" asp-action="Index">Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+

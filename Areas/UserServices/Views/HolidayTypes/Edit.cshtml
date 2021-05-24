@@ -1,0 +1,46 @@
+﻿@model HolidayType
+@{
+    ViewData["Title"] = "Edit";
+    Layout = null;
+}
+
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Modifier type de congés</h4>
+</div>
+
+<br />
+<form asp-action="Edit" onsubmit="return jQueryAjaxPost(this);">
+    <input type="hidden" asp-for="Id" />
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <label asp-for="Name" class="col-form-label text-dark h5"></label>
+                    <input id="saleprice" asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <partial name="_UpdateAndBackToListButtonsPartial" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+}
+
+
+
+

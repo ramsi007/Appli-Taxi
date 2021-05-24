@@ -1,0 +1,54 @@
+﻿@model Tax
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+<form asp-action="Create" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
+    <div class="white-Background border m-5 p-5">
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+        <div class="row pt-4">
+            <div class="col-md-2 pt-1">
+                <label asp-for="Name" class="h6 text-dark"></label>
+            </div>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-md-2 pt-1">
+                <label asp-for="Discount" class="h6 text-dark"></label>
+            </div>
+            <div class="col-md-10">
+                <input asp-for="Discount" class="form-control txtTax" />
+                <span asp-validation-for="Discount"></span>
+            </div>
+        </div>
+
+
+        <div class="row pt-4">
+            <div class="col-md-6 offset-md-2 ">
+                <partial name="_CreateAndBackToListButtonsPartial" />
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            $('.txtTax').keyup(function () {
+                var content = $(this).val();
+                $(this).val(content.replace(/[\.]+/g, ','));
+            });
+        });
+    </script>
+}
+
+
+

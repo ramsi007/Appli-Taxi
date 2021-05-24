@@ -1,0 +1,103 @@
+﻿@model ProduitViewModel
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Détails du Produit </h4>
+</div>
+
+<br />
+<br />
+@Html.HiddenFor(m => m.Produit.Id)
+
+<div class="white-Background border m-5 p-5">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row">
+        <div class="col-12 form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <label asp-for="Produit.Name" class="col-form-label text-dark h5"></label>
+                    <input asp-for="Produit.Name" class="form-control" readonly />
+                    <span asp-validation-for="Produit.Name" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <label asp-for="Produit.Description" class="col-form-label text-dark h5"></label>
+                    <textarea asp-for="Produit.Description" class="form-control" disabled></textarea>
+                    <span asp-validation-for="Produit.Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 form-group">
+            <div class="row">
+                <div class="col-md-6">
+                    <label asp-for="Produit.SalePrice" class="col-form-label text-dark h5"></label>
+                    <input asp-for="Produit.SalePrice" class="form-control" readonly />
+                    <span asp-validation-for="Produit.SalePrice" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Produit.PurchasePrice" class="col-form-label text-dark h5"></label>
+                    <input asp-for="Produit.PurchasePrice" class="form-control" readonly />
+                    <span asp-validation-for="Produit.PurchasePrice" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 form-group">
+            <div class="row">
+                <div class="col-md-6">
+                    <label asp-for="CategoriesList" class="col-form-label text-dark h5"></label>
+                    <select class="form-control" asp-for="Produit.CategoryId"
+                            asp-items="@(new SelectList(Model.CategoriesList,"Id", "Name"))" disabled>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="TaxesList" class="col-form-label text-dark h5"></label>
+                    <select id="ddlCategories" class="form-control" asp-for="Produit.TaxId"
+                            asp-items="@(new SelectList(Model.TaxesList,"Id", "Discount"))" disabled>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <label asp-for="Produit.TypePS" class="col-form-label text-dark h5"></label>
+                    <select id="" class="form-control" asp-for="Produit.TypePS"
+                            asp-items="@Html.GetEnumSelectList<Produit.EType>()" disabled>
+                    </select>
+                    <span asp-validation-for="Produit.TypePS"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-md-6">
+                <a onclick="showInPopup('@Url.Action("Edit","Produits", new {id= @Model.Produit.Id}, Context.Request.Scheme)', 'Modifier')"
+                   class="btn btn-primary form-control text-white" style="cursor:pointer">Modifier</a>
+            </div>
+            <div class="col-md-6">
+                <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+            </div>
+
+        </div>
+    </div>
+</div>

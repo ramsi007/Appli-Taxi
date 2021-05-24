@@ -1,0 +1,120 @@
+﻿@model CreditNoteBillsViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Ajouter un reçu</h4>
+</div>
+
+<br />
+<form asp-action="Edit" onsubmit="return jQueryAjaxPost(this);">
+    <input type="hidden" asp-for="@Model.Receipt.UserId" />
+    <input type="hidden" asp-for="@Model.Receipt.Id" />
+    <input type="hidden" asp-for="@Model.Receipt.BillId" />
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="ListBills" class="col-form-label text-dark h5"></label>
+                        @if (Model.ListBills.Count() > 1)
+                        {
+                            <select class="form-control" asp-for="Receipt.BillId"
+                                    asp-items="@(new SelectList(Model.ListBills,"Id", "NumBill"))">
+                            </select>
+                        }
+                        else
+                        {
+                            <input type="hidden" asp-for="Receipt.BillId" />
+                            <input asp-for="Bill.NumBill" class="form-control" readonly />
+                        }
+
+                        <span asp-validation-for="Receipt.BillId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Receipt.Montant" class="col-form-label text-dark h5"></label>
+                        <input id="saleprice" asp-for="Receipt.Montant" class="form-control" />
+                        <span asp-validation-for="Receipt.Montant" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Receipt.RecieptDate" class="col-form-label text-dark h5"></label>
+                        <input id="purshaseprice" asp-for="Receipt.RecieptDate" class="form-control" />
+                        <span asp-validation-for="Receipt.RecieptDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <label asp-for="Receipt.Reference" class="col-form-label text-dark h5"></label>
+                    <input id="saleprice" asp-for="Receipt.Reference" class="form-control" />
+                    <span asp-validation-for="Receipt.Reference" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="Receipt.Description" class="col-form-label text-dark h5"></label>
+                        <textarea asp-for="Receipt.Description" class="form-control"></textarea>
+                        <span asp-validation-for="Receipt.Description" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <input id="btnAdd" type="submit" value="Ajouter" class="btn btn-primary form-control" />
+                        </div>
+                        @if (Model.Receipt.BillId == 0)
+                        {
+                            <div class="col-md-6">
+                                <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-6">
+                                <a class="btn btn-success form-control" asp-action="Edit" asp-route-billId="@Model.Receipt.BillId" asp-controller="Bills">Annuler</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+    </script>
+}
+
+
+

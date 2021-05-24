@@ -1,0 +1,271 @@
+﻿@model ApplicationUser
+@{
+    ViewData["Title"] = "Modifier un utilisateur";
+    Layout = null;
+}
+
+<div class="form-group">
+    <h4 class="text-success text-center">Modifier un nouveau compte</h4>
+</div>
+
+<br />
+
+<form asp-action="Edit" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
+
+    <div class="white-Background border m-3 p-2">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="text-info mb-3">
+            <i class="fas fa-info-circle"></i>&nbsp;<span style="font-size:19px;font-weight:600">
+                Information de base
+            </span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="col-form-label text-dark h5"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="col-form-label text-dark h5"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="PhoneNumber" class="col-form-label text-dark h5"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!(string.IsNullOrEmpty(Model.EmployeeAdresse)) && (!string.IsNullOrEmpty(Model.EmployeeCity))
+      && (!string.IsNullOrEmpty(Model.EmployeeCountry)) && (!string.IsNullOrEmpty(Model.EmployeePostalCode)))
+        {
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="EmployeeAdresse" class="col-form-label text-dark h5"></label>
+                            <textarea asp-for="EmployeeAdresse" class="form-control"></textarea>
+                            <span asp-validation-for="EmployeeAdresse" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="EmployeeCity" class="col-form-label text-dark h5"></label>
+                            <input asp-for="EmployeeCity" class="form-control" />
+                            <span asp-validation-for="EmployeeCity" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="EmployeePostalCode" class="col-form-label text-dark h5"></label>
+                            <input asp-for="EmployeePostalCode" class="form-control" />
+                            <span asp-validation-for="EmployeePostalCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="EmployeeCountry" class="col-form-label text-dark h5"></label>
+                            <input asp-for="EmployeeCountry" class="form-control" />
+                            <span asp-validation-for="EmployeeCountry" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-info mb-3 mt-3">
+                <i class="fas fa-address-card"></i>&nbsp;<span style="font-size:19px;font-weight:600">
+                    Adresse de facturation
+                </span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="BillingName" class="col-form-label text-dark h5"></label>
+                            <input id="bName" asp-for="BillingName" class="form-control" />
+                            <span asp-validation-for="BillingName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="BillingPhone" class="col-form-label text-dark h5"></label>
+                            <input id="bPhone" asp-for="BillingPhone" class="form-control" />
+                            <span asp-validation-for="BillingPhone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="BillingPostalCode" class="col-form-label text-dark h5"></label>
+                            <input id="bPostal" asp-for="BillingPostalCode" class="form-control" />
+                            <span asp-validation-for="BillingPostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="BillingAdresse" class="col-form-label text-dark h5"></label>
+                            <textarea id="bAdresse" asp-for="BillingAdresse" class="form-control"></textarea>
+                            <span asp-validation-for="BillingAdresse" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="BillingCity" class="col-form-label text-dark h5"></label>
+                            <input id="bCity" asp-for="BillingCity" class="form-control" />
+                            <span asp-validation-for="BillingCity" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="BillingCountry" class="col-form-label text-dark h5"></label>
+                            <input id="bCountry" asp-for="BillingCountry" class="form-control" />
+                            <span asp-validation-for="BillingCountry" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="BillingState" class="col-form-label text-dark h5"></label>
+                            <input id="bState" asp-for="BillingState" class="form-control" />
+                            <span asp-validation-for="BillingState" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="col-md-5 offset-md-7">
+                    <input onclick="copyToText()" id="btnCopy" class="btn-sm btn-info m-3 form-control text-center"
+                           value="Expédition identique à la facturation" style="cursor:pointer" />
+                </div>
+            </div>
+
+            <div class="text-info mb-3 mt-3">
+                <i class="fas fa-shipping-fast"></i>&nbsp;<span style="font-size:19px;font-weight:600">
+                    Adresse d'expédition
+                </span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="ShippingName" class="col-form-label text-dark h5"></label>
+                            <input id="sName" asp-for="ShippingName" class="form-control" />
+                            <span asp-validation-for="ShippingName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ShippingPhone" class="col-form-label text-dark h5"></label>
+                            <input id="sPhone" asp-for="ShippingPhone" class="form-control" />
+                            <span asp-validation-for="ShippingPhone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ShippingPostalCode" class="col-form-label text-dark h5"></label>
+                            <input id="sPostal" asp-for="ShippingPostalCode" class="form-control" />
+                            <span asp-validation-for="ShippingPostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            <label asp-for="ShippingAdresse" class="col-form-label text-dark h5"></label>
+                            <textarea id="sAdresse" asp-for="ShippingAdresse" class="form-control"></textarea>
+                            <span asp-validation-for="ShippingAdresse" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label asp-for="ShippingCity" class="col-form-label text-dark h5"></label>
+                            <input id="sCity" asp-for="ShippingCity" class="form-control" />
+                            <span asp-validation-for="ShippingCity" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ShippingCountry" class="col-form-label text-dark h5"></label>
+                            <input id="sCountry" asp-for="ShippingCountry" class="form-control" />
+                            <span asp-validation-for="ShippingCountry" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ShippingState" class="col-form-label text-dark h5"></label>
+                            <input id="sState" asp-for="ShippingState" class="form-control" />
+                            <span asp-validation-for="ShippingState" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12 offset-md-2 mt-3">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <button type="submit" class="btn btn-primary form-control">Modifier</button>
+                        </div>
+                        <div class="col-md-4">
+                            <a class="btn btn-success form-control" asp-action="Index" asp-controller="Users"
+                               asp-area="Admin">Annuler</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 mt-4">
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <a class="btn btn-outline-info form-control" asp-action="Index">Retour à la liste</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+<script>
+
+    function copyToText() {
+        document.getElementById("sName").value = document.getElementById("bName").value;
+        document.getElementById("sPhone").value = document.getElementById("bPhone").value;
+        document.getElementById("sPostal").value = document.getElementById("bPostal").value;
+        document.getElementById("sAdresse").value = document.getElementById("bAdresse").value;
+        document.getElementById("sCity").value = document.getElementById("bCity").value;
+        document.getElementById("sCountry").value = document.getElementById("bCountry").value;
+        document.getElementById("sState").value = document.getElementById("bState").value;
+    }
+
+    mybtn.addEventListener('click', copyToText);
+</script>
+}
+
+
+

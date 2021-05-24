@@ -1,0 +1,378 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model UserProposalViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<br />
+<div class="form-group row">
+    <div class="col-md-6">
+        <h4 class="text-success text-center">Nouvelle facture</h4>
+    </div>
+    <div class="col-md-5 text-right">
+        @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoopingCartCount) == null)
+        {
+            <a asp-action="ShoopingCart">
+                <i class="fas fa-shopping-cart bag"></i>
+                <span class="mb-5 bag" style="color:#ff6a00">(0)</span>
+            </a>
+        }
+        else
+        {
+            <a asp-action="ShoopingCart">
+                <span>
+                    <i class="fas fa-shopping-cart bag"></i>
+                    <span class="mb-5 bag" style="color:#ff6a00">
+                        (@HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoopingCartCount))
+                    </span>
+                </span>
+            </a>
+        }
+    </div>
+</div>
+<br />
+<form method="post">
+    <div class="white-Background border m-3 p-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row mb-5">
+                    <div class="col-md-3">
+                        <label asp-for="Bill.NumBill" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Bill.NumBill" class="form-control" readonly />
+                        <span asp-validation-for="Bill.NumBill" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label asp-for="Bill.IssueDate" class="col-form-label text-dark h5"></label>
+                        <input type="date" asp-for="Bill.IssueDate" class="form-control" />
+                        <span asp-validation-for="Bill.IssueDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label asp-for="Bill.DueDate" class="col-form-label text-dark h5"></label>
+                        <input type="date" asp-for="Bill.DueDate" class="form-control" />
+                        <span asp-validation-for="Bill.DueDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="Bill.BillType" class="col-form-label text-dark h5"></label>
+                        <select id="" class="form-control" asp-for="Bill.BillType"
+                                asp-items="@Html.GetEnumSelectList<Bill.PrType>()">
+                        </select>
+                        <span asp-validation-for="Bill.BillType"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    @if (Model.ListShoopingCart.Count() == 0)
+                    {
+                        <div class="col-md-6" id="divUser">
+
+                            <label asp-for="ListUsers" class="col-form-label text-dark h5"></label>
+                            <select id="ddlUser" class="form-control" asp-for="@Model.Bill.UserId"
+                                    asp-items="@(new SelectList(Model.ListUsers, "Id", "FirstName"))">
+                                <option>-- Selectionner un client --</option>
+                            </select>
+                            <span asp-validation-for="@Model.Bill.UserId" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-md-12 mb-5" id="divUserDetail" style="display:none">
+                            <div class="row">
+                                <div class="col-md-12 text-center card">
+                                    <div class="card-header bg-dark text-center text-light ml-0 row container">
+                                        <div class="col-md-5 pt-2"><h6 class=" text-center text-warning text-bold"> Facturé à</h6></div>
+                                        <div class="col-md-5 pt-2"><h6 class=" text-center text-warning text-bold"> Expédié à </h6></div>
+                                        <div class="col-md-2" id="addtoCart"></div>
+                                    </div>
+                                    <div class="card-body row">
+
+                                        <div class="col-md-5 text-secondary" id="billDiv">
+
+                                        </div>
+                                        <div class="col-md-5 text-secondary" id="shipDiv">
+                                        </div>
+
+                                        <div class="col-md-2 mt-5">
+                                            <button id="btnRemove" type="button" class="btn btn-danger form-control">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mb-5" style="display:none">
+                            <div class="row">
+                                <div class="col-md-12 text-center card">
+                                    <div class="card-header bg-dark text-center text-light ml-0 row container">
+                                        <div class="col-md-5 pt-2"><h6 class=" text-center text-warning text-bold"> Facturé à</h6></div>
+                                        <div class="col-md-5 pt-2"><h6 class=" text-center text-warning text-bold"> Expédié à </h6></div>
+                                        <div class="col-md-2" id="addtoCart"></div>
+                                    </div>
+                                    <div class="card-body row">
+
+                                        <div class="col-md-5 text-secondary" id="billDiv">
+
+                                        </div>
+                                        <div class="col-md-5 text-secondary" id="shipDiv">
+                                        </div>
+
+                                        <div class="col-md-2 mt-5">
+                                            <button id="btnRemove" type="button" class="btn btn-danger form-control">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-12 mb-5">
+                            <div class="row">
+                                <div class="col-md-12 text-center card">
+                                    <div class="card-header bg-dark text-center text-light ml-0 row container">
+                                        <div class="col-md-5 mt-1"><h6 class=" text-center text-warning text-bold"> Facturé à</h6></div>
+                                        <div class="col-md-5 mt-1"><h6 class=" text-center text-warning text-bold"> Expédié à </h6></div>
+                                        <div class="col-md-2" id="addtoCart"></div>
+                                    </div>
+                                    <input asp-for="@Model.Bill.UserId" type="hidden" />
+
+                                    <div class="card-body row">
+                                        @foreach (var item in Model.ListUsers)
+                                        {
+                                            <div class="col-md-5 text-secondary">
+                                                <p>@item.BillingName + </p> <p>@item.BillingPhone</p> <p>@item.BillingAdresse</p>
+                                                <span>@item.BillingPostalCode</span><span>@item.BillingCity </span>
+                                            </div>
+                                            <div class="col-md-5 text-secondary">
+                                                <p>@item.ShippingName + </p> <p>@item.ShippingPhone</p> <p>@item.BillingAdresse</p>
+                                                <span>@item.ShippingPostalCode</span><span>@item.ShippingCity </span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mb-5">
+                            <div class="row">
+                                <div class="col-md-12 card">
+                                    <div class="card-header bg-dark text-light row container">
+                                        <div class="col-md-5 mt-2">
+                                            <i class="fab fa-product-hunt"></i>&nbsp;
+                                            <h6 class="text-warning text-bold d-inline"> Récaputilatif des produits</h6>
+                                        </div>
+                                        @foreach (var item in Model.ListUsers)
+                                        {
+                                            <div class="col-md-2 offset-md-5">
+                                                <a asp-action="AddToCart" asp-route-id="@item.Id"
+                                                   class="btn-sm btn btn-outline-info form-control pt-2">
+                                                    <i class="fas fa-plus"></i>&nbsp; Ajouter un produit
+                                                </a>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="card-body">
+                                        @if (Model.ListShoopingCart.Count() == 0)
+                                        {
+                                            <div class="m-5">
+                                                <h5 class="text-danger text-center"> Aucun article pour cette proposition ... !</h5>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var item in Model.ListShoopingCart)
+                                            {
+                                                <div class="row mb-3">
+                                                    <div class="col-md-10">
+                                                        <label asp-for="@item.Description" class="col-form-label text-dark h5"></label>
+                                                        <textarea asp-for="@item.Description" class="form-control"></textarea>
+                                                        <span asp-validation-for="@item.Description" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-md-1 offset-md-1 mt-5">
+                                                        <button type="submit" asp-action="RemoveCart" asp-controller="Proposals" asp-area="Customer"
+                                                                class="btn btn-danger"
+                                                                asp-route-productId="@item.ProduitId">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-4">
+                                                    <div class="col-md-2 col-sm-4">
+                                                        <label asp-for="@item.Count" class="col-form-label text-dark h5"></label>
+                                                        <input asp-for="@item.Count" class="form-control" />
+                                                        <span asp-validation-for="@item.Count" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="row col-md-3 col-sm-4">
+                                                        <label asp-for="@item.Price" class="col-form-label text-info h5">Prix (€)</label>
+                                                        <span class="form-control" readonly>@item.Price</span>
+                                                        <span asp-validation-for="@item.Price" class="text-danger"></span>
+                                                    </div>
+
+                                                    <div class="col-md-2 col-sm-4">
+                                                        <label class="col-form-label text-dark h5">Taxe</label>
+                                                        <span class="form-control" readonly>@item.Tax</span>
+                                                        <span asp-validation-for="@item.Tax" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-4">
+                                                        <label class="col-form-label text-info h5">Remise (€)</label>
+                                                        <span class="form-control">@item.Remise</span>
+                                                        <span asp-validation-for="@item.Remise" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="row col-md-3 col-sm-4">
+                                                        <label class="col-form-label text-secondary h5">Montant total (€)</label>
+                                                        <span class="form-control">@Math.Round(item.Montant, 2)</span>
+                                                        <span asp-validation-for="@item.Montant" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            <div class="row col-md-5  offset-md-7 mb-2">
+                                                <div class="col-md-5">
+                                                    <label class="col-form-label text-success">
+                                                        Total(TTC) partiel (€)
+                                                        <span class="text-danger font-weight-normal">sans remise (€)</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <span class="text-center border-0 form-control">@Math.Round(Model.Bill.BillTotalOrginal, 2)</span>
+                                                    <span asp-validation-for="@Model.Bill.BillTotalOrginal" class="text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="row col-md-5  offset-md-7 mb-2">
+                                                <div class="col-md-5">
+                                                    <label class="col-form-label text-info">Remise (€)</label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <span class="text-center border-0 form-control">@Model.Bill.Remise</span>
+                                                    <span asp-validation-for="@Model.Bill.Remise" class="text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="row col-md-5  offset-md-7 mb-2">
+                                                <div class="col-md-5">
+                                                    <label class="col-form-label text-success">Total(TTC) (€)</label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <span class=" text-center border-0 form-control">@Model.Bill.BillTotal</span>
+                                                    <span asp-validation-for="@Model.Bill.BillTotal" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row col-md-5  offset-md-7 mb-2">
+                                                <div class="col-md-5">
+                                                    <label class="col-form-label text-success">Payé (€)</label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input asp-for="@Model.Bill.Paid" class="text-center border-0 form-control" />
+                                                    <span asp-validation-for="@Model.Bill.Paid" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row col-md-5  offset-md-7 mb-2">
+                                                <div class="col-md-5">
+                                                    <label class="col-form-label text-success">Reste (€)</label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input asp-for="@Model.Bill.Rest" class="text-center border-0 form-control" />
+                                                    <span asp-validation-for="@Model.Bill.Rest" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12 offset-md-2 mt-3">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <input asp-action="Create" type="submit" class="btn btn-primary form-control" value="Créer" />
+                        </div>
+                        <div class="col-md-4">
+                            <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function getUser() {
+            var selectedUser = document.getElementById("ddlUser").value;
+            $userlist = $('#divUser');
+            $userlistdetail = $('#divUserDetail');
+            $userbill = $('#billDiv');
+            $usership = $('#shipDiv');
+            $addtocart = $('#addtoCart');
+            $.ajax({
+                url: '/Customer/Proposals/getUserById/' + selectedUser,
+                type: 'GET',
+                contentType: "text/html; charset=utf-8",
+                dataType: 'json',
+                success: function (data) {
+                    if (data != null) {
+                        $userlist.hide();
+                        $userlistdetail.show();
+
+                        $userbill.append(
+                            '<p> ' + data.billingName + '</p> <p>' + data.billingPhone + '</p> <p>' + data.billingAdresse + '</p>' +
+                            '<span>' + data.billingPostalCode + '</span><span>' + data.billingCity + '</span>')
+
+                        $usership.append(
+                            '<p> ' + data.shippingName + '</p> <p>' + data.shippingPhone + '</p> <p>' + data.shippingAdresse + '</p>' +
+                            '<span>' + data.shippingPostalCode + '</span><span>' + data.shippingCity + '</span>')
+
+                        $addtocart.append('<a class="btn btn-outline-info btn-sm form-control text-white pt-2" style="cursor:pointer" href="/Customer/Bills/AddToCart/' + data.id + '"' + '><i class="fas fa-plus"></i>&nbsp; Ajouter un produit')
+                    }
+                },
+                error: function (data) {
+                    alert("erreur lors du chargement des données...!")
+                }
+            });
+        }
+
+        function removeUser() {
+            $btnremove = $('#btnRemove')
+            $userlist = $('#divUser');
+            $userlistdetail = $('#divUserDetail');
+
+            $userlist.show();
+            $('#billDiv').empty();
+            $('#shipDiv').empty();
+            $('#addtoCart').empty();
+            $userlistdetail.hide();
+        }
+
+        $('#btnRemove').on('click', function () {
+            removeUser();
+        })
+
+        $(document).ready(function () {
+            getUser();
+        });
+
+        $("#ddlUser").on("change", function () {
+            getUser();
+        });
+    </script>
+
+}
+
+
+
