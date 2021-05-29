@@ -13,7 +13,7 @@ namespace Appli_Taxi.Utility
         public const string CustomerUser = "Client";
         public const string EmployeeUser = "Employee";
 
-        public const string StatusOpen = "ouvert";
+        //public const string StatusOpen = "ouvert";
         public const string StatusInProcess = "en cours de traitement";
         public const string StatusAccepted = "accepté";
         public const string StatusDeclined = "refusé";
@@ -29,8 +29,5 @@ namespace Appli_Taxi.Utility
         public const string ShoopingCartCount = "ShoopingCartCount";
 
     }
-
-
-
 
 }

@@ -1,16 +1,14 @@
 ﻿@model UserBillDetailViewModel
-@using Microsoft.Extensions.Options
-@inject IOptions<Appli_Taxi.Utility.StripesSettings> Stripe
 @{
     ViewData["Title"] = "Modifier";
     Layout = "~/Views/Shared/_AdminLTE.cshtml";
 }
 
-<form method="post" asp-action="Edit">
+<form method="post">
     <div class="white-Background border m-3 p-2">
         @Html.HiddenFor(m => m.ApplicationUser.Id)
         @Html.HiddenFor(m => m.Bill.Id)
-        <div class="col-md-12 form-group card-header bg-black text-light mb-3 ">
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3 ">
             <div class="row">
                 <div class="col-md-4">
                     <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
@@ -53,7 +51,25 @@
                     <div class="col-md-4 about-item-content">
                         <span class="d-block">
                             status de la facture
-                        </span>&nbsp;&nbsp;<span style="color: #2e232c;">@Model.Bill.Status</span>
+                            <br />
+                        </span>&nbsp;&nbsp;
+                        @if (Model.Bill.Status == SD.StatusNotPaid)
+                        {
+                            <span class=" badge badge-danger text-center">@Model.Bill.Status</span>
+                        }
+                        else if (Model.Bill.Status == SD.StatusPrePaid)
+                        {
+                            <span class=" badge badge-info text-center">@Model.Bill.Status</span>
+
+                        }
+                        else if (Model.Bill.Status == SD.StatusCanceled)
+                        {
+                            <span class=" badge badge-warning text-center">@Model.Bill.Status</span>
+                        }
+                        else if (Model.Bill.Status == SD.StatusPaid)
+                        {
+                            <span class=" badge badge-success text-center">@Model.Bill.Status</span>
+                        }
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -81,7 +97,7 @@
         </div>
 
         <hr />
-        <div class="col-md-12 form-group card-header bg-black text-light mb-3">
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
             <div class="row col-md-12">
                 <div class="col-md-6">
                     <i class="fas fa-file-invoice-dollar text-warning"></i>&nbsp;<span>
@@ -124,7 +140,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12 form-group card-header bg-black text-light mb-3">
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
             <div class="row">
                 <div class="col-md-4 title-card">
                     <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
@@ -171,7 +187,7 @@
                     @foreach (var item in Model.BillDetailsList)
                     {
 
-                        var montant = item.Price * item.Count;
+                        var montant = Math.Round((item.Price * item.Count)+ ((item.Price * item.Count)*item.Tax)/100,2);
                         <tr>
                             <td>@Html.DisplayFor(m => item.ProduitId)</td>
                             <td>@Html.DisplayFor(m => item.Name)</td>
@@ -201,9 +217,9 @@
                                 </div>
                             </td>
                         </tr>
-                        total += montant;
+                        total += Math.Round((item.Price * item.Count),2);
                         remise += item.Remise;
-                        mntpartiel += (item.Price * item.Count) + ((item.Price * item.Count) * item.Tax / 100);
+                        mntpartiel += montant;
                     }
                     tax = ((mntpartiel - total) / total) * 100;
                 }
@@ -211,7 +227,7 @@
         </table>
         <br /><br />
 
-        <div class="col-md-12 form-group card-header bg-black text-light mb-3">
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
             <div class="row">
                 <div class="col-md-4 title-card">
                     <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
@@ -250,17 +266,15 @@
                         <td>@Html.DisplayFor(m => item.Description)</td>
 
                         <td style="width:150px">
-                            <form asp-action="RemoveNote" asp-route-noteId="@item.Id" onsubmit="return jQueryAjaxDelete(this);">
-
-                                <div class="btn-group">
-                                    <a onclick="showInPopup('@Url.Action("Edit","CreditNotes", new {id= item.Id}, Context.Request.Scheme)', 'Note de crédit ')"
-                                       class="btn btn-success text-white" style="cursor:pointer"><i class="far fa-edit"></i></a>
-
-                                    <button type="submit" class="btn btn-info">
-                                        Supprimer
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="btn-group">
+                                <a onclick="showInPopup('@Url.Action("Edit","CreditNotes", new {id= item.Id}, Context.Request.Scheme)', 'Note de crédit ')"
+                                   class="btn btn-success text-white" style="cursor:pointer"><i class="far fa-edit"></i></a>
+                                <a onclick="showInPopup('@Url.Action("RemoveNote","Bills", new {noteId= item.Id}, Context.Request.Scheme)',
+                                        'Supprimer une note de crédit')"
+                                   class="btn btn-info text-white" style="cursor:pointer">
+                                    Supprimer
+                                </a>
+                            </div>
                         </td>
 
                     </tr>
@@ -272,7 +286,7 @@
 
         <br /><br />
 
-        <div class="col-md-12 form-group card-header bg-black text-light mb-3">
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
             <div class="row">
                 <div class="col-md-4 title-card">
                     <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
@@ -314,13 +328,15 @@
                         <td>@Html.DisplayFor(m => item.Reference)</td>
                         <td>@Html.DisplayFor(m => item.Description)</td>
                         <td style="width:150px">
-                            <form asp-action="RemoveReceipt" asp-route-receiptId="@item.Id" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
-                                <div class="btn-group">
-                                    <a onclick="showInPopup('@Url.Action("Edit","Receipts", new {id= item.Id}, Context.Request.Scheme)', 'Reçu')"
-                                       class="btn btn-success text-white" style="cursor:pointer"><i class="far fa-edit"></i></a>
-                                    <button type="submit" class="btn btn-info">Supprimer</button>
-                                </div>
-                            </form>
+                            <div class="btn-group">
+                                <a onclick="showInPopup('@Url.Action("Edit","Receipts", new {id= item.Id}, Context.Request.Scheme)', 'Reçu')"
+                                   class="btn btn-success text-white" style="cursor:pointer"><i class="far fa-edit"></i></a>
+                                <a onclick="showInPopup('@Url.Action("RemoveReceipt","Bills", new {receiptId= item.Id}, Context.Request.Scheme)',
+                                        'Supprimer un reçu')"
+                                   class="btn btn-info text-white" style="cursor:pointer">
+                                    Supprimer
+                                </a>
+                            </div>
 
                         </td>
                     </tr>
@@ -332,7 +348,7 @@
         <div class="col-md-4 offset-md-8 form-group mt-5 rec-bill">
             <div class="row">
                 <div class="col-md-6">
-                    <span class="text-success">Total Partiel (€):</span>
+                    <span class="text-success">Total Partiel (€) : </span>
                 </div>
                 <div class="col-md-6 text-right">
                     <span> @Math.Round(Model.Bill.BillTotalOrginal, 2)</span>
@@ -340,15 +356,15 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <span class="text-success">Remise (€):</span>
+                    <span class="text-success">Remise (€) : </span>
                 </div>
                 <div class="col-md-6 text-right">
-                    <span> @Model.Bill.Remise</span>
+                    <span> @Math.Round(Model.Bill.Remise,2)</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <span class="text-success">Tax (%):</span>
+                    <span class="text-success">Tax (%) : </span>
                 </div>
                 <div class="col-md-6 text-right">
                     <span> @Math.Round(tax, 2)</span>
@@ -356,7 +372,7 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <span class="text-success">Total (€):</span>
+                    <span class="text-success">Total (€) : </span>
                 </div>
                 <div class="col-md-6 text-right">
                     <span>@Model.Bill.BillTotal</span>
@@ -364,7 +380,7 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <span class="text-success">Note de crédit:</span>
+                    <span class="text-success">Note de crédit : </span>
                 </div>
                 <div class="col-md-6 text-right">
                     <span> @Math.Round(noteAmount, 2)</span>
@@ -372,7 +388,7 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <span class="text-success">Payé:</span>
+                    <span class="text-success">Payé : </span>
                 </div>
                 <div class="col-md-6 text-right">
                     <span> @Model.Bill.Paid</span>
@@ -380,7 +396,7 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <span class="text-success">Reste:</span>
+                    <span class="text-success">Reste : </span>
                 </div>
                 <div class="col-md-6 text-right">
                     <span> @Math.Round(Model.Bill.Rest, 2)</span>
@@ -388,25 +404,14 @@
             </div>
         </div>
 
-        <div class="offset-md-4 row">
-            <div class="col-md-12">
-                @{ var billTotalForStripe = Model.Bill.Rest * 100;}
-                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                        data-key="@Stripe.Value.PublishableKey"
-                        data-amount="@billTotalForStripe"
-                        data-name="Finaliser le réglement"
-                        data-description="Facture "+ @Model.Bill.Id
-                        data-locale="auto"
-                        data-allow-remember-me="false"
-                        data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
-                </script>
-
-                <script>
-                    document.getElementsByClassName("stripe-button-el")[0].style.display = "none";
-                </script>
-                <input type="submit" class="btn-cart" style="width: 400px" value="Finaliser le reglément"/>               
+        @if (Model.Bill.Rest > 0)
+        {
+            <div class="offset-md-4 row">
+                <div class="col-md-12">
+                    <a asp-action="Overview" class="btn-cart" asp-route-id="@Model.Bill.Id"> Finaliser le réglement</a>
+                </div>
             </div>
-        </div>
+        }
     </div>
 </form>
 

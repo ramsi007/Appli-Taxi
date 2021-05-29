@@ -63,7 +63,10 @@
                                     <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">
                                         <i class="fas fa-list-ul text-white"></i>
                                     </a>
-                                    <a class="btn btn-success" asp-action="Edit" asp-route-billId="@item.Id"><i class="far fa-edit"></i></a>
+                                    @if (!item.Status.Equals(SD.StatusPaid))
+                                    {
+                                        <a class="btn btn-success" asp-action="Edit" asp-route-billId="@item.Id"><i class="far fa-edit"></i></a>
+                                    }
                                     <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                                 </div>
                             </form>

@@ -1,0 +1,27 @@
+﻿@model Receipt
+@{
+    Layout = null;
+}
+
+<form asp-action="RemoveReceipt" onsubmit="return jQueryAjaxPost(this);">
+    @{
+        string message = "Voulez vous vraiment confirmer le suppression : ";
+    }
+
+    <div class="modal-body">
+        @message<strong>@Model.Reference</strong>
+        <input type="hidden" asp-for="@Model.Id" />
+    </div>
+
+    <div class="modal-footer">
+        <div class="row form-group">
+            <div class="col-md-6">
+                <input type="submit" value="Valider" class="btn btn-info form-control" />
+            </div>
+            <div class="col-md-6">
+                <a class="btn btn-warning form-control" asp-action="Edit" asp-route-billId="@Model.BillId">Annuler</a>
+            </div>
+        </div>
+    </div>
+</form>
+

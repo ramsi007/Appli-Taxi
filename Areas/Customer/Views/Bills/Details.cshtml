@@ -34,14 +34,26 @@
     <div class="row  about-edit-item ltr-effect">
         <div class="col-md-12 about-item-content">
             <div class="row">
-                <div class="col-md-4">
-                    <span class="d-block mb-1">
-                        Modifier la Facture&nbsp;&nbsp;
-                        <a asp-action="Edit" asp-route-billId="@Model.Bill.Id">
-                            <i class="far fa-edit icon"></i>
-                        </a>
-                    </span>
-                </div>
+                @if (Model.Bill.Status != SD.StatusPaid)
+                {
+                    <div class="col-md-4">
+                        <span class="d-block mb-1">
+                            Modifier la Facture&nbsp;&nbsp;
+                            <a asp-action="Edit" asp-route-billId="@Model.Bill.Id">
+                                <i class="far fa-edit icon"></i>
+                            </a>
+                        </span>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-4">
+                        <span class="d-block mb-1">
+                            <strong>Réference :  <span class="text-danger">@Model.Bill.NumBill</span></strong>&nbsp;&nbsp;
+                        </span>
+                    </div>
+                }
+
                 @if (Model.Bill.Status != SD.StatusPaid)
                 {
                     <div class="col-md-4 about-item-content">
@@ -62,8 +74,26 @@
 
                 <div class="col-md-4 about-item-content">
                     <span class="d-block">
-                        status de la prposition
-                    </span>&nbsp;&nbsp;<span style="color: #2e232c;">@Model.Bill.Status</span>
+                        status de la facture
+                        <br />
+                    </span>&nbsp;&nbsp;
+                    @if (Model.Bill.Status == SD.StatusNotPaid)
+                    {
+                        <span class=" badge badge-danger text-center">@Model.Bill.Status</span>
+                    }
+                    else if (Model.Bill.Status == SD.StatusPrePaid)
+                    {
+                        <span class=" badge badge-info text-center">@Model.Bill.Status</span>
+
+                    }
+                    else if (Model.Bill.Status == SD.StatusCanceled)
+                    {
+                        <span class=" badge badge-warning text-center">@Model.Bill.Status</span>
+                    }
+                    else if (Model.Bill.Status == SD.StatusPaid)
+                    {
+                        <span class=" badge badge-success text-center">@Model.Bill.Status</span>
+                    }
                 </div>
             </div>
             <div class="col-md-4">

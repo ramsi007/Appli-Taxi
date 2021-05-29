@@ -79,10 +79,10 @@ namespace Appli_taxi.Areas.Customer.Controllers
 
             if (ModelState.IsValid)
             {
-                var bill = await db.Bills.Where(m => m.Id == model.Bill.Id).FirstOrDefaultAsync();
+                var bill = await db.Bills.Where(m => m.Id == model.Receipt.BillId).FirstOrDefaultAsync();
 
                 model.Receipt.UserId = bill.UserId;
-                model.Receipt.BillId = bill.Id;
+
 
                 if(model.Receipt.Montant>bill.Rest)
                 {
@@ -96,20 +96,7 @@ namespace Appli_taxi.Areas.Customer.Controllers
                 await db.SaveChangesAsync();
 
                 // Find and Update bill
-                bill.Paid += model.Receipt.Montant;
-                bill.Rest -= model.Receipt.Montant;
-
-                if(bill.Paid == 0 && bill.Rest>0)
-                {
-                    bill.Status = SD.StatusNotPaid;
-                }else if(bill.Paid > 0 && bill.Rest > 0)                     
-                {
-                    bill.Status = SD.StatusPrePaid;
-                }
-                else if (bill.Paid > 0 && bill.Rest == 0)
-                {
-                    bill.Status = SD.StatusPaid;
-                }
+                UpdateBill(bill.Id);
 
                 db.Bills.Update(bill);
                 await db.SaveChangesAsync();
@@ -146,8 +133,13 @@ namespace Appli_taxi.Areas.Customer.Controllers
         {
             if (ModelState.IsValid)
             {
+                var bill = await db.Bills.Where(m => m.Id == model.Receipt.BillId).FirstOrDefaultAsync();
+
                 db.Receipts.Update(model.Receipt);
                 await db.SaveChangesAsync();
+
+                UpdateBill(bill.Id);
+
                 return Json(new
                 {
                     success = true,
@@ -165,6 +157,55 @@ namespace Appli_taxi.Areas.Customer.Controllers
             creditNoteBillsVM.Receipt.RecieptDate = Convert.ToDateTime(DateTime.Now.ToString("dd-MMMM-yyyy"));
 
             return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "Edit", creditNoteBillsVM) });
+        }
+
+        public void UpdateBill(int? id)
+        {
+            var bill = db.Bills.Find(id);
+            bill.BillTotalOrginal = 0; bill.Remise = 0;
+            var ListProductInBillDetails = db.BillDetails.Where(m => m.BillId == id).ToList();
+
+
+            double totalAmountPaid = 0, totalNoteAmount = 0;
+            List<double> listAmountPaid = db.Receipts.Include(m => m.Bill).Where(m => m.BillId == id)
+                                    .Select(m => m.Montant).ToList();
+
+            List<double> listCreditNotes = db.CreeditNotes.Include(m => m.Bill).Where(m => m.BillId == id)
+                        .Select(m => m.Montant).ToList();
+            foreach (var amount in listAmountPaid)
+            {
+                totalAmountPaid += amount;
+            }
+
+            foreach (var note in listCreditNotes)
+            {
+                totalNoteAmount += note;
+            }
+
+
+            foreach (var product in ListProductInBillDetails)
+            {
+                bill.BillTotalOrginal += Math.Round((product.Count * product.Price) + ((product.Count * product.Price) * product.Tax) / 100, 2);
+                bill.Remise += Convert.ToDouble(product.Remise);
+            }
+            bill.BillTotal = Math.Round((bill.BillTotalOrginal - bill.Remise), 2);
+            bill.Paid = totalAmountPaid;
+            bill.Rest = bill.BillTotal - totalNoteAmount - bill.Paid;
+
+            if (bill.Paid == 0 && bill.Rest > 0)
+            {
+                bill.Status = SD.StatusNotPaid;
+            }
+            else if (bill.Paid > 0 && bill.Rest > 0)
+            {
+                bill.Status = SD.StatusPrePaid;
+            }
+            else if (bill.Paid > 0 && bill.Rest == 0)
+            {
+                bill.Status = SD.StatusPaid;
+            }
+            db.Bills.Update(bill);
+            db.SaveChanges();
         }
     }
 }

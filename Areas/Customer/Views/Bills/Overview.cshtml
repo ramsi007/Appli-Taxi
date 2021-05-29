@@ -1,4 +1,6 @@
 ﻿@model UserBillDetailViewModel
+@using Microsoft.Extensions.Options
+@inject IOptions<Appli_Taxi.Utility.StripesSettings> Stripe
 @{
     ViewData["Title"] = "Overview";
     Layout = null;
@@ -7,233 +9,257 @@
 <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
 <link href="~/css/Style.css" rel="stylesheet" />
 
-<div class="white-Background m-5 p-5">
-    <div class="row">
-        <div class="col-md-12 grid-margin">
-            <div class="card">
-                <div class="card-body" id="pdfContainer">
-                    <div class="container-fluid d-flex justify-content-between">
-                        <div class="col-md-3 pl-0">
-                            <div class="row ml-1">
-                                @*<p class="d-inline pt-2"><b>Appl<span class="text-danger">i</span>Taxi</b></p>
+<form method="post">
+    <div class="white-Background m-5 p-5">
+        @Html.HiddenFor(m => m.Bill.Id)
+        <div class="row">
+            <div class="col-md-12 grid-margin">
+                <div class="card">
+                    <div class="card-body" id="pdfContainer">
+                        <div class="container-fluid d-flex justify-content-between">
+                            <div class="col-md-3 pl-0">
+                                <div class="row ml-1">
+                                    @*<p class="d-inline pt-2"><b>Appl<span class="text-danger">i</span>Taxi</b></p>
                                     &nbsp;&nbsp;*@
-                                <span>
-                                    <img class="pb-2" src="~/images/appliTaxi.jpg" style="width:120px; height:120px" />
-                                </span>
+                                    <span>
+                                        <img class="pb-2" src="~/images/appliTaxi.jpg" style="width:120px; height:120px" />
+                                    </span>
+                                </div>
+
+                                <p>
+                                    28 avenue de la résistance <br />
+                                    91700 Sainte-Genevièves-des-bois <br />
+                                    <b>SIRET :</b> 83138505900017 <br />
+                                    France
+                                </p>
+                            </div>
+                            <div class="col-md-3 pr-0">
+                                <p class="mt-5 mb-2"><b>Facture</b></p>
+                                <p>
+                                    @Model.Bill.NumBill<br />
+                                    @Model.Bill.DueDate.ToString("dd/MM/yyyy") &nbsp;&nbsp;@Model.Bill.IssueDate.ToString("dd/MM/yyyy")
+                                    <br />
+                                </p>
                             </div>
 
-                            <p>
-                                28 avenue de la résistance <br />
-                                91700 Sainte-Genevièves-des-bois <br />
-                                <b>SIRET :</b> 83138505900017 <br />
-                                France
-                            </p>
                         </div>
-                        <div class="col-md-3 pr-0">
-                            <p class="mt-5 mb-2"><b>Facture</b></p>
-                            <p>
-                                @Model.Bill.NumBill<br />
-                                @Model.Bill.DueDate.ToString("dd/MM/yyyy") &nbsp;&nbsp;@Model.Bill.IssueDate.ToString("dd/MM/yyyy")
-                                <br />
-                            </p>
-                        </div>
+                        <br /><br />
 
-                    </div>
-                    <br /><br />
-
-                    <div class="col-md-12 row mb-5">
-                        <div class="col-md-6 text-center">
-                            @{
-                                var fullname = Model.ApplicationUser.FirstName + " " + Model.ApplicationUser.LastName;
-                            }
-                            <p class="mt-5 mb-2"><b class="text-danger">Factué pour :</b></p>
-                            <p class="mt-5 mb-2"><b>@Model.ApplicationUser.BillingName</b></p>
-                            @Model.ApplicationUser.BillingAdresse <br />
-                            @Model.ApplicationUser.BillingPostalCode <br />
-                            @Model.ApplicationUser.BillingCity<br />
-                            @Model.ApplicationUser.BillingPhone<br />
-                            @Model.ApplicationUser.BillingCountry<br />
-                        </div>
-                        <div class="col-md-6 text-center">
-                            <p class="mt-5 mb-2"><b class="text-danger">Expédié à :</b></p>
-                            <p class="mt-5 mb-2"><b>@Model.ApplicationUser.ShippingName</b></p>
-                            @Model.ApplicationUser.ShippingAdresse <br />
-                            @Model.ApplicationUser.ShippingPostalCode <br />
-                            @Model.ApplicationUser.ShippingCity<br />
-                            @Model.ApplicationUser.ShippingPhone<br />
-                            @Model.ApplicationUser.ShippingCountry<br />
-                        </div>
-                    </div>
-
-                    <div class="col-md-12 form-group card-header bg-dark">
-                        <div class="row">
-                            <h6 class="text-light m-1 ml-3">Récapitulatif du produit</h6>
-                        </div>
-                    </div>
-
-                    <table class="table table-striped border table-hover col-md-12">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Produit</th>
-                                <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Count)</th>
-                                <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Price)</th>
-                                <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Remise)</th>
-                                <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Tax)</th>
-                                <th>
-                                    Montant <span class="text-danger"
-                                                  style="font-size:12px">Avant impôt & remise</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                double total = 0;
-                                double remise = 0;
-                                double mntpartiel = 0;
-                                double tax = 0;
-
-                                @foreach (var item in Model.BillDetailsList)
-                                {
-
-                                    var montant = item.Price * item.Count;
-                                    <tr>
-                                        <td>@Html.DisplayFor(m => item.ProduitId)</td>
-                                        <td>@Html.DisplayFor(m => item.Name)</td>
-                                        <td>@Html.DisplayFor(m => item.Count)</td>
-                                        <td>@Html.DisplayFor(m => item.Price)</td>
-                                        <td>@Html.DisplayFor(m => item.Remise)</td>
-                                        <td>@Html.DisplayFor(m => item.Tax) %</td>
-                                        <td style="width:200px">@montant</td>
-                                    </tr>
-                                    total += montant;
-                                    remise += item.Remise;
-                                    mntpartiel += (item.Price * item.Count) + ((item.Price * item.Count) * item.Tax / 100);
+                        <div class="col-md-12 row mb-5">
+                            <div class="col-md-6 text-center">
+                                @{
+                                    var fullname = Model.ApplicationUser.FirstName + " " + Model.ApplicationUser.LastName;
                                 }
-                                tax = ((mntpartiel - total) / total) * 100;
-                            }
-                        </tbody>
-                    </table>
-
-                    <br /><br />
-
-                    <div class="col-md-12 form-group card-header bg-dark">
-                        <div class="row">
-                            <h6 class="text-light m-1 ml-3">Récapitulatif des notes de crédit</h6>
+                                <p class="mt-5 mb-2"><b class="text-danger">Factué pour :</b></p>
+                                <p class="mt-5 mb-2"><b>@Model.ApplicationUser.BillingName</b></p>
+                                @Model.ApplicationUser.BillingAdresse <br />
+                                @Model.ApplicationUser.BillingPostalCode <br />
+                                @Model.ApplicationUser.BillingCity<br />
+                                @Model.ApplicationUser.BillingPhone<br />
+                                @Model.ApplicationUser.BillingCountry<br />
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <p class="mt-5 mb-2"><b class="text-danger">Expédié à :</b></p>
+                                <p class="mt-5 mb-2"><b>@Model.ApplicationUser.ShippingName</b></p>
+                                @Model.ApplicationUser.ShippingAdresse <br />
+                                @Model.ApplicationUser.ShippingPostalCode <br />
+                                @Model.ApplicationUser.ShippingCity<br />
+                                @Model.ApplicationUser.ShippingPhone<br />
+                                @Model.ApplicationUser.ShippingCountry<br />
+                            </div>
                         </div>
-                    </div>
 
-                    <table class="table table-striped border table-hover col-md-12" id="example1">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>@Html.DisplayNameFor(m => m.CreditNoteList[0].Montant)</th>
-                                <th>@Html.DisplayNameFor(m => m.CreditNoteList[0].Description)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{ double noteAmount = 0;}
-                            @foreach (var item in Model.CreditNoteList)
-                            {
-                                var date = item.NoteDate.ToShortDateString();
+                        <div class="col-md-12 form-group card-header bg-dark">
+                            <div class="row">
+                                <h6 class="text-light m-1 ml-3">Récapitulatif du produit</h6>
+                            </div>
+                        </div>
+
+                        <table class="table table-striped border table-hover col-md-12">
+                            <thead>
                                 <tr>
-                                    <td>@Html.DisplayFor(m => date)</td>
-                                    <td>@Html.DisplayFor(m => item.Montant)</td>
-                                    <td>@Html.DisplayFor(m => item.Description)</td>
+                                    <th>#</th>
+                                    <th>Produit</th>
+                                    <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Count)</th>
+                                    <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Price)</th>
+                                    <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Remise)</th>
+                                    <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Tax)</th>
+                                    <th>
+                                        Montant <span class="text-danger"
+                                                      style="font-size:12px">Avant impôt & remise</span>
+                                    </th>
                                 </tr>
-                                noteAmount += item.Montant;
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @{
+                                    double total = 0;
+                                    double remise = 0;
+                                    double mntpartiel = 0;
+                                    double tax = 0;
 
-                    <div class="col-md-12 form-group mt-5">
-                        <div class="col-md-3 offset-md-9">
+                                    @foreach (var item in Model.BillDetailsList)
+                                    {
+
+                                        var montant = item.Price * item.Count;
+                                        <tr>
+                                            <td>@Html.DisplayFor(m => item.ProduitId)</td>
+                                            <td>@Html.DisplayFor(m => item.Name)</td>
+                                            <td>@Html.DisplayFor(m => item.Count)</td>
+                                            <td>@Html.DisplayFor(m => item.Price)</td>
+                                            <td>@Html.DisplayFor(m => item.Remise)</td>
+                                            <td>@Html.DisplayFor(m => item.Tax) %</td>
+                                            <td style="width:200px">@montant</td>
+                                        </tr>
+                                        total += montant;
+                                        remise += item.Remise;
+                                        mntpartiel += (item.Price * item.Count) + ((item.Price * item.Count) * item.Tax / 100);
+                                    }
+                                    tax = ((mntpartiel - total) / total) * 100;
+                                }
+                            </tbody>
+                        </table>
+
+                        <br /><br />
+
+                        <div class="col-md-12 form-group card-header bg-dark">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-success">Total Partiel (€):</span>
+                                <h6 class="text-light m-1 ml-3">Récapitulatif des notes de crédit</h6>
+                            </div>
+                        </div>
+
+                        <table class="table table-striped border table-hover col-md-12" id="example1">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>@Html.DisplayNameFor(m => m.CreditNoteList[0].Montant)</th>
+                                    <th>@Html.DisplayNameFor(m => m.CreditNoteList[0].Description)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ double noteAmount = 0;}
+                                @foreach (var item in Model.CreditNoteList)
+                                {
+                                    var date = item.NoteDate.ToShortDateString();
+                                    <tr>
+                                        <td>@Html.DisplayFor(m => date)</td>
+                                        <td>@Html.DisplayFor(m => item.Montant)</td>
+                                        <td>@Html.DisplayFor(m => item.Description)</td>
+                                    </tr>
+                                    noteAmount += item.Montant;
+                                }
+                            </tbody>
+                        </table>
+
+                        <div class="col-md-12 form-group mt-5">
+                            <div class="col-md-3 offset-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="text-success">Total Partiel (€):</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span>@Model.Bill.BillTotalOrginal</span>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <span>@Model.Bill.BillTotalOrginal</span>
+                            </div>
+                            <div class="col-md-3 offset-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="text-success">Remise (€):</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span> @Model.Bill.Remise</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 offset-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="text-success">Tax (%):</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span> @Math.Round(tax, 2)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 offset-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="text-success">Total (€):</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span>@Model.Bill.BillTotal</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 offset-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="text-success">Note de crédit:</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span> @Math.Round(noteAmount, 2)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 offset-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="text-success">Payé:</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span> @Model.Bill.Paid</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 offset-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="text-success">Reste:</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span> @Model.Bill.Rest</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 offset-md-9">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-success">Remise (€):</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span> @Model.Bill.Remise</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 offset-md-9">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-success">Tax (%):</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span> @Math.Round(tax, 2)</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 offset-md-9">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-success">Total (€):</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span>@Model.Bill.BillTotal</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 offset-md-9">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-success">Note de crédit:</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span> @Math.Round(noteAmount,2)</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 offset-md-9">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-success">Payé:</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span> @Model.Bill.Paid</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 offset-md-9">
-                            @{ var reste = Model.Bill.BillTotal - Model.Bill.Paid -noteAmount;}
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-success">Reste:</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span> @reste</span>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
-
                 </div>
             </div>
         </div>
-    </div>
-    @if (User.IsInRole(SD.ManagerUser))
-    {
-        <div class="col-md-4">
-            <a asp-action="Index" class="btn-cart" style="margin:10px 0;">Retour à la liste des propositions</a>
+        <div class="row">
+            @if (User.IsInRole(SD.ManagerUser))
+            {
+                <div class="col-md-4">
+                    <a asp-action="Index" class="btn-cart" style="margin:20px 0;">Retour à la liste des propositions</a>
+                </div>
+            }
+            @if (Model.Bill.Rest > 0)
+            {
+                <div class="col-md-4">
+                    @{ var billTotalForStripe = Model.Bill.Rest * 100;}
+                    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                            data-key="@Stripe.Value.PublishableKey"
+                            data-amount="@billTotalForStripe"
+                            data-name="Réglement facture"
+                            data-description="Appli-Taxi "
+                            data-locale="auto"
+                            data-allow-remember-me="false"
+                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
+                    </script>
+
+                    <script>
+                        document.getElementsByClassName("stripe-button-el")[0].style.display = "none";
+                    </script>
+                    <button asp-action="Edit" type="submit" class="btn-cart">Finaliser le reglément</button>
+                </div>
+            }
         </div>
+
+    </div>
+</form>
+    @section Scripts{
+
     }
-</div>
-
-@section Scripts{
-
-}
 
 

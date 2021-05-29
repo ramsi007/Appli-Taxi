@@ -28,12 +28,10 @@ namespace Appli_Taxi.Areas.UserServices.Controllers
             this._emailSender = emailSender;
         }
 
-
         ExpenseReport expense = new ExpenseReport();
 
         public async Task<IActionResult> Index()
         {
-      
             IList<ExpenseReport> listExpenses;
             if (User.IsInRole(SD.ManagerUser))
             {
@@ -101,7 +99,7 @@ namespace Appli_Taxi.Areas.UserServices.Controllers
 
                 var user = await db.ApplicationUsers.Where(m => m.Id == userId).FirstOrDefaultAsync();
 
-                await _emailSender.SendEmailAsync("professionel263@gmail.com", "Confirmer une note de frais",
+                await _emailSender.SendEmailAsync("Marc.grosy@pyrgus.fr", "Confirmer une note de frais",
                                     "Bonjour : <br/>" +
                                     "Vous avez une nouvelle demande de congé de la part du salarié : " + user.FirstName + " " + user.LastName + "<br/>" +
                                     "Cliquer sur le lien si dessous pour voir les détails de la demande <br/>" +

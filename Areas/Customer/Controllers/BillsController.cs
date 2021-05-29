@@ -253,8 +253,10 @@ namespace Appli_taxi.Areas.Customer.Controllers
         public async Task<IActionResult> Edit(int billId)
         {
             Bill bill = await db.Bills.FindAsync(billId);
-
-            UpdateBill(billId);
+            if(bill != null)
+            {
+                UpdateBill(billId);
+            }
             UserBillDetailViewModel UserBillDetailVM = new UserBillDetailViewModel()
             {
                 Bill = bill,
@@ -264,6 +266,7 @@ namespace Appli_taxi.Areas.Customer.Controllers
                 ReceiptList = await db.Receipts.Include(m => m.Bill).Where(m => m.BillId == bill.Id).ToListAsync()
             };
 
+            
             return View(UserBillDetailVM);
         }
 
@@ -273,44 +276,82 @@ namespace Appli_taxi.Areas.Customer.Controllers
         ///
 
         //Plus
-        public async Task<IActionResult> Plus(int id, UserBillDetailViewModel model)
+        public async Task<IActionResult> Plus(int id, int productId, int cartId, UserBillDetailViewModel model)
         {
-            var billDetail = await db.BillDetails.Where(m => m.ProduitId == id
-                                && m.BillId == model.Bill.Id).FirstOrDefaultAsync();
+            if(id >0)
+            {
+                var billDetail = await db.BillDetails.Where(m => m.ProduitId == id
+                                    && m.BillId == model.Bill.Id).FirstOrDefaultAsync();
             
-            billDetail.Count++;
-            UpdateBill(model.Bill.Id);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Edit", new { billId = billDetail.BillId });
+                billDetail.Count++;
+                UpdateBill(model.Bill.Id);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Edit", new { billId = billDetail.BillId });
+            }
+            else
+            {
+                var shoopingCart = await db.ShooppingCarts.Where(m => m.ProduitId == productId
+                                    && m.Id == cartId).FirstOrDefaultAsync();
+
+                shoopingCart.Count++;
+                shoopingCart.Montant = Math.Round(((shoopingCart.Count * shoopingCart.Price) 
+                                        + ((shoopingCart.Count * shoopingCart.Price)*shoopingCart.Tax/100)),2);
+                await db.SaveChangesAsync();
+                return RedirectToAction("ShoopingCart");
+            }
         }
 
         //Moins
-        public async Task<IActionResult> Minus(int id, UserBillDetailViewModel model)
+        public async Task<IActionResult> Minus(int id, int productId, int cartId, UserBillDetailViewModel model)
         {
-            var billDetail = await db.BillDetails.Where(m => m.ProduitId == id
-                                && m.BillId == model.Bill.Id).FirstOrDefaultAsync();
-            if (billDetail != null)
+            if (id > 0)
             {
-                if (billDetail.Count > 1)
-                {
-                    billDetail.Count--;
-                    UpdateBill(model.Bill.Id);
-                    await db.SaveChangesAsync();
-                }
-            }
+                var billDetail = await db.BillDetails.Where(m => m.ProduitId == id
+                                    && m.BillId == model.Bill.Id).FirstOrDefaultAsync();
 
-            return RedirectToAction("Edit", new { billId = billDetail.BillId });
+                if (billDetail != null)
+                {
+                    if (billDetail.Count > 1)
+                    {
+                        billDetail.Count--;
+                        UpdateBill(model.Bill.Id);
+                        await db.SaveChangesAsync();
+                    }
+                }
+                return RedirectToAction("Edit", new { billId = billDetail.BillId });
+            }
+            else
+            {
+                var shoopingCart = await db.ShooppingCarts.Where(m => m.ProduitId == productId
+                                    && m.Id == cartId).FirstOrDefaultAsync();
+
+                shoopingCart.Count--;
+                shoopingCart.Montant = Math.Round(((shoopingCart.Count * shoopingCart.Price)
+                                        + ((shoopingCart.Count * shoopingCart.Price) * shoopingCart.Tax / 100)), 2);
+                await db.SaveChangesAsync();
+                return RedirectToAction("ShoopingCart");
+            }
         }
 
         //Remove product
-        public async Task<IActionResult> Remove(int id, UserBillDetailViewModel model)
+        public async Task<IActionResult> Remove(int id, int productId, int cartId,UserBillDetailViewModel model)
         {
-            var billDetail = await db.BillDetails.FindAsync(id);
-            db.BillDetails.Remove(billDetail);
-            await db.SaveChangesAsync();
+            if(id>0)
+            {
+                var billDetail = await db.BillDetails.FindAsync(id);
+                db.BillDetails.Remove(billDetail);
+                await db.SaveChangesAsync();
 
-            return RedirectToAction("Edit", new { billId = billDetail.BillId });
+                return RedirectToAction("Edit", new { billId = billDetail.BillId });
+            }
+            else
+            {
+                var shoopingCart = await db.ShooppingCarts.FindAsync(cartId);
+                db.ShooppingCarts.Remove(shoopingCart);
+                await db.SaveChangesAsync();
 
+                return RedirectToAction("ShoopingCart");
+            }
         }
 
         //////////
@@ -320,6 +361,8 @@ namespace Appli_taxi.Areas.Customer.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var bill = await db.Bills.FindAsync(id);
+            UpdateBill(id);
+
             UserBillDetailViewModel UserBillDetailVM = new UserBillDetailViewModel()
             {
                 Bill = bill,
@@ -330,6 +373,7 @@ namespace Appli_taxi.Areas.Customer.Controllers
             };
 
             return View(UserBillDetailVM);
+
         }
 
 
@@ -362,39 +406,19 @@ namespace Appli_taxi.Areas.Customer.Controllers
         }
 
         /// <summary>
-        /// Delete Note de crédit
-        /// </summary>
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveNote(int noteId)
-        {
-            CreeditNote model = await db.CreeditNotes.FindAsync(noteId);
-            Bill bill = await db.Bills.Where(m => m.Id == model.BillId).FirstOrDefaultAsync();
-            UserBillDetailViewModel UserBillDetailVM = new UserBillDetailViewModel()
-            {
-                Bill = bill,
-                ApplicationUser = await db.ApplicationUsers.Where(m => m.Id == bill.UserId).FirstOrDefaultAsync(),
-                BillDetailsList = await db.BillDetails.Include(m => m.Bill).Where(m => m.BillId == bill.Id).ToListAsync(),
-                CreditNoteList = await db.CreeditNotes.Include(m => m.Bill).Where(m => m.BillId == bill.Id).ToListAsync(),
-                ReceiptList = await db.Receipts.Include(m => m.Bill).Where(m => m.BillId == bill.Id).ToListAsync()
-            };
-            if (model == null)
-            {
-                return Json(new { success = false, message = "Erreur lors de la suppression !", html = Helper.RenderRazorViewToString(this, "Edit", UserBillDetailVM) });
-            }
-            db.CreeditNotes.Remove(model);
-            await db.SaveChangesAsync();
-            return Json(new { success = true, message = "Note de crédit supprimé !", html = Helper.RenderRazorViewToString(this, "Edit", UserBillDetailVM) });
-        }
-
-        /// <summary>
         /// <returns></returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        /// 
         public async Task<IActionResult> RemoveReceipt(int receiptId)
         {
-            Receipt model = await db.Receipts.FindAsync(receiptId);
+            var model = await db.Receipts.FindAsync(receiptId);
+            return View(model);    
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveReceipt(Receipt receipt)
+        {
+            Receipt model = await db.Receipts.FindAsync(receipt.Id);
             Bill bill = await db.Bills.Where(m => m.Id == model.BillId).FirstOrDefaultAsync();
             UserBillDetailViewModel UserBillDetailVM = new UserBillDetailViewModel()
             {
@@ -409,8 +433,56 @@ namespace Appli_taxi.Areas.Customer.Controllers
                 return Json(new { success = false, message = "Erreur lors de la suppression !", html = Helper.RenderRazorViewToString(this, "Edit", UserBillDetailVM) });
             }
             db.Receipts.Remove(model);
+            bill.Status = SD.StatusPrePaid;
+            db.Bills.Update(bill);
             await db.SaveChangesAsync();
-            return Json(new { success = true, message = "reçu supprimé !", html = Helper.RenderRazorViewToString(this, "Edit", UserBillDetailVM) });
+
+            return Json(new 
+            { 
+                success = true, 
+                message = "reçu supprimé !",
+                isValid = true,
+                html = Helper.RenderRazorViewToString(this, "Details", UserBillDetailVM) });
+        }
+
+
+        public async Task<IActionResult> RemoveNote(int noteId)
+        {
+            var model = await db.CreeditNotes.FindAsync(noteId);
+            return View(model);
+           
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveNote(CreeditNote note)
+        {
+            CreeditNote model = await db.CreeditNotes.FindAsync(note.Id);
+            Bill bill = await db.Bills.Where(m => m.Id == model.BillId).FirstOrDefaultAsync();
+            UserBillDetailViewModel UserBillDetailVM = new UserBillDetailViewModel()
+            {
+                Bill = bill,
+                ApplicationUser = await db.ApplicationUsers.Where(m => m.Id == bill.UserId).FirstOrDefaultAsync(),
+                BillDetailsList = await db.BillDetails.Include(m => m.Bill).Where(m => m.BillId == bill.Id).ToListAsync(),
+                CreditNoteList = await db.CreeditNotes.Include(m => m.Bill).Where(m => m.BillId == bill.Id).ToListAsync(),
+                ReceiptList = await db.Receipts.Include(m => m.Bill).Where(m => m.BillId == bill.Id).ToListAsync()
+            };
+            if (model == null)
+            {
+                return Json(new { success = false, message = "Erreur lors de la suppression !", html = Helper.RenderRazorViewToString(this, "Edit", UserBillDetailVM) });
+            }
+            db.CreeditNotes.Remove(model);
+            bill.Status = SD.StatusPrePaid;
+            db.Bills.Update(bill);
+            await db.SaveChangesAsync();
+
+            return Json(new
+            {
+                success = true,
+                message = "note de crédit supprimé !",
+                isValid = true,
+                html = Helper.RenderRazorViewToString(this, "Details", UserBillDetailVM)
+            });
         }
         // Send Email
         public async Task<IActionResult> SendBill(int? id)
@@ -498,13 +570,12 @@ namespace Appli_taxi.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ActionName("Edit")]
-        public async Task<IActionResult> EditPost(UserBillDetailViewModel model, string stripeToken)
+        public async Task<IActionResult> Overview(UserBillDetailViewModel model, string stripeToken)
         {
             var bill = await db.Bills.FindAsync(model.Bill.Id);
             var options = new Stripe.ChargeCreateOptions
             {
-                Amount = Convert.ToInt32(model.Bill.Rest * 100),
+                Amount = Convert.ToInt32(bill.Rest * 100),
                 Currency = "usd",
                 Description = "Order ID : " + model.Bill.Id,
                 Source = stripeToken
@@ -525,6 +596,8 @@ namespace Appli_taxi.Areas.Customer.Controllers
             if (charge.Status.ToLower() == "succeeded")
             {
                 bill.Status = SD.StatusPaid;
+                bill.Paid = bill.Paid + bill.Rest;
+                bill.Rest = 0;
             }
             else
             {
@@ -533,6 +606,7 @@ namespace Appli_taxi.Areas.Customer.Controllers
 
             db.Bills.Update(bill);
             await db.SaveChangesAsync();
+
 
             return RedirectToAction("Details", new {id = model.Bill.Id });
             //return RedirectToAction("Confirm", "Orders", new { id = OrderDetailsVM.OrderHeader.Id });
@@ -553,39 +627,57 @@ namespace Appli_taxi.Areas.Customer.Controllers
 
         public void UpdateBill(int? id)
         {
+            
             var bill = db.Bills.Find(id);
-            bill.BillTotalOrginal = 0; bill.Remise = 0;
-            var ListProductInBillDetails =  db.BillDetails.Where(m => m.BillId == id).ToList();
-
-
-            double totalAmountPaid = 0, totalNoteAmount = 0;
-            List<double> listAmountPaid =  db.Receipts.Include(m => m.Bill).Where(m => m.BillId == id)
-                                    .Select(m => m.Montant).ToList();
-
-            List<double> listCreditNotes =  db.CreeditNotes.Include(m => m.Bill).Where(m => m.BillId == id)
-                        .Select(m => m.Montant).ToList();
-            foreach (var amount in listAmountPaid)
+            if (bill.Status != SD.StatusPaid)
             {
-                totalAmountPaid += amount;
+                bill.BillTotalOrginal = 0; bill.Remise = 0;
+                var ListProductInBillDetails =  db.BillDetails.Where(m => m.BillId == id).ToList();
+
+
+                double totalAmountPaid = 0, totalNoteAmount = 0;
+                List<double> listAmountPaid =  db.Receipts.Include(m => m.Bill).Where(m => m.BillId == id)
+                                        .Select(m => m.Montant).ToList();
+
+                List<double> listCreditNotes =  db.CreeditNotes.Include(m => m.Bill).Where(m => m.BillId == id)
+                            .Select(m => m.Montant).ToList();
+                foreach (var amount in listAmountPaid)
+                {
+                    totalAmountPaid += amount;
+                }
+
+                foreach (var note in listCreditNotes)
+                {
+                    totalNoteAmount += note;
+                }
+
+
+                foreach (var product in ListProductInBillDetails)
+                {
+                    bill.BillTotalOrginal += Math.Round((product.Count * product.Price) + ((product.Count * product.Price)*product.Tax)/100,2);
+                    bill.Remise += Convert.ToDouble(product.Remise);
+                }
+                bill.BillTotal = Math.Round((bill.BillTotalOrginal - bill.Remise),2);
+                bill.Paid = totalAmountPaid;
+                bill.Rest = bill.BillTotal - totalNoteAmount - bill.Paid;
+
+                if (bill.Paid == 0 && bill.Rest > 0)
+                {
+                    bill.Status = SD.StatusNotPaid;
+                }
+                else if (bill.Paid > 0 && bill.Rest > 0)
+                {
+                    bill.Status = SD.StatusPrePaid;
+                }
+                else if (bill.Paid > 0 && bill.Rest == 0)
+                {
+                    bill.Status = SD.StatusPaid;
+                }
+
+                db.Bills.Update(bill);
+                db.SaveChanges();
             }
 
-            foreach (var note in listCreditNotes)
-            {
-                totalNoteAmount += note;
-            }
-
-
-            foreach (var product in ListProductInBillDetails)
-            {
-                bill.BillTotalOrginal += Math.Round((product.Count * product.Price) + ((product.Count * product.Price)*product.Tax)/100,2);
-                bill.Remise += Convert.ToDouble(product.Remise);
-            }
-            bill.BillTotal = Math.Round((bill.BillTotalOrginal - bill.Remise),2);
-            bill.Paid = totalAmountPaid;
-            bill.Rest = bill.BillTotal - totalNoteAmount - bill.Paid;
-
-            db.Bills.Update(bill);
-            db.SaveChanges();
         }
 
     }

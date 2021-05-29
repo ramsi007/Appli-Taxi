@@ -29,10 +29,6 @@
 
                         <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
                             <div class="btn-group">
-                                <a onclick="showInPopup('@Url.Action("Details","CreditNotes", new {id= item.Id}, Context.Request.Scheme)',
-                            'Note de crédit')"
-                                   class="btn btn-info text-white" style="cursor:pointer"><i class="fas fa-list-ul"></i></a>
-
                                 <a onclick="showInPopup('@Url.Action("Edit","CreditNotes", new {id= item.Id}, Context.Request.Scheme)', 'Note de crédit ')"
                                    class="btn btn-success text-white" style="cursor:pointer"><i class="far fa-edit"></i></a>
 

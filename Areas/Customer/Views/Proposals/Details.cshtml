@@ -69,33 +69,33 @@
             </div>
         }
 
-    <div class="col-md-4 about-item-content">
-        <span class="d-block">
-            status de la prposition
-            <br />
-        </span>&nbsp;&nbsp;
-        @if (Model.Proposal.Status == SD.StatusInProcess)
-        {
-            <span class=" badge badge-info text-center">@Model.Proposal.Status</span>
-        }
-        else if (Model.Proposal.Status == SD.StatusAccepted)
-        {
-            <span class=" badge badge-success text-center">@Model.Proposal.Status</span>
+        <div class="col-md-4 about-item-content">
+            <span class="d-block">
+                status de la prposition
+                <br />
+            </span>&nbsp;&nbsp;
+            @if (Model.Proposal.Status == SD.StatusInProcess)
+            {
+                <span class=" badge badge-info text-center">@Model.Proposal.Status</span>
+            }
+            else if (Model.Proposal.Status == SD.StatusAccepted)
+            {
+                <span class=" badge badge-success text-center">@Model.Proposal.Status</span>
 
-        }
-        else if (Model.Proposal.Status == SD.StatusCanceled)
-        {
-            <span class=" badge badge-danger text-center">@Model.Proposal.Status</span>
-        }
-        else if (Model.Proposal.Status == SD.StatusCompleted)
-        {
-            <span class=" badge badge-primary text-center">@Model.Proposal.Status</span>
-        }
-        else if (Model.Proposal.Status == SD.StatusSend)
-        {
-            <span class=" badge badge-secondary text-center">@Model.Proposal.Status</span>
-        }
-    </div>
+            }
+            else if (Model.Proposal.Status == SD.StatusCanceled)
+            {
+                <span class=" badge badge-danger text-center">@Model.Proposal.Status</span>
+            }
+            else if (Model.Proposal.Status == SD.StatusCompleted)
+            {
+                <span class=" badge badge-primary text-center">@Model.Proposal.Status</span>
+            }
+            else if (Model.Proposal.Status == SD.StatusSend)
+            {
+                <span class=" badge badge-secondary text-center">@Model.Proposal.Status</span>
+            }
+        </div>
     </div>
 
     <hr />
