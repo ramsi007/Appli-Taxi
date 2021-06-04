@@ -23,13 +23,16 @@ jQueryAjaxPost = form => {
                     $('#view-all').html(res.html)
                     $('#form-modal .modal-body').html('');
                     $('#form-modal .modal-title').html('');
-                    $('#form-modal').modal('hide');
+                    $('#form-modal').modal('hide');   
                     toastr.success(res.message);
+
+                    setTimeout(location.reload.bind(location), 2000);
                 }
                 else
                     $('#form-modal .modal-body').html(res.html);
 
             },
+            
             error: function (err) {
                 console.log(err),
                     toastr.error(res.message);
@@ -71,7 +74,6 @@ jQueryAjaxDelete = form => {
                         'Votre fichier a été supprimé!',
                         'success'
                     )
-
                 },
                 error: function (res) {
                     toastr.error(res.message);
@@ -83,7 +85,6 @@ jQueryAjaxDelete = form => {
     //prevent default form submit event
     return false;
 }
-
 
 
 jQueryAjaxConvert = form => {

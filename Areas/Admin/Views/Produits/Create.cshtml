@@ -1,7 +1,7 @@
 ﻿@model ProduitViewModel
 @{
     ViewData["Title"] = "Create";
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <br />
@@ -44,13 +44,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label asp-for="Produit.SalePrice" class="col-form-label text-dark h5"></label>
-                        <input  asp-for="Produit.SalePrice" class="form-control txtPrice" />
-                        <span asp-validation-for="Produit.SalePrice" class="text-danger"></span>
+                        <input  asp-for="Produit.SalePrice" class="form-control txtConvert" />
+                        @*<span asp-validation-for="Produit.SalePrice" class="text-danger"></span>*@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Produit.PurchasePrice" class="col-form-label text-dark h5"></label>
-                        <input asp-for="Produit.PurchasePrice" class="form-control txtPrice" />
-                        <span asp-validation-for="Produit.PurchasePrice" class="text-danger"></span>
+                        <input asp-for="Produit.PurchasePrice" class="form-control txtConvert" />
+                        @*<span asp-validation-for="Produit.PurchasePrice" class="text-danger"></span>*@
                     </div>
                 </div>
 

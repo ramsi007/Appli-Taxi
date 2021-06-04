@@ -1,7 +1,7 @@
 ﻿@model Tax
 @{
     ViewData["Title"] = "Create";
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <form asp-action="Create" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
@@ -23,8 +23,8 @@
                 <label asp-for="Discount" class="h6 text-dark"></label>
             </div>
             <div class="col-md-10">
-                <input asp-for="Discount" class="form-control txtTax" />
-                <span asp-validation-for="Discount"></span>
+                <input asp-for="Discount" class="form-control txtConvert" />
+                @*<span asp-validation-for="Discount"></span>*@
             </div>
         </div>
 
@@ -40,14 +40,6 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        $(document).ready(function () {
-            $('.txtTax').keyup(function () {
-                var content = $(this).val();
-                $(this).val(content.replace(/[\.]+/g, ','));
-            });
-        });
-    </script>
 }
 
 

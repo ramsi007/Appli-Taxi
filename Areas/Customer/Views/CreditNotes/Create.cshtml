@@ -1,9 +1,9 @@
 ﻿@model CreditNoteBillsViewModel
 @{
     ViewData["Title"] = "Create";
-    Layout = null;
-}
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
+}
 
 <br />
 <div class="form-group">
@@ -12,7 +12,7 @@
 
 <br />
 <form asp-action="Create" onsubmit="return jQueryAjaxPost(this);">
-   
+
     <div class="white-Background border m-5 p-5">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -47,12 +47,12 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label asp-for="CreditNote.Montant" class="col-form-label text-dark h5"></label>
-                        <input id="saleprice" asp-for="CreditNote.Montant" class="form-control" />
-                        <span asp-validation-for="CreditNote.Montant" class="text-danger"></span>
+                        <input type="text" asp-for="CreditNote.Montant" class="form-control txtConvert" />
+                        @*<span asp-validation-for="CreditNote.Montant" class="text-danger"></span>*@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="CreditNote.NoteDate" class="col-form-label text-dark h5"></label>
-                        <input id="purshaseprice" asp-for="CreditNote.NoteDate" class="form-control" />
+                        <input asp-for="CreditNote.NoteDate" class="form-control" />
                         <span asp-validation-for="CreditNote.NoteDate" class="text-danger"></span>
                     </div>
                 </div>
@@ -100,9 +100,5 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
-
-    <script>
-
-    </script>
 }
 

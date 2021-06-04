@@ -32,6 +32,7 @@ namespace Appli_Taxi.Models
         [Range(1, int.MaxValue, ErrorMessage = "La valeur doit être supérieur ou égal à 1")]
         public int Count { get; set; }
 
+        [RegularExpression(@"[0-9]+\.?[0-9,]*", ErrorMessage = "Invalid Price.")]
         public string Remise { get; set; }
 
         [Display(Name = "Description")]
@@ -41,11 +42,9 @@ namespace Appli_Taxi.Models
         public string NumBill { get; set; }
 
         [Display(Name = "Prix")]
-        //[RegularExpression(@"\d{1,20}(\.\d{1,4})?", ErrorMessage = "Invalid Price. Please use the format of XXXX.XX.")]
         public double Price { get; set; }
 
         [Display(Name = "Taxe")]
-        //[RegularExpression(@"\d{1,20}(\.\d{1,4})?", ErrorMessage = "Invalid Price. Please use the format of XXXX.XX.")]
         public double Tax { get; set; }
 
         [Display(Name = "Montant")]

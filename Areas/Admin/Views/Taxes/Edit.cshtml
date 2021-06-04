@@ -1,7 +1,7 @@
 ﻿@model Tax
 @{
     ViewData["Title"] = "Edit";
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h4 class="text-center text-success">Modifier une tax d'imposition</h4>
@@ -26,8 +26,8 @@
                 <label asp-for="Discount" class="h6 text-dark"></label>
             </div>
             <div class="col-md-10">
-                <input asp-for="Discount" class="form-control" />
-                <span asp-validation-for="Discount"></span>
+                <input asp-for="Discount" class="form-control txtConvert" />
+                @*<span asp-validation-for="Discount"></span>*@
             </div>
         </div>
 
