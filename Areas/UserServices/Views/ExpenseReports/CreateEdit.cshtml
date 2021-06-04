@@ -1,0 +1,93 @@
+﻿@model ExpenseUserViewModel
+@{
+    ViewData["Title"] = "Créer et Modifier";
+    Layout = null;
+}
+
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Créer une note de frais</h4>
+</div>
+
+<br />
+<form asp-action="CreateEdit" onsubmit="return jQueryAjaxPost(this);">
+
+    <input type="hidden" asp-for="ExpenseReport.Id" />
+    <input type="hidden" asp-for="ExpenseReport.Status" />
+
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-12 form-group">
+                <label asp-for="ExpenseReport.Date" class="col-form-label text-dark h5"></label>
+                <input type="date" asp-for="ExpenseReport.Date" class="form-control" readonly />
+                <span asp-validation-for="ExpenseReport.Date" class="text-danger"></span>
+            </div>
+        </div>
+
+        @if (User.IsInRole(SD.ManagerUser))
+        {
+            <div class="row">
+                <div class="col-12 form-group">
+                    <label asp-for="ListUsers" class="col-form-label text-dark h5"></label>
+                    <select class="form-control" asp-for="ExpenseReport.UserId"
+                            asp-items="@(new SelectList(Model.ListUsers, "Id", "FirstName"))">
+                    </select>
+                    <span asp-validation-for="ExpenseReport.UserId" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <input type="hidden" asp-for="ExpenseReport.UserId" />
+        }
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="ExpenseReport.Montant" class="col-form-label text-dark h5"></label>
+                        <input asp-for="ExpenseReport.Montant" class="form-control" />
+                        <span asp-validation-for="ExpenseReport.Montant" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="ExpenseReport.Comment" class="col-form-label text-dark h5"></label>
+                        <textarea asp-for="ExpenseReport.Comment" class="form-control"></textarea>
+                        <span asp-validation-for="ExpenseReport.Comment" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <input type="submit" value="Envoyez la demande" class="btn btn-primary form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+}
+
+
+

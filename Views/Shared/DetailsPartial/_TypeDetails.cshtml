@@ -1,0 +1,38 @@
+﻿@model TypeCat
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Détails du type </h4>
+</div>
+
+<br />
+<br />
+
+<div class="white-Background">
+    @Html.HiddenFor(m => m.Id)
+    <div class="row form-group">
+        <div class="col-2">
+            <label asp-for="Name" class="col-form-label"></label>
+        </div>
+        <div class="col-10">
+            <input asp-for="Name" class="form-control" readonly />
+        </div>
+    </div>
+    <br />
+
+    <div class="row form-group">
+        <div class="col-md-6 mb-2">
+            <a onclick="showInPopup('@Url.Action("Edit","TypeCats", new {id= Model.Id}, Context.Request.Scheme)', 'Modifier')"
+               class="btn btn-primary text-white form-control" style="cursor:pointer">Modifier</a>
+        </div>
+        <div class="col-md-6">
+            <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

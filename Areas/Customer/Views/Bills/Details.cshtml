@@ -1,0 +1,362 @@
+﻿@model UserBillDetailViewModel
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<div class="white-Background border m-3 p-2">
+    @Html.HiddenFor(m => m.ApplicationUser.Id)
+    @Html.HiddenFor(m => m.Bill.Id)
+    <div class="col-md-12 form-group card-header bg-dark text-light mb-3 ">
+        <div class="row">
+            <div class="col-md-4 title-card">
+                <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
+                <span>
+                    Détail de la facture
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-2 offset-md-10">
+            <div class="row mb-2 mr-2">
+                <div class="col-md-6 text-right">
+                    <a asp-action="Overview" asp-route-id="@Model.Bill.Id"
+                       class="btn btn-sm btn-outline-primary">Aperçu</a>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-sm btn-outline-secondary" id="btnPdf">PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row  about-edit-item ltr-effect">
+        <div class="col-md-12 about-item-content">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="d-block mb-1">
+                        Modifier la Facture&nbsp;&nbsp;
+                        <a asp-action="Edit" asp-route-id="@Model.Bill.Id">
+                            <i class="far fa-edit icon"></i>
+                        </a>
+                    </span>
+                </div>
+                @if (Model.Bill.Status == SD.StatusNotPaid)
+                {
+                    <div class="col-md-4 about-item-content">
+                        <a asp-action="SendProposal"
+                           asp-route-id="@Model.Bill.Id" class="nav-link">
+                            <span>
+                                Envoyer la proposition
+                            </span>&nbsp;&nbsp;<i class="far fa-paper-plane icon"></i>
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-4 about-item-content">
+
+                    </div>
+                }
+
+                <div class="col-md-4 about-item-content">
+                    <span class="d-block">
+                        status de la prposition
+                    </span>&nbsp;&nbsp;<span style="color: #2e232c;">@Model.Bill.Status</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-center">
+                            <i class="far fa-clock icon">&nbsp;&nbsp;</i>
+                            <span style="color: #2e232c">
+                                Date d'émission :
+                                @Model.Bill.DueDate.ToString("dd MMMM, yyyy")
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="text-center">
+                            <span style="color: #2e232c">
+                                Date d'échéance :
+                                @Model.Bill.IssueDate.ToString("dd MMMM, yyyy")
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+    <div id="pdfContainer">
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
+            <div class="row col-md-12">
+                <div class="col-md-6">
+                    <i class="fas fa-file-invoice-dollar text-warning"></i>&nbsp;<span>
+                        Facture
+                    </span>
+                </div>
+
+                <div class="col-md-6 text-right">
+                    <span>@Model.Bill.NumBill</span>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-12 about-edit-item ltr-effect">
+            <div class="row col-md-12">
+                <div class="col-md-6 text-center about-item-title">
+                    <span>
+                        Comblé vers :
+                    </span>
+                </div>
+                <div class="col-md-6 text-center about-item-title">
+                    <span class="d-block about-item-title">Expédié à :</span>
+                </div>
+            </div>
+            <div class="row col-md-12">
+                <div class="col-md-6 about-item-content">
+                    <span class="d-block">@Model.ApplicationUser.BillingName</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingPhone</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingAdresse</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingPostalCode</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingCity</span>
+                    <span>@Model.ApplicationUser.BillingCountry</span>&nbsp;<span>@Model.ApplicationUser.BillingState</span>
+                </div>
+                <div class="col-md-6 about-item-content">
+                    <span class="d-block">@Model.ApplicationUser.ShippingName</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingPhone</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingAdresse</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingPostalCode</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingCity</span>
+                    <span>@Model.ApplicationUser.ShippingCountry</span>&nbsp;&nbsp;<span>@Model.ApplicationUser.ShippingState</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
+            <div class="row">
+                <div class="col-md-4 title-card">
+                    <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
+                    <span>
+                        Récapitulatif du produit
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 form-group card-body">
+            <span>Tous les éléments ne peuvent pas être supprimés.</span>
+        </div>
+        <table class="table table-striped border table-hover col-md-12" id="example1">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Produit</th>
+                    <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Count)</th>
+                    <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Price)</th>
+                    <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Remise)</th>
+                    <th>@Html.DisplayNameFor(m => m.BillDetailsList[0].Tax)</th>
+                    <th>
+                        Montant <span class="text-danger"
+                                 style="font-size:12px">Avant impôt & remise</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    double total = 0;
+                    double remise = 0;
+                    double mntpartiel = 0;
+                    double tax = 0;
+
+                    @foreach (var item in Model.BillDetailsList)
+                    {
+
+                        var montant = item.Price * item.Count;
+                        <tr>
+                            <td>@Html.DisplayFor(m => item.ProduitId)</td>
+                            <td>@Html.DisplayFor(m => item.Name)</td>
+                            <td>@Html.DisplayFor(m => item.Count)</td>
+                            <td>@Html.DisplayFor(m => item.Price)</td>
+                            <td>@Html.DisplayFor(m => item.Remise)</td>
+                            <td>@Html.DisplayFor(m => item.Tax) %</td>
+                            <td style="width:200px">@montant</td>
+                        </tr>
+                        total += montant;
+                        remise += item.Remise;
+                        mntpartiel += (item.Price * item.Count) + ((item.Price * item.Count) * item.Tax / 100);
+                    }
+                    tax = ((mntpartiel - total) / total) * 100;
+                }
+            </tbody>
+        </table>
+
+        <br /><br />
+
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
+            <div class="row">
+                <div class="col-md-4 title-card">
+                    <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
+                    <span>
+                        Récapitulatif des notes de crédit
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-striped border table-hover col-md-12" id="example1">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>@Html.DisplayNameFor(m => m.CreditNoteList[0].Montant)</th>
+                    <th>@Html.DisplayNameFor(m => m.CreditNoteList[0].Description)</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @{ double noteAmount = 0;}
+                @foreach (var item in Model.CreditNoteList)
+                {
+                    var date = item.NoteDate.ToShortDateString();
+                    <tr>
+                        <td>@Html.DisplayFor(m => date)</td>
+                        <td>@Html.DisplayFor(m => item.Montant)</td>
+                        <td>@Html.DisplayFor(m => item.Description)</td>
+                    </tr>
+                    noteAmount += item.Montant;
+                }
+            </tbody>
+        </table>
+
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
+            <div class="row">
+                <div class="col-md-4 title-card">
+                    <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
+                    <span>
+                        Récapitulatif de réception
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <table class="table table-striped border table-hover text-center col-md-12" id="example1">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>@Html.DisplayNameFor(m => m.ReceiptList[0].Montant)</th>
+                    <th>Type de paiment</th>
+                    <th>@Html.DisplayNameFor(m => m.ReceiptList[0].Reference)</th>
+                    <th>@Html.DisplayNameFor(m => m.ReceiptList[0].Description)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ double receiptAmount = 0;}
+                @foreach (var item in Model.ReceiptList)
+                {
+                    var date = item.RecieptDate.ToShortDateString();
+                    <tr>
+                        <td>@Html.DisplayFor(m => date)</td>
+                        <td>@Html.DisplayFor(m => item.Montant)</td>
+                        <td>Manuel</td>
+                        <td>@Html.DisplayFor(m => item.Reference)</td>
+                        <td>@Html.DisplayFor(m => item.Description)</td>
+                    </tr>
+                    receiptAmount += item.Montant;
+                }
+            </tbody>
+        </table>
+
+        <div class="col-md-12 form-group mt-5">
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Total Partiel (€):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span> @Model.Bill.BillTotalOrginal</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Remise (€):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span> @Model.Bill.Remise</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Tax (%):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span> @Math.Round(tax, 2)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                @{ var totalAmount = Math.Round(total + (total * tax) / 100 - (remise + noteAmount), 2);}
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Total (€):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span>@Model.Bill.BillTotal</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Note de crédit:</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span> @Math.Round(noteAmount)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Payé:</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span> @Model.Bill.Paid</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Reste:</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span> @Model.Bill.Rest</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+
+    <script>
+        $("#btnPdf").click(function () {
+            var element = document.getElementById('pdfContainer');
+
+            html2pdf().from(element).set({
+                margin: [30, 10, 5, 10],
+                pagebreak: { avoid: 'tr' },
+                jsPDF: { orientation: 'landscape', unit: 'pt', format: 'letter', compressPDF: true }
+            }).save()
+        });
+
+    </script>
+}

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Proposal>
+
+@{
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<div class="m-5">
+    <div class="white-Background border p-2">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="text-info">Liste des Propositions</h3>
+            </div>
+            <div class="col-md-6 text-right">
+                <partial name="_CreateButtonPartial" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Count() == 0)
+{
+    <div class="col-md-12">
+        <h4 class="text-center text-danger pt-4"> Aucune proposition dans cette liste ... </h4>
+    </div>
+
+}
+else
+{
+    <div id="view-all">
+        @await Html.PartialAsync("_ViewAll")
+    </div>
+
+}
+
+@section Scripts{
+
+}
+
+

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Proposal>
+
+<div class="m-5">
+    <table class="table table-striped border table-hover text-center" id="example1">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.NumProposal)</th>
+                <th>@Html.DisplayNameFor(m => m.ApplicationUser.LastName)</th>
+                <th>@Html.DisplayNameFor(m => m.ProposalDate)</th>
+                <th>@Html.DisplayNameFor(m => m.Status)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                var proposalDate = item.ProposalDate.ToShortDateString();
+                <tr>
+                    <td>@Html.DisplayFor(m => item.NumProposal)</td>
+                    <td>@Html.DisplayFor(m => item.ApplicationUser.LastName)</td>
+                    <td>@Html.DisplayFor(m => proposalDate)</td>
+                    <td>
+                        @if (item.Status == SD.StatusInProcess)
+                        {
+                            <span class="badge badge-info">@Html.DisplayFor(m => item.Status)</span>
+                        }
+                        else if (item.Status == SD.StatusAccepted)
+                        {
+                            <span class="badge badge-success p-2">@Html.DisplayFor(m => item.Status)</span>
+                        }
+                        else if (item.Status == SD.StatusCanceled)
+                        {
+                            <span class="badge badge-danger p-2">@Html.DisplayFor(m => item.Status)</span>
+                        }
+                        else if (item.Status == SD.StatusCompleted)
+                        {
+                            <span class="badge badge-primary p-2">@Html.DisplayFor(m => item.Status)</span>
+                        }
+                        else if (item.Status == SD.StatusSend)
+                        {
+                            <span class="badge badge-secondary p-2">@Html.DisplayFor(m => item.Status)</span>
+                        }
+                    </td>
+
+                    <td style="width:180px">
+                        <form asp-action="DeleteProposal" asp-route-proposalId="@item.Id" asp-controller="Proposals" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                            <div class="btn-group" role="group">
+
+                                <a class="btn btn-info" asp-action="Details" asp-route-proposalId="@item.Id">
+                                    <i class="fas fa-list-ul text-white"></i>
+                                </a>
+                                <a class="btn btn-success" asp-action="Edit" asp-route-proposalId="@item.Id"><i class="far fa-edit"></i></a>
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                            </div>
+
+                        </form>
+                        @if (item.Status != SD.StatusCompleted)
+                        {
+                            <form asp-action="ConvertToBill" asp-route-proposalId="@item.Id" asp-controller="Proposals" onsubmit="return jQueryAjaxConvert(this);" class="d-inline">
+
+                                <button type="submit" class="btn exchange">
+
+                                    <i class="fas fa-exchange-alt text-white"></i>
+                                </button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Contrat>
+<div class="m-5">
+    <table class="table table-striped border text-center table-hover" id="example1">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Reference)</th>
+                <th>Employé</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @{ var fullname = item.ApplicationUser.FirstName + " " + item.ApplicationUser.LastName;}
+                    <td>@Html.DisplayFor(m => item.Reference)</td>
+                    <td>@fullname</td>
+                    <td style="width:150px">
+                        <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                            <div class="btn-group text-left">
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

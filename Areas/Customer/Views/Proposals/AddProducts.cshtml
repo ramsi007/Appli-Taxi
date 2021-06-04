@@ -1,0 +1,132 @@
+﻿@model ProposalDetailsViewModel
+@{
+    ViewData["Title"] = "AddProducts";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<br />
+<div class="form-group text-info">
+    <i class="fab fa-product-hunt"></i>&nbsp;<span style="font-size:19px;font-weight:600">
+        Produits et services
+    </span>
+</div>
+
+<br />
+
+<form asp-action="AddProducts">
+    <div class="white-Background border m-3 p-3">
+        <input type="hidden" asp-for="@Model.ProposalDetail.ProposalId" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="row col-md-12">
+                <label asp-for="ProductsList" class="col-form-label text-dark h5"></label>
+                <select id="ddlProduct" class="form-control" asp-for="ProposalDetail.ProduitId"
+                        asp-items="@(new SelectList(Model.ProductsList,"Id", "Name"))">
+                </select>
+                <span asp-validation-for="ProposalDetail.ProduitId" class="text-danger"></span>
+            </div>
+
+            <div class="row col-md-12">
+                <label asp-for="@Model.ProposalDetail.Description" class="col-form-label text-dark h5"></label>
+                <textarea asp-for="@Model.ProposalDetail.Description" class="form-control"></textarea>
+                <span asp-validation-for="@Model.ProposalDetail.Description" class="text-danger"></span>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label asp-for="@Model.ProposalDetail.Count" class="col-form-label text-dark h5"></label>
+                    <input id="txtCount" asp-for="@Model.ProposalDetail.Count" class="form-control" />
+                    <span asp-validation-for="@Model.ProposalDetail.Count" class="text-danger"></span>
+                </div>
+                <div class="row col-md-4">
+                    <label asp-for="@Model.ProposalDetail.Price" class="col-form-label text-info h5">Prix (€)</label>
+                    <input id="txtPrice" asp-for="@Model.ProposalDetail.Price" class="form-control" readonly />
+                    <span asp-validation-for="@Model.ProposalDetail.Price" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="col-form-label text-dark h5">Taxe</label>
+                    <input id="txtTax" asp-for="@Model.ProposalDetail.Tax" class="form-control" readonly />
+                    <span asp-validation-for="@Model.ProposalDetail.Tax" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 col-sm-4">
+                    <label asp-for="@Model.ProposalDetail.Remise" class="col-form-label text-info h5">Remise (€)</label>
+                    <input id="txtRemise" asp-for="@Model.ProposalDetail.Remise" class="form-control" />
+                    <span asp-validation-for="@Model.ProposalDetail.Remise" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 col-sm-4">
+                    <label class="col-form-label text-info h5">Montant (€)</label>
+                    <input id="txtMontant" class="form-control" readonly />
+                    <span asp-validation-for="@Model.ProposalDetail.Price" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12 offset-md-2 mt-3">
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <button type="submit" class="btn btn-primary form-control">Ajouter </button>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-success form-control" asp-action="Edit" asp-route-proposalId="@Model.ProposalDetail.ProposalId">Annuler</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function getPriceAndTax() {
+            var selectedCategory = document.getElementById("ddlProduct").value;
+            var total = 0;
+            $price = $('#txtPrice');
+            $tax = $('#txtTax');
+            $montant = $('#txtMontant')
+            $count = $('#txtCount')
+            $remise = $('#txtRemise')
+            $.ajax({
+                url: '/Customer/Proposals/getPriceAndTax/' + selectedCategory,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $price.val(data.salePrice);
+                    $tax.val(data.tax.discount);
+                    total = ($count.val() * (parseFloat($price.val()) + (parseFloat($price.val())
+                        * parseFloat($tax.val()) / 100))) - parseFloat($remise.val())
+
+                    $montant.val(total.toString().replace(".", ","));
+                },
+                error: function (data) {
+                    alert("erreur ...!")
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            getPriceAndTax();
+        });
+
+        $("#ddlProduct").on("change", function () {
+            getPriceAndTax();
+        });
+
+        $("#txtCount").on("change", function () {
+            getPriceAndTax();
+        });
+        $("#txtRemise").on("keypress", function () {
+            getPriceAndTax();
+        });
+        $("#txtRemise").on("keyup", function () {
+            getPriceAndTax();
+        });
+    </script>
+}
+

@@ -1,0 +1,59 @@
+﻿@model UserContratViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+<h4 class="text-center text-info">Ajouter un contrat</h4>
+<br />
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="white-Background border">
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+        <input asp-for="@Model.ApplicationUser.Id" class="form-control" type="hidden" />
+        <input asp-for="@Model.Contrat.UserId" class="form-control" type="hidden" />
+
+        <div class="row pt-4">
+            <div class="col-md-6">
+                <input asp-for="ApplicationUser" class="form-control" type="hidden" />
+            </div>
+        </div>
+        <div class="modal-body">
+
+            <div class="row pt-4">
+                <div class="col-md-2 pt-1">
+                    <label asp-for="Contrat.Reference" class="h6 text-dark"></label>
+                </div>
+                <div class="col-md-6">
+                    <input asp-for="Contrat.Reference" class="form-control" readonly />
+                    <span asp-validation-for="Contrat.Reference"></span>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <div class="col-md-2 pt-1">
+                    <label asp-for="Contrat.Path" class="h6 text-dark"></label>
+                </div>
+                <div class="col-md-6">
+                    <input type="file" multiple asp-for="Contrat.Path" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="submit" value="Ajouter" class="btn btn-info form-control" />
+                </div>
+                <div col-md-6>
+                    <a class="btn btn-warning form-control" asp-action="Details" asp-controller="Users"
+                       asp-route-id="@Model.Contrat.UserId">Annuler</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+

@@ -1,0 +1,144 @@
+﻿@model UserProposalDetailsViewModel
+@{
+    ViewData["Title"] = "Overview";
+    Layout = null;
+}
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+<div class="white-Background m-5 p-5">
+    <div class="row">
+        <div class="col-md-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container-fluid d-flex justify-content-between">
+                        <div class="col-md-3 pl-0">
+                            <div class="row ml-1">
+                                @*<p class="d-inline pt-2"><b>Appl<span class="text-danger">i</span>Taxi</b></p>
+                                &nbsp;&nbsp;*@
+                                <span>
+                                    <img class="pb-2" src="~/images/appliTaxi.jpg" style="width:120px; height:120px" />
+                                </span>
+                            </div>
+
+                            <p>
+                                28 avenue de la résistance <br />
+                                91700 Sainte-Genevièves-des-bois <br />
+                                <b>SIRET :</b> 83138505900017 <br />
+                                France
+                            </p>
+                        </div>
+                        <div class="col-md-3 pr-0">
+
+                            <p class="mt-5 mb-2"><b>Proposition</b></p>
+                            <p>
+                                @Model.Proposal.NumProposal<br />
+                                @Model.Proposal.ProposalDate.ToString("dd/MM/yyyy")<br />
+                            </p>
+                        </div>
+
+                    </div>
+                    <br /><br />
+
+                    <div class="col-md-12 row mb-5">
+                        <div class="col-md-6 text-center">
+                            @{
+                                var fullname = Model.ApplicationUser.FirstName + " " + Model.ApplicationUser.LastName;
+                            }
+                            <p class="mt-5 mb-2"><b class="text-danger">Factué pour :</b></p>
+                            <p class="mt-5 mb-2"><b>@Model.ApplicationUser.BillingName</b></p>
+                            @Model.ApplicationUser.BillingAdresse <br />
+                            @Model.ApplicationUser.BillingPostalCode <br />
+                            @Model.ApplicationUser.BillingCity<br />
+                            @Model.ApplicationUser.BillingPhone<br />
+                            @Model.ApplicationUser.BillingCountry<br />
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <p class="mt-5 mb-2"><b class="text-danger">Expédié à :</b></p>
+                            <p class="mt-5 mb-2"><b>@Model.ApplicationUser.ShippingName</b></p>
+                            @Model.ApplicationUser.ShippingAdresse <br />
+                            @Model.ApplicationUser.ShippingPostalCode <br />
+                            @Model.ApplicationUser.ShippingCity<br />
+                            @Model.ApplicationUser.ShippingPhone<br />
+                            @Model.ApplicationUser.ShippingCountry<br />
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 row m-3">
+                        <div class="col-md-8"><h5><b class="text-secondary">Récapitulatif du produit</b></h5></div>
+                    </div>
+
+                    <table class="table table-striped border table-hover col-md-12">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Produit</th>
+                                <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Count)</th>
+                                <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Price)</th>
+                                <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Remise)</th>
+                                <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Tax)</th>
+                                <th>
+                                    Montant <span class="text-danger"
+                                                  style="font-size:12px">Avant impôt & remise</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                double total = 0;
+                                double remise = 0;
+                                double mntpartiel = 0;
+                                double tax = 0;
+
+                                @foreach (var item in Model.ProposalDetailsList)
+                                {
+
+                                    var montant = item.Price * item.Count;
+                                    <tr>
+                                        <td>@Html.DisplayFor(m => item.ProduitId)</td>
+                                        <td>@Html.DisplayFor(m => item.Name)</td>
+                                        <td>@Html.DisplayFor(m => item.Count)</td>
+                                        <td>@Html.DisplayFor(m => item.Price)</td>
+                                        <td>@Html.DisplayFor(m => item.Remise)</td>
+                                        <td>@Html.DisplayFor(m => item.Tax) %</td>
+                                        <td style="width:200px">@montant</td>
+                                    </tr>
+                                    total += montant;
+                                    remise += item.Remise;
+                                    mntpartiel += (item.Price * item.Count) + ((item.Price * item.Count) * item.Tax / 100);
+                                }
+                                tax = ((mntpartiel - total) / total) * 100;
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="col-md-3 offset-md-9">
+                        <form>
+                            <button asp-action="Confirm" asp-route-id="@Model.Proposal.Id"
+                                    class="btn btn-primary">Confirmer cette propostion
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (User.IsInRole(SD.ManagerUser))
+    {
+        <div class="col-md-4">
+            <a asp-action="Index">retour à la liste des propositions</a>
+        </div>
+    }
+</div>
+
+@section Scripts{
+    @*<script type="text/javascript">
+        $("#btnPdf").click(function () {
+            var sHtml = $("#pdfConverter").html();
+            sHtml = sHtml.replace(/</g, "StrTag").replace(/>/g, "EndTag");
+            window.open('../Proposals/GeneratePdf?html=' + sHtml, '_blank');
+        });
+    </script>*@
+}
+
+

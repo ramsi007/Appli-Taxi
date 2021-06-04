@@ -1,0 +1,49 @@
+﻿@model Tax
+@{
+    ViewData["Title"] = "Edit";
+    Layout = null;
+}
+
+<h4 class="text-center text-success">Modifier une tax d'imposition</h4>
+<br />
+
+<form asp-action="Edit" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
+    <div class="white-Background border m-5 p-5">
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+        <div class="row pt-4">
+            <div class="col-md-2 pt-1">
+                <label asp-for="Name" class="h6 text-dark"></label>
+            </div>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-md-2 pt-1">
+                <label asp-for="Discount" class="h6 text-dark"></label>
+            </div>
+            <div class="col-md-10">
+                <input asp-for="Discount" class="form-control" />
+                <span asp-validation-for="Discount"></span>
+            </div>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-md-8 offset-md-3 ">
+                <partial name="_UpdateAndBackToListButtonsPartial" />
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
+

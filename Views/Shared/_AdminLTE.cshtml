@@ -1,0 +1,396 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - Appli-Taxi</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link href="~/css/all.min.css" rel="stylesheet" />
+    <!-- Theme style -->
+    <link href="~/css/adminlte.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+          integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+    <!--Theme datatable -->
+    <link href="~/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/css/responsive.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/css/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <!-- -->
+    <!-- Css-->
+    <link href="~/css/Style.css" rel="stylesheet" />
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                @*<li class="nav-item d-none d-sm-inline-block">
+                        <a href="#" class="nav-link">Contact</a>
+                    </li>*@
+            </ul>
+
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <partial name="_LoginPartial" />
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a class="brand-link" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo.png" alt="Logo" class="brand-image img-circle elevation-5"
+                     style="opacity: .8">
+                <span class="brand-text font-weight-light">Appli-Taxi</span>
+            </a>
+
+            <!-- Sidebar -->
+
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <!-- SidebarSearch Form -->
+                <!-- Sidebar Menu -->
+
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                        with font-awesome or any other icon font library -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Home
+                                    @*<span class="right badge badge-danger">New</span>*@
+                                </p>
+                            </a>
+                        </li>
+                        @if (User.IsInRole(SD.ManagerUser))
+                        {
+                            <li class="nav-item menu-open">
+                                <a href="#" class="nav-link active">
+                                    <i class="nav-icon fas fa-shopping-cart"></i>
+                                    <p>
+                                        Produits & Services
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Produits">
+                                            <p>&nbsp;&nbsp;&nbsp;Produit</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <p>&nbsp;&nbsp;&nbsp;Service</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--Constants -->
+
+                            <li class="nav-item menu-open">
+                                <a href="#" class="nav-link active">
+                                    <i class="nav-icon fas fa-cog"></i>
+                                    <p>
+                                        Constant
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item ">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="TypeCats">
+                                            &nbsp;&nbsp;&nbsp;Types
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Categories">
+                                            &nbsp;&nbsp;&nbsp;Catégories
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Taxes">
+                                            &nbsp;&nbsp;&nbsp;Taxes
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- / Constants -->
+                            <!--Users-->
+                            <li class="nav-item menu-open">
+                                <a class="nav-link active" href="#">
+                                    <i class="fas fa-user-friends"></i>
+                                    <p>&nbsp;&nbsp;&nbsp;Utilisateurs</p>
+                                    <i class="right fas fa-angle-left"></i>
+                                </a>
+                                <ul class="nav nav-treeview">
+
+                                    <li class="nav-item menu-open">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Employees" asp-controller="Users">
+                                            <p>&nbsp;&nbsp;&nbsp;Employés</p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Customers" asp-controller="Users">
+                                            <p>&nbsp;&nbsp;&nbsp;Clients</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Vendors" asp-controller="Users">
+                                            <p>&nbsp;&nbsp;&nbsp;Fournisseurs</p>
+                                        </a>
+                                    </li>
+
+                                    @*<li class="nav-item">
+                                            <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Users">
+                                                <p>&nbsp;&nbsp;&nbsp;Tous les comptes</p>
+                                            </a>
+                                        </li>*@
+                                    @*<li class="nav-item">
+                                            <a asp-page="/Account/Register" asp-area="Identity" class="nav-link">
+                                                <p>&nbsp;&nbsp;&nbsp;Nouveau compte</p>
+                                            </a>
+                                        </li>*@
+                                </ul>
+                            </li>
+                        }
+
+                        <li class="nav-item menu-open">
+                            <a class="nav-link btn-effect" asp-area="Customer" asp-action="Index" asp-controller="Proposals">
+                                <i class="fas fa-receipt"></i>
+                                <p>&nbsp;&nbsp;&nbsp;Propositions</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item menu-open">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-file-invoice"></i>
+                                <p>&nbsp;&nbsp;&nbsp;Revenus</p>
+                                <i class="right fas fa-angle-left"></i>
+                            </a>
+                            <ul class="nav nav-treeview">
+
+                                <li class="nav-item menu-open">
+                                    <a class="nav-link" asp-area="Customer" asp-action="Index" asp-controller="Bills">
+                                        <p>&nbsp;&nbsp;&nbsp;Factures</p>
+                                    </a>
+                                </li>
+                                @if (User.IsInRole(SD.ManagerUser))
+                                {
+                                    <li class="nav-item menu-open">
+                                        <a class="nav-link" asp-area="Customer" asp-action="Index" asp-controller="CreditNotes">
+                                            <p>&nbsp;&nbsp;&nbsp;Notes de crédit</p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item menu-open">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Receipts">
+                                            <p>&nbsp;&nbsp;&nbsp;Réceptions</p>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                        @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.EmployeeUser))
+                        {
+                            <li class="nav-item menu-open">
+                                <a class="nav-link active" href="#">
+                                    <i class="fas fa-tasks"></i>
+                                    <p>&nbsp;&nbsp;&nbsp;Services</p>
+                                    <i class="right fas fa-angle-left"></i>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item menu-open">
+                                        <a class="nav-link" asp-area="UserServices" asp-action="Index" asp-controller="HolidayTypes">
+                                            <p>&nbsp;&nbsp;&nbsp;Type congé</p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item menu-open mb-2">
+                                        <a class="nav-link d-inline" asp-area="UserServices" asp-action="Index" asp-controller="Holidays">
+                                            <p>&nbsp;&nbsp;&nbsp;Congés</p>
+                                        </a>
+                                        @if (User.IsInRole(SD.ManagerUser))
+                                        {
+                                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.HolidaysDemandCount) == null)
+                                            {
+                                                <a class="nav-link d-inline" asp-area="UserServices" asp-action="ShowHolidaysinDemand" asp-controller="Holidays">
+                                                    <span class="badge badge-success badge-holiday">0</span>
+                                                </a>
+
+                                            }
+                                            else
+                                            {
+                                                <a class="nav-link d-inline" asp-area="UserServices" asp-action="ShowHolidaysinDemand" asp-controller="Holidays">
+                                                    <span class="badge badge-success badge-holiday">
+                                                        @HttpContextAccessor.HttpContext.Session.GetInt32(SD.HolidaysDemandCount)
+                                                    </span>
+                                                </a>
+                                            }
+                                        }
+                                    </li>
+
+                                    <li class="nav-item menu-open d-inline mt-5">
+                                        <a class="nav-link d-inline" asp-area="UserServices" asp-action="Index" asp-controller="ExpenseReports">
+                                            <p>&nbsp;&nbsp;&nbsp;Note des frais</p>
+                                        </a>
+                                        @if (User.IsInRole(SD.ManagerUser))
+                                        {
+                                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ExpensesDemandCount) == null)
+                                            {
+                                                <a class="nav-link d-inline ml-2" asp-area="UserServices" asp-action="ShowExpensesinDemand" asp-controller="ExpenseReports">
+                                                    <span class="badge badge-info ">0</span>
+                                                </a>
+
+                                            }
+                                            else
+                                            {
+                                                <a class="nav-link d-inline ml-2" asp-area="UserServices" asp-action="ShowExpensesinDemand" asp-controller="ExpenseReports">
+                                                    <span class="badge badge-info">
+                                                        @HttpContextAccessor.HttpContext.Session.GetInt32(SD.ExpensesDemandCount)
+                                                    </span>
+                                                </a>
+                                            }
+                                        }
+
+                                    </li>
+
+                                    <li class="nav-item menu-open">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Contrats">
+                                            <p>&nbsp;&nbsp;&nbsp;Contrats</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
+
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="form-modal">
+            <div class="modal-dialog" style="width:1200px">
+                <div class="modal-content" style="width:150%; margin-left:-100px;">
+                    <div class="modal-header text-center">
+                        <h5 class="modal-title text-success"></h5>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                                style=" font-size: 18px; border: none;">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.content-wrapper -->
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+            <div class="p-3">
+                <h5>Title</h5>
+                <p>Sidebar content</p>
+            </div>
+        </aside>
+        <!-- /.control-sidebar -->
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="float-right d-none d-sm-inline">
+                <span style="color:#808080" class="text-bold">Mohammed </span>&copy;
+                <span style="color:darkgreen">EL GHAZI</span>
+            </div>
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2021-2022 Appl<span style="color:red; font-size:18px">i</span>Taxi </strong>
+            - Tous les droits sont résérvé.
+        </footer>
+    </div>
+    <!-- ./wrapper -->
+    <!-- REQUIRED SCRIPTS -->
+    @*<script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+            crossorigin="anonymous"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+    </script>*@
+
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/js/adminlte.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+    <!-- DataTables  & Plugins -->
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/js/html2pdf.bundle.min.js"></script>
+    <script src="~/js/jquery.priceformat.min.js"></script>
+    @*<script src="~/js/buttons.bootstrap4.min.js"></script>*@
+    <script src="~/js/dataTables.buttons.min.js"></script>
+    <script src="~/js/jszip.min.js"></script>
+    <script src="~/js/pdfmake.min.js"></script>
+
+    <!--   -->
+
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+</body>
+</html>
+
+

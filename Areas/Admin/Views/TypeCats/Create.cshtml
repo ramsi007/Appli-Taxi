@@ -1,0 +1,48 @@
+﻿@model TypeCat
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Créer un nouveau Type</h4>
+</div>
+
+<br />
+<br />
+
+<form asp-action="Create" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row form-group">
+            <div class="col-md-4">
+                <label asp-for="Name" class="col-form-label"></label>
+            </div>
+            <div class="col-md-8">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-8 offset-md-4">
+            <partial name="_CreateAndBackToListButtonsPartial" />
+        </div>
+
+
+    </div>
+
+    <div class="row form-group">
+        <div class="col-md-4">
+            <a class="btn btn-outline-info form-control" asp-action="Index">Retour à la liste</a>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+

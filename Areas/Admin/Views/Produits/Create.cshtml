@@ -1,0 +1,134 @@
+﻿@model ProduitViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Créer un nouveau produit</h4>
+</div>
+
+<br />
+<form asp-action="Create" onsubmit="return jQueryAjaxPost(this);">
+
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="Produit.Name" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Produit.Name" class="form-control" />
+                        <span asp-validation-for="Produit.Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="Produit.Description" class="col-form-label text-dark h5"></label>
+                        <textarea asp-for="Produit.Description" class="form-control"></textarea>
+                        <span asp-validation-for="Produit.Description" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Produit.SalePrice" class="col-form-label text-dark h5"></label>
+                        <input id="saleprice" asp-for="Produit.SalePrice" name="saleprice" class="form-control" />
+                        <span asp-validation-for="Produit.SalePrice" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Produit.PurchasePrice" class="col-form-label text-dark h5"></label>
+                        <input id="purshaseprice" asp-for="Produit.PurchasePrice" name="purshaseprice" class="form-control" />
+                        <span asp-validation-for="Produit.PurchasePrice" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="CategoriesList" class="col-form-label text-dark h5"></label>
+                        <select class="form-control" asp-for="Produit.CategoryId"
+                                asp-items="@(new SelectList(Model.CategoriesList,"Id", "Name"))">
+                        </select>
+                        <span asp-validation-for="Produit.CategoryId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="TaxesList" class="col-form-label text-dark h5"></label>
+                        <select id="ddlCategories" class="form-control" asp-for="Produit.TaxId"
+                                asp-items="@(new SelectList(Model.TaxesList,"Id", "Discount"))">
+                        </select>
+                        <span asp-validation-for="Produit.TaxId" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="Produit.TypePS" class="col-form-label text-dark h5"></label>
+                        <select id="" class="form-control" asp-for="Produit.TypePS"
+                                asp-items="@Html.GetEnumSelectList<Produit.EType>()">
+                        </select>
+                        <span asp-validation-for="Produit.TypePS"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <input type="submit" value="Ajouter" class="btn btn-primary form-control" />
+                        </div>
+                        <div class="col-6">
+                            <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    @*<script>
+        var btnadd = document.getElementById('btnAdd');
+
+        function convertPrice() {
+            var sale = document.getElementById('saleprice').value;
+            var purshase = document.getElementById('purshaseprice').value;
+ 
+            sale = sale.toString().replace(/./g, ',')
+            purshase = purshase.toString().replace(/./g, ',')
+        }
+
+        btnadd.onclick = function () { convertPrice };
+        //btnadd.addEventListener('click', convertPrice)
+        $('#saleprice').priceFormat();
+        $('#purshaseprice').priceFormat();
+    </script>*@
+}
+
+
+

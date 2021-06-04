@@ -1,0 +1,244 @@
+﻿@model UserProposalDetailsViewModel
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<div class="white-Background border m-3 p-2">
+    @Html.HiddenFor(m => m.ApplicationUser.Id)
+    @Html.HiddenFor(m => m.Proposal.Id)
+    <div class="col-md-12 form-group card-header bg-dark text-light mb-3 ">
+        <div class="row">
+            <div class="col-md-4 title-card">
+                <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
+                <span>
+                    Détail de la proposition
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-2 offset-md-10">
+            <div class="row mb-2 mr-2">
+                <div class="col-md-6 text-right">
+                    <a asp-action="Overview" asp-route-id="@Model.Proposal.Id"
+                       class="btn btn-sm btn-outline-primary">Aperçu</a>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-sm btn-outline-secondary" id="btnPdf">PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+
+    </div>
+    <div class="row  about-edit-item ltr-effect">
+        <div class="col-md-4 about-item-content">
+            <span class="d-block mb-1">
+                Modifier la Proposition&nbsp;&nbsp;
+                <a asp-action="Edit" asp-route-proposalId="@Model.Proposal.Id">
+                    <i class="far fa-edit icon"></i>
+                </a>
+            </span>
+            <span class="text-center">
+                <i class="far fa-clock icon">&nbsp;&nbsp;</i>
+                <span style="color: #2e232c">
+                    Créé le :
+                    @Model.Proposal.ProposalDate.ToString("dd MMMM, yyyy")
+                </span>
+            </span>
+        </div>
+
+        @if (Model.Proposal.Status == SD.StatusInProcess)
+        {
+            <div class="col-md-4 about-item-content">
+                <a asp-action="SendProposal"
+                   asp-route-id="@Model.Proposal.Id" class="nav-link">
+                    <span>
+                        Envoyer la proposition
+                    </span>&nbsp;&nbsp;<i class="far fa-paper-plane icon"></i>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="col-md-4 about-item-content">
+
+            </div>
+        }
+
+        <div class="col-md-4 about-item-content">
+            <span class="d-block">
+                status de la prposition
+                <br />
+            </span>&nbsp;&nbsp;<span style="color: #2e232c;">@Model.Proposal.Status</span>
+        </div>
+    </div>
+
+    <hr />
+    <div id="pdfContainer">
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
+            <div class="row col-md-12">
+                <div class="col-md-6">
+                    <i class="fas fa-file-invoice-dollar text-warning"></i>&nbsp;<span>
+                        Proposition
+                    </span>
+                </div>
+
+                <div class="col-md-6 text-right">
+                    <span>@Model.Proposal.NumProposal</span>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-12 about-edit-item ltr-effect">
+            <div class="row col-md-12">
+                <div class="col-md-6 text-center about-item-title">
+                    <span>
+                        Comblé vers :
+                    </span>
+                </div>
+                <div class="col-md-6 text-center about-item-title">
+                    <span class="d-block about-item-title">Expédié à :</span>
+                </div>
+            </div>
+            <div class="row col-md-12">
+                <div class="col-md-6 about-item-content">
+                    <span class="d-block">@Model.ApplicationUser.BillingName</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingPhone</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingAdresse</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingPostalCode</span>
+                    <span class="d-block">@Model.ApplicationUser.BillingCity</span>
+                    <span>@Model.ApplicationUser.BillingCountry</span>, &nbsp;<span>@Model.ApplicationUser.BillingState</span>
+                </div>
+                <div class="col-md-6 about-item-content">
+                    <span class="d-block">@Model.ApplicationUser.ShippingName</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingPhone</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingAdresse</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingPostalCode</span>
+                    <span class="d-block">@Model.ApplicationUser.ShippingCity</span>
+                    <span>@Model.ApplicationUser.ShippingCountry</span>&nbsp;, &nbsp;<span>@Model.ApplicationUser.ShippingState</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 form-group card-header bg-dark text-light mb-3">
+            <div class="row">
+                <div class="col-md-4 title-card">
+                    <i class="fas fa-list-alt text-warning"></i>&nbsp;&nbsp;
+                    <span>
+                        Récapitulatif du produit
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 form-group card-body">
+            <span>Tous les éléments ne peuvent pas être supprimés.</span>
+        </div>
+        <table class="table table-striped border table-hover col-md-12" id="example1">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Produit</th>
+                    <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Count)</th>
+                    <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Price)</th>
+                    <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Remise)</th>
+                    <th>@Html.DisplayNameFor(m => m.ProposalDetailsList[0].Tax)</th>
+                    <th>
+                        Montant <span class="text-danger"
+                                      style="font-size:12px">Avant impôt & remise</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    double total = 0;
+                    double remise = 0;
+                    double mntpartiel = 0;
+                    double tax = 0;
+
+                    @foreach (var item in Model.ProposalDetailsList)
+                    {
+
+                        var montant = item.Price * item.Count;
+                        <tr>
+                            <td>@Html.DisplayFor(m => item.ProduitId)</td>
+                            <td>@Html.DisplayFor(m => item.Name)</td>
+                            <td>@Html.DisplayFor(m => item.Count)</td>
+                            <td>@Html.DisplayFor(m => item.Price)</td>
+                            <td>@Html.DisplayFor(m => item.Remise)</td>
+                            <td>@Html.DisplayFor(m => item.Tax) %</td>
+                            <td style="width:200px">@montant</td>
+                        </tr>
+                        total += montant;
+                        remise += item.Remise;
+                        mntpartiel += (item.Price * item.Count) + ((item.Price * item.Count) * item.Tax / 100);
+                    }
+                    tax = ((mntpartiel - total) / total) * 100;
+                }
+            </tbody>
+        </table>
+
+        <div class="col-md-12 form-group mt-5">
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Total Partiel (€):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class=""> @total</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Remise (€):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class=""> @remise</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Tax (%):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class=""> @Math.Round(tax, 2)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-9">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-success">Total (€):</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="">@Math.Round(total + (total * tax) / 100 - remise, 2)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@section Scripts{
+
+    <script>
+        $("#btnPdf").click(function () {
+            var element = document.getElementById('pdfContainer');
+
+            html2pdf().from(element).set({
+                margin: [30, 10, 5, 10],
+                pagebreak: { avoid: 'tr' },
+                jsPDF: { orientation: 'landscape', unit: 'pt', format: 'letter', compressPDF: true }
+            }).save()
+        });
+
+    </script>
+}

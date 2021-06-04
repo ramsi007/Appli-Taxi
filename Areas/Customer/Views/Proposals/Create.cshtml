@@ -1,0 +1,311 @@
+﻿@model ProposalDetailsViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Créer une proposition</h4>
+</div>
+
+<br />
+<form method="post">
+    <div class="white-Background border m-3 p-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="row mb-5">
+                    <div class="col-md-4">
+                        <label asp-for="Proposal.NumProposal" class="col-form-label text-dark h5"></label>
+                        <input asp-for="Proposal.NumProposal" class="form-control" readonly />
+                        <span asp-validation-for="Proposal.NumProposal" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Proposal.ProposalDate" class="col-form-label text-dark h5"></label>
+                        <input type="date" asp-for="Proposal.ProposalDate" class="form-control" />
+                        <span asp-validation-for="Proposal.ProposalDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Proposal.PoposalType" class="col-form-label text-dark h5"></label>
+                        <select id="" class="form-control" asp-for="Proposal.PoposalType"
+                                asp-items="@Html.GetEnumSelectList<Proposal.PrType>()">
+                        </select>
+                        <span asp-validation-for="Proposal.PoposalType"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    @if (Model.ShooppingCart.ApplicationUserId == null)
+                    {
+                        <div class="col-md-6" id="divUser">
+
+                            <label asp-for="UsersList" class="col-form-label text-dark h5"></label>
+                            <select id="ddlUser" class="form-control" asp-for="@Model.ApplicationUser.Id"
+                                    asp-items="@(new SelectList(Model.UsersList, "Id", "FirstName"))">
+                                <option>-- Selectionner un client --</option>
+                            </select>
+                            <span asp-validation-for="@Model.ApplicationUser.Id" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-md-12 mb-5" id="divUserDetail" style="display:none">
+                            <div class="row">
+                                <div id="billDiv" class="col-md-5 text-center">
+
+                                </div>
+                                <div id="shipDiv" class="col-md-5 text-center">
+
+                                </div>
+                                <div class="col-md-1 offset-md-1 mt-5">
+                                    <button id="btnRemove" type="button" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 offset-md-9 text-right" id="addtoCart">
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-12 mb-5">
+                            <div class="row mb-3">
+                                <div class="col-md-4 offset-md-1 about-item ltr-effect">
+                                    <div class="row title" style="padding-left:100px">
+                                        <i class="icon fas fa-file-invoice mt-1"></i>&nbsp;&nbsp;
+                                        <span class="about-item-title"> Adresse de facturation </span>
+                                    </div>
+                                        <input type="hidden" asp-for="@Model.ApplicationUser.Id" />
+                                        <input  asp-for="@Model.ApplicationUser.BillingName" />
+                                        <input  asp-for="@Model.ApplicationUser.BillingPhone" />
+                                        <input  asp-for="@Model.ApplicationUser.BillingAdresse" />
+                                        <input  asp-for="@Model.ApplicationUser.BillingPostalCode" />
+                                        <input  asp-for="@Model.ApplicationUser.BillingCity" />
+                                        <input  type="hidden" asp-for="@Model.ApplicationUser.PhoneNumber" />
+                                </div>
+                                <div class="col-md-4 offset-md-1 about-item ltr-effect">
+                                    <div class="row title" style="padding-left:100px">
+                                        <i class="icon fas fa-shipping-fast mt-1"></i>&nbsp;&nbsp;
+                                        <span class="about-item-title"> Adresse d'expédition </span>
+                                    </div>
+                                    <div class="content">
+                                        <input asp-for="@Model.ApplicationUser.ShippingName" />
+                                        <input asp-for="@Model.ApplicationUser.ShippingPhone" />
+                                        <input asp-for="@Model.ApplicationUser.ShippingAdresse" />
+                                        <input asp-for="@Model.ApplicationUser.ShippingPostalCode" />
+                                        <input asp-for="@Model.ApplicationUser.ShippingCity" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 offset-md-9 text-right" id="addtoCart">
+                                    <a class="btn btn-primary text-white" style="cursor:pointer" 
+                                       asp-action="AddToCart" asp-route-id="@Model.ApplicationUser.Id">                                   
+                                        <i class="fas fa-plus"></i>&nbsp; Ajouter
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="row mb-5">
+                    <i class="fab fa-product-hunt text-info"></i>&nbsp;<span style="font-size:19px;font-weight:600">
+                        Produits et services
+                    </span>
+                </div>
+
+                @if (Model.ListShoppingCarts.Count == 0)
+                {
+                    <div class="m-5">
+                        <h5 class="text-danger text-center"> Aucun article pour cette proposition, veuillez ajouter au moins un article</h5>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var item in Model.ListShoppingCarts)
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-10">
+                                <label asp-for="@item.Description" class="col-form-label text-dark h5"></label>
+                                <textarea asp-for="@item.Description" class="form-control"></textarea>
+                                <span asp-validation-for="@item.Description" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-1 offset-md-1 mt-5">
+                                <button type="submit" asp-action="RemoveCart" asp-controller="Proposals" asp-area="Customer"
+                                        class="btn btn-danger"
+                                        asp-route-productId="@item.ProduitId">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-2 col-sm-4">
+                                <label asp-for="@item.Count" class="col-form-label text-dark h5"></label>
+                                <input asp-for="@item.Count" class="form-control" />
+                                <span asp-validation-for="@item.Count" class="text-danger"></span>
+                            </div>
+                            <div class="row col-md-3 col-sm-4">
+                                <label asp-for="@item.Price" class="col-form-label text-info h5">Prix (€)</label>
+                                <span class="form-control" readonly>@item.Price</span>
+                                <span asp-validation-for="@item.Price" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-2 col-sm-4">
+                                <label class="col-form-label text-dark h5">Taxe</label>
+                                <span class="form-control" readonly>@item.Tax</span>
+                                <span asp-validation-for="@item.Tax" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-2 col-sm-4">
+                                <label class="col-form-label text-info h5">Remise (€)</label>
+                                <span class="form-control">@item.Remise</span>
+                                <span asp-validation-for="@item.Remise" class="text-danger"></span>
+                            </div>
+                            <div class="row col-md-3 col-sm-4">
+                                <label class="col-form-label text-secondary h5">Montant total (€)</label>
+                                <span class="form-control">@item.Montant</span>
+                                <span asp-validation-for="@item.Montant" class="text-danger"></span>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row col-md-5  offset-md-7 mb-2">
+                        <div class="col-md-5">
+                            <label class="col-form-label text-success">
+                                Total(TTC) partiel (€)
+                                <span class="text-danger font-weight-normal">sans remise (€)</span>
+                            </label>
+                        </div>
+                        <div class="col-md-7">
+                            <span class="text-center border-0 form-control">@Model.Proposal.ProposalTotalOrginal</span>
+                            <span asp-validation-for="@Model.Proposal.ProposalTotalOrginal" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-5  offset-md-7 mb-2">
+                        <div class="col-md-5">
+                            <label class="col-form-label text-info">Remise (€)</label>
+                        </div>
+                        <div class="col-md-7">
+                            <span class="text-center border-0 form-control">@Model.Proposal.Remise</span>
+                            <span asp-validation-for="@Model.Proposal.Remise" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-5  offset-md-7 mb-2">
+                        <div class="col-md-5">
+                            <label class="col-form-label text-success">Total(TTC) (€)</label>
+                        </div>
+                        <div class="col-md-7">
+                            <span class=" text-center border-0 form-control">@Model.Proposal.ProposalTotal</span>
+                            <span asp-validation-for="@Model.Proposal.ProposalTotal" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12 offset-md-2 mt-3">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <input asp-action="Create" type="submit" class="btn btn-primary form-control" value="Créer" />
+                        </div>
+                        <div class="col-md-4">
+                            <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function getUser() {
+            var selectedCategory = document.getElementById("ddlUser").value;
+            $userlist = $('#divUser');
+            $userlistdetail = $('#divUserDetail');
+            $userbill = $('#billDiv');
+            $usership = $('#shipDiv');
+            $addtocart = $('#addtoCart');
+            $.ajax({
+                url: '/Customer/Proposals/getUserById/' + selectedCategory,
+                type: 'GET',
+                contentType: "text/html; charset=utf-8",
+                dataType: 'json',
+                success: function (data) {
+                    if (data != null) {
+                        $userlist.hide();
+                        $userlistdetail.show();
+                        $userbill.append('<h5 class="text-info text-bold">' + "Facturé à" + '</h5>')
+                        //$userbill.append(' <p> ' + data.id + '</p>')
+                        $userbill.append(' <p>' + data.billingName + '</p>')
+                        $userbill.append(' <p>' + data.billingPhone + '</p>')
+                        $userbill.append(' <p>' + data.billingAdresse + '</p>')
+                        $userbill.append(' <span>' + data.billingPostalCode + '</span>')
+                        $userbill.append(' <span>' + data.billingCity + '</span>')
+
+                        $usership.append('<h5 class="text-info text-bold">' + "Expédié à" + '</h5>')
+                        $usership.append(' <p>' + data.shippingName + '</p>')
+                        $usership.append(' <p>' + data.shippingPhone + '</p>')
+                        $usership.append(' <p>' + data.shippingAdresse + '</p>')
+                        $usership.append(' <span>' + data.shippingPostalCode + '</span>')
+                        $usership.append(' <span>' + data.shippingCity + '</span>')
+                        $addtocart.append('<a class="btn btn-primary text-white" style="cursor:pointer" href="/Customer/Proposals/AddToCart/' + data.id + '"' + '><i class="fas fa-plus"></i>&nbsp; Ajouter')
+
+                    }
+                },
+                error: function (data) {
+                    alert("erreur ...!")
+                }
+            });
+        }
+
+        function removeUser() {
+            $btnremove = $('#btnRemove')
+            $userlist = $('#divUser');
+            $userlistdetail = $('#divUserDetail');
+
+            $userlist.show();
+            $('#billDiv').empty();
+            $('#shipDiv').empty();
+            $('#addtoCart').empty();
+            $userlistdetail.hide();
+        }
+
+        $('#btnRemove').on('click', function () {
+            removeUser();
+        })
+
+        $(document).ready(function () {
+            getUser();
+        });
+
+        $("#ddlUser").on("change", function () {
+            getUser();
+        });
+    </script>
+
+}
+
+
+@*$addtocart.append('<a class="btn btn-primary text-white" style="cursor:pointer" href="/Cutomer/Proposals/AddToCart/" ' + data.id + '>
+    ')*@
+
+@*<a asp-action="AddToCart" asp-route-id="@Model.ApplicationUser.Id"
+        >
+        <i class="fas fa-plus"></i>&nbsp; Ajouter
+    </a>*@
+

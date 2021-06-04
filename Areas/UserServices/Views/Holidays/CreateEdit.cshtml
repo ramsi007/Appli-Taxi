@@ -1,0 +1,110 @@
+﻿@model HolidayViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+
+<br />
+<div class="form-group">
+    <h4 class="text-success text-center">Demander un congé</h4>
+</div>
+
+<br />
+<form asp-action="CreateEdit" onsubmit="return jQueryAjaxPost(this);">
+
+    <input type="hidden" asp-for="Holiday.Id" />
+    <input type="hidden" asp-for="Holiday.Status" />
+
+    <div class="white-Background border m-5 p-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-12 form-group">
+                <label asp-for="Holiday.DemandeDate" class="col-form-label text-dark h5"></label>
+                <input type="date" asp-for="Holiday.DemandeDate" class="form-control" readonly />
+                <span asp-validation-for="Holiday.DemandeDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        @if (User.IsInRole(SD.ManagerUser))
+        {
+            <div class="row">
+                <div class="col-12 form-group">
+                    <label asp-for="ListUsers" class="col-form-label text-dark h5"></label>
+                    <select class="form-control" asp-for="Holiday.UserId"
+                            asp-items="@(new SelectList(Model.ListUsers, "Id", "FirstName"))">
+                    </select>
+                    <span asp-validation-for="Holiday.UserId" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <input type="hidden" asp-for="Holiday.UserId" />
+        }
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Holiday.StartDate" class="col-form-label text-dark h5"></label>
+                        <input type="date" asp-for="Holiday.StartDate" class="form-control" />
+                        <span asp-validation-for="Holiday.StartDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Holiday.EndDate" class="col-form-label text-dark h5"></label>
+                        <input type="date" asp-for="Holiday.EndDate" class="form-control" />
+                        <span asp-validation-for="Holiday.EndDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+
+                <label asp-for="ListHolidaysType" class="col-form-label text-dark h5"></label>
+                <select class="form-control" asp-for="Holiday.TypeId"
+                        asp-items="@(new SelectList(Model.ListHolidaysType,"Id", "Name"))">
+                </select>
+                <span asp-validation-for="Holiday.TypeId" class="text-danger"></span>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="Holiday.Comment" class="col-form-label text-dark h5"></label>
+                        <textarea asp-for="Holiday.Comment" class="form-control"></textarea>
+                        <span asp-validation-for="Holiday.Comment" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <input type="submit" value="Envoyez la demande" class="btn btn-primary form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+}
+
+
+

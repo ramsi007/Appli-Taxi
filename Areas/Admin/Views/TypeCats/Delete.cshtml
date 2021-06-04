@@ -1,0 +1,42 @@
+﻿@model TypeCat
+@{
+    ViewData["Title"] = "Delete";
+}
+
+
+<br />
+<div class="form-group">
+    <h4 class="text-danger text-center">Supprimer un Type </h4>
+</div>
+
+<br />
+<br />
+
+<form asp-action="Delete" method="post">
+    <div class="white-Background border m-5 p-5">
+        @Html.HiddenFor(m => m.Id)
+        <div class="row form-group">
+            <div class="col-md-2">
+                <label asp-for="Name" class="col-form-label"></label>
+            </div>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" readonly />
+            </div>
+        </div>
+        <br />
+        <partial name="_DeleteAndBackToListButtonsPartial" />
+
+    </div>
+
+    <div class="row form-group">
+        <div class="col-md-12 col-md-3">
+            <a class="btn btn-outline-info form-control" asp-action="Index">Retour à la liste</a>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+

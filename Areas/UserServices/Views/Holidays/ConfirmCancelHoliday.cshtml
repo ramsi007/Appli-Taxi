@@ -1,0 +1,35 @@
+﻿@model Holiday
+@{
+    Layout =null;
+}
+
+<form asp-action="ConfirmCancelHoliday" onsubmit="return jQueryAjaxPost(this);">
+    @{ 
+        string message = null;
+
+        if(Model.Nbdays == Model.Id)
+        {
+            message = "Voulez vous vraiment confirmer le congé : ";
+        }
+        else
+        {
+            message = "Voulez vous vraiment refusé la demande pour le congé : ";
+        }
+    }
+    <div class="modal-body">
+        @message<strong>@Model.HolidayType.Name</strong>
+        <input type="hidden" asp-for="@Model.Id"/>
+        <input type="hidden" asp-for="@Model.Nbdays"/>
+    </div>
+
+    <div class="modal-footer">
+        <div class="row form-group">
+            <div class="col-md-6">
+                <input type="submit" value="Valider" class="btn btn-info form-control" />
+            </div>
+            <div class="col-md-6">
+                <a class="btn btn-warning form-control" asp-action="ShowHolidaysinDemand">Annuler</a>
+            </div>
+        </div>    
+    </div>
+</form>

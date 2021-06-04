@@ -1,0 +1,296 @@
+﻿@model UserProposalsBillsViewModel
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<br />
+<div class="col-md-12 form-group">
+    <div class="row">
+        <div class="col-md-3">
+            <h4 class="text-success text-center">Détails du Compte </h4>
+        </div>
+
+        @if (!Model.ApplicationUser.UserRole.Equals(SD.EmployeeUser))
+        {
+            <div class=" col-md-9">
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3">
+                        <a asp-action="Create" asp-controller="Proposals" asp-area="Customer"
+                           asp-route-id="@Model.ApplicationUser.Id" class="nav-link btn btn-primary">
+                            <span title="créer une proposition">Créer une proposition</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a asp-action="Create" asp-controller="Bills" asp-area="Customer"
+                           asp-route-id="@Model.ApplicationUser.Id" class="nav-link btn btn-info">
+                            <span title="créer une facture">Créer une facture</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a onclick="showInPopup('@Url.Action("Edit","Users", new {id= Model.ApplicationUser.Id}, Context.Request.Scheme)', 'Modifier')"
+                           class="btn btn-success text-white" style="cursor:pointer"><i class="far fa-edit"></i></a>
+
+                        <form asp-action="Delete" asp-route-id="Model.ApplicationUser.Id" asp-area="Admin"
+                              asp-controller="Users" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </form>
+                        <a asp-action="Index" asp-controller="Users" asp-area="Admin"
+                           asp-route-id="@Model.ApplicationUser.Id" class="btn btn-warning">
+                            <i class="fas fa-undo-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+            <br />
+            <br />
+
+            <div class="white-Background border m-3 p-2">
+                @Html.HiddenFor(m => m.ApplicationUser.Id)
+                <div class="row">
+                    <div class="col-md-12 form-group card-header bg-dark text-light mb-3 ">
+                        <div class="row">
+                            <div class="col-md-4 text-center ">
+                                <i class="fas fa-user text-warning"></i>&nbsp;&nbsp;
+                                <span>
+                                    Informations User
+                                </span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-address-card text-warning"></i>&nbsp;&nbsp;
+                                <span>
+                                    Adresse de facturation
+                                </span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-shipping-fast text-warning"></i>&nbsp;&nbsp;
+                                <span>
+                                    Adresse d'expédition
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 card-body">
+                        <div class="row ltr-effect border mb-3 p-2">
+                            <div class="col-md-4 text-center about-item-content">
+                                <span>@Model.ApplicationUser.FirstName</span>&nbsp;&nbsp;<span>@Model.ApplicationUser.LastName</span>
+                                <span class="d-block">@Model.ApplicationUser.Email</span>
+                                <span class="d-block">@Model.ApplicationUser.PhoneNumber</span>
+                            </div>
+
+                            <div class="col-md-4 text-center about-item-content">
+                                <span class="d-block">@Model.ApplicationUser.BillingName</span>
+                                <span class="d-block">@Model.ApplicationUser.BillingPhone</span>
+                                <span class="d-block">@Model.ApplicationUser.BillingAdresse</span>
+                                <span class="d-block">@Model.ApplicationUser.BillingPostalCode</span>
+                                <span class="d-block">@Model.ApplicationUser.BillingCity</span>
+                                <span>@Model.ApplicationUser.BillingCountry</span>, &nbsp;<span>@Model.ApplicationUser.BillingState</span>
+                            </div>
+
+                            <div class="col-md-4 text-center about-item-content">
+                                <span class="d-block">@Model.ApplicationUser.ShippingName</span>
+                                <span class="d-block">@Model.ApplicationUser.ShippingPhone</span>
+                                <span class="d-block">@Model.ApplicationUser.ShippingAdresse</span>
+                                <span class="d-block">@Model.ApplicationUser.ShippingPostalCode</span>
+                                <span class="d-block">@Model.ApplicationUser.ShippingCity</span>
+                                <span>@Model.ApplicationUser.ShippingCountry</span>&nbsp;, &nbsp;<span>@Model.ApplicationUser.ShippingState</span>
+                            </div>
+                        </div>
+                        <div class="text-info title-card">
+                            <i class="fas fa-file-invoice-dollar"></i>&nbsp;<span class="title-card">
+                                Propositions
+                            </span>
+                        </div>
+                        <hr />
+                        @if (Model.ProposalList.Count() == 0)
+                        {
+                            <div class="col-md-12">
+                                <h4 class="text-center text-danger pt-4"> Aucune proposition pour cet utilisateur ... </h4>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="m-5">
+                                <table class="table table-striped border table-hover" id="example1">
+                                    <thead>
+                                        <tr>
+                                            <th>@Html.DisplayNameFor(m => m.ProposalList[0].NumProposal)</th>
+                                            <th>@Html.DisplayNameFor(m => m.ProposalList[0].ProposalDate)</th>
+                                            <th>@Html.DisplayNameFor(m => m.ProposalList[0].ProposalTotal)</th>
+                                            <th>@Html.DisplayNameFor(m => m.ProposalList[0].Status)</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var item in Model.ProposalList)
+                                        {
+                                            <tr>
+                                                <td>@Html.DisplayFor(m => item.NumProposal)</td>
+                                                <td>@Html.DisplayFor(m => item.ApplicationUser.LastName)</td>
+                                                <td>@Html.DisplayFor(m => item.ProposalDate)</td>
+                                                <td>@Html.DisplayFor(m => item.Status)</td>
+                                                <td style="width:150px">
+                                                    <div class="btn-group" role="group">
+                                                        <a class="btn btn-primary" asp-route-proposalId="@item.Id"><i class="fas fa-retweet"></i></a>
+                                                        <a class="btn btn-warning" asp-route-proposalId="@item.Id"><i class="fas fa-clone"></i></a>
+                                                        <a class="btn btn-info" asp-area="Customer" asp-controller="Proposals" asp-action="Details" asp-route-proposalId="@item.Id">
+                                                            <i class="fas fa-list-ul text-white"></i>
+                                                        </a>
+                                                        <a class="btn btn-success" asp-area="Customer" asp-controller="Proposals" asp-action="Edit" asp-route-proposalId="@item.Id"><i class="far fa-edit"></i></a>
+                                                        <a class="btn btn-danger" asp-area="Customer" asp-controller="Proposals" asp-action="Delete" asp-route-proposalId="@item.Id"><i class="fas fa-trash-alt"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="col-md-12">
+                <div class="col-md-3 offset-md-9">
+                    <div class="row mb-2 ml-5">
+                        <div class="col-md-6 text-right">
+                            <button class="btn btn-sm btn-outline-secondary"
+                                    id="btnPdf">
+                                Télécharger
+                            </button>
+
+                        </div>
+                        <div class="col-md-6">
+                            <a onclick="showInPopup('@Url.Action("Create","Contrats", new {id= Model.ApplicationUser.Id}, Context.Request.Scheme)',
+                                        'Contrat')"
+                               class="btn btn-sm btn-outline-info">
+                                <i class="fas fa-plus"></i>&nbsp;Ajouter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="pdfContainer">
+                <div class="col-md-12 form-group m-5">
+                    <div class="row m-2">
+                        <div class="col-md-2">
+                            <label class="col-form-label text-dark h5"> Nom : </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input asp-for="ApplicationUser.FirstName"
+                                   class="form-control empBorder" />
+                        </div>
+                    </div>
+
+                    <div class="row m-2">
+                        <div class="col-md-2">
+                            <label class="col-form-label text-dark h5"> Prénom : </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input asp-for="ApplicationUser.LastName"
+                                   class="form-control empBorder" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 form-group ml-5">
+                    <div class="row m-2">
+                        <div class="col-md-2">
+                            <label class="col-form-label text-dark h5">Téléphone :</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input asp-for="ApplicationUser.PhoneNumber"
+                                   class="form-control empBorder" />
+                        </div>
+                    </div>
+
+                    <div class="row m-2">
+                        <div class="col-md-2">
+                            <label class="col-form-label text-dark h5"> Email : </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input asp-for="ApplicationUser.Email"
+                                   class="form-control empBorder" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 form-group ml-5">
+                    <div class="row m-2">
+                        <div class="col-md-2">
+                            <label class="col-form-label text-dark h5"> Adresse : </label>
+                        </div>
+                        <div class="col-md-10">
+                            <textarea asp-for="ApplicationUser.EmployeeAdresse"
+                                      class="form-control empBorder"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 form-group ml-5">
+                    <div class="row m-2">
+                        <div class="col-md-2">
+                            <label class="col-form-label text-dark h5">Ville :</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input asp-for="ApplicationUser.EmployeeCity"
+                                   class="form-control empBorder" />
+                        </div>
+                    </div>
+
+                    <div class="row m-2">
+                        <div class="col-md-2">
+                            <label class="col-form-label text-dark h5"> Code Postal : </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input asp-for="ApplicationUser.EmployeePostalCode"
+                                   class="form-control empBorder" />
+                        </div>
+                    </div>
+
+                    <div class="row m-2">
+                        <div class="col-md-2">
+                            <label class="col-form-label text-dark h5"> Pays : </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input asp-for="ApplicationUser.EmployeeCountry"
+                                   class="form-control empBorder" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+<!-- Card Footer-->
+@*<div class="card-footer bg-dark">
+
+    </div>*@
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $("#btnPdf").click(function () {
+            var element = document.getElementById('pdfContainer');
+
+            html2pdf().from(element).set({
+                margin: [30, 10, 5, 10],
+                pagebreak: { avoid: 'tr' },
+                jsPDF: { orientation: 'landscape', unit: 'pt', format: 'letter', compressPDF: true }
+            }).save()
+        });
+
+    </script>
+
+}

@@ -1,0 +1,26 @@
+﻿@model Proposal
+@{
+    ViewData["Title"] = "ConvertToBill";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<h5 class="text-danger">voulez-vous vraiment convertir cette proposition en facture ?</h5>
+<form method="post">
+    <input type="hidden" asp-for="Id"/>
+    <div class="white-Background border m-3 p-3">
+
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <input asp-for="NumProposal" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12 offset-md-2 mt-3">
+                    <partial name="_CreateAndBackToListButtonsPartial" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
