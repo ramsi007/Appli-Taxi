@@ -41,7 +41,7 @@ namespace Appli_taxi.Areas.Customer.Controllers
             Receipt receipt = new Receipt();
             if (id == 0)
             {
-                bills = await db.Bills.ToListAsync();
+                bills = await db.Bills.Where(m=> m.Status != SD.StatusPaid).ToListAsync();
                 if (bills.Count == 1)
                 {
                     bill = bills[0];

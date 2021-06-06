@@ -29,6 +29,7 @@
                             <select class="form-control" asp-for="Receipt.BillId"
                                     asp-items="@(new SelectList(Model.ListBills,"Id", "NumBill"))">
                             </select>
+                            <span asp-validation-for="Receipt.BillId" class="text-danger"></span>
                         }
                         else
                         {
@@ -39,7 +40,6 @@
                         <input type="hidden" asp-for="Bill.Id" />
                         <input type="hidden" asp-for="Bill.UserId" />
 
-                        <span asp-validation-for="Receipt.BillId" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -117,10 +117,13 @@
 
     @*<script>
         var add = document.getElementById("btnAdd");
+        var mess = document.getElementById("message");
 
         function showErrorMessage() {
-            document.getElementById("message").style.display = "";
+            mess.style.padding = "15px";
         }
+        console.log("1111");
+        console.log(mess);
         add.addEventListener('click', showErrorMessage);
     </script>*@
 }
