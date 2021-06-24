@@ -17,7 +17,7 @@ namespace Appli_Taxi.Utility
         public const string StatusInProcess = "en cours de traitement";
         public const string StatusAccepted = "accepté";
         public const string StatusDeclined = "refusé";
-        public const string StatusCompleted = "terminé";
+        public const string StatusCompleted = "archivée";
         public const string StatusSend = "Envoyé";
         public const string StatusCanceled = "annulé";
         public const string StatusNotPaid = "Non Payé";

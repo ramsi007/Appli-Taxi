@@ -12,6 +12,11 @@ namespace Appli_Taxi.Services
 {
     public class EmailSender : IEmailSender
     {
+
+        // .....
+
+
+
         private readonly MailJetSettings _mailJetSettings;
 
         public EmailSender(IOptions<MailJetSettings> mailJetSettings)

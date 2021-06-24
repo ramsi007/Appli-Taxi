@@ -50,7 +50,7 @@ jQueryAjaxPost = form => {
 /*                   */
 jQueryAjaxDelete = form => {
     Swal.fire({
-        title: 'Vous êtes sûr?',
+        title: 'Vous êtes sûr de vouloir supprimer?',
         text: "si vous continuer cette action, le fichier va être supprimé!",
         icon: 'warning',
         showCancelButton: true,

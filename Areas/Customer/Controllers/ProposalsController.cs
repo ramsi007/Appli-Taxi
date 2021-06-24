@@ -72,15 +72,13 @@ namespace Appli_Taxi.Areas.Customer.Controllers
 
             if (id == null)
             {
-                UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole != SD.EmployeeUser).ToListAsync();
+                UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole != SD.EmployeeUser && m.UserRole != SD.VendorUser).ToListAsync();
             }
             else
             {
                 UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.Id == id).ToListAsync();
             }
             UserProposalVM.ListShoopingCart = ListCartFromDb;
-
-            //
 
 
             List<string> Users = new List<string>();
@@ -178,7 +176,15 @@ namespace Appli_Taxi.Areas.Customer.Controllers
                                            select s;
 
             ProposalCartVM.ListProduct = Products.ToList();
-            ProposalCartVM.ApplicationUser = await db.ApplicationUsers.Where(m => m.Id == id).FirstOrDefaultAsync();
+
+            if(User.IsInRole(SD.VendorUser))
+            {
+                ProposalCartVM.ApplicationUser = await db.ApplicationUsers.Where(m => m.UserRole == SD.ManagerUser).FirstOrDefaultAsync();
+            }
+            else
+            {
+                ProposalCartVM.ApplicationUser = await db.ApplicationUsers.Where(m => m.Id == id).FirstOrDefaultAsync();
+            }
 
             ProposalCartVM.ShooppingCart = new ShooppingCart()
 
@@ -575,6 +581,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
         /// <summary>
         /// 
 
+       // HttpGet
         public async Task<IActionResult> ShoopingCart()
         {
 
@@ -591,8 +598,10 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             {
                 ShoppingCartViewModel ShoppingCartVM = new ShoppingCartViewModel()
                 {
-                    ListProposalShooppingCarts = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id && m.NumProposal != null).ToListAsync(),
-                    ListBilllShooppingCarts = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id && m.NumBill != null).ToListAsync(),
+                    ListProposalShooppingCarts = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id 
+                                                && m.NumProposal != null).ToListAsync(),
+                    ListBilllShooppingCarts = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id 
+                                               && m.NumBill != null).ToListAsync(),
                     User = await db.ApplicationUsers.FindAsync(user.Id)
                 };
 

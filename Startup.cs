@@ -51,10 +51,12 @@ namespace Appli_taxi
             services.AddRazorPages();
 
             services.Configure<MailJetSettings>(Configuration.GetSection("MailJetSettings"));
+
             services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddSession(
-            options => {
+            options =>
+            {
                 options.Cookie.IsEssential = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
                 options.Cookie.HttpOnly = true;
@@ -87,6 +89,9 @@ namespace Appli_taxi
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // 
+
             app.UseSession();
 
             app.UseEndpoints(endpoints =>
@@ -99,3 +104,7 @@ namespace Appli_taxi
         }
     }
 }
+
+
+
+
