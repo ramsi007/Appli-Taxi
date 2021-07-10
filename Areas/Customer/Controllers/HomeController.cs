@@ -27,6 +27,22 @@ namespace Appli_taxi.Controllers
 
         public IActionResult Index()
         {
+            var customers = db.ApplicationUsers.Where(m => m.UserRole.Equals(SD.CustomerUser)).ToList();
+            ViewBag.Customer = customers;
+
+            var vendors = db.ApplicationUsers.Where(m => m.UserRole.Equals(SD.VendorUser)).ToList();
+            ViewBag.Vendor = vendors;
+
+            var employees = db.ApplicationUsers.Where(m => m.UserRole.Equals(SD.EmployeeUser)).ToList();
+            ViewBag.Employee = employees;
+
+            var bills = db.Bills.ToList();
+            ViewBag.Bill = bills;
+
+            var proposals = db.Proposals.ToList();
+            ViewBag.Proposal = proposals;
+
+
             var holidayInDemand = db.Holidays.Where(m => m.Status == SD.StatusInProcess).ToList();
             HttpContext.Session.SetInt32(SD.HolidaysDemandCount, holidayInDemand.Count);
 
@@ -35,10 +51,49 @@ namespace Appli_taxi.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+
+        /// <summary>
+        /// 
+
+        [HttpGet]
+        public JsonResult BillsLineChart()
         {
-            return View();
+            var billList = GetBillsByStatus();
+            return Json(billList);
         }
+
+        [HttpGet]
+        public List<Bill> GetBillsByStatus()
+        {
+            List<Bill> list = new List<Bill>();
+            var paidBills = db.Bills.Where(m => m.Status.Equals(SD.StatusPaid)).ToList();
+            var notPaidBills = db.Bills.Where(m => m.Status.Equals(SD.StatusNotPaid)).ToList();
+            var prePaidBills = db.Bills.Where(m => m.Status.Equals(SD.StatusPrePaid)).ToList();
+
+            foreach (var item in paidBills)
+            {
+                list.Add(item);
+            }
+
+            foreach (var item in notPaidBills)
+            {
+                list.Add(item);
+            }
+
+            foreach (var item in prePaidBills)
+            {
+                list.Add(item);
+            }
+
+            return list;
+        }
+
+
+
+        /// </summary>
+        /// <returns></returns>
+        /// 
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

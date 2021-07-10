@@ -211,7 +211,7 @@ namespace Appli_Taxi.Areas.UserServices.Controllers
             }
             else
             {
-                expense.Status = SD.StatusCanceled;
+                expense.Status = SD.StatusDeclined;
             }
 
             db.ExpenseReports.Update(expense);

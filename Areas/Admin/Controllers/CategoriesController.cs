@@ -3,6 +3,7 @@ using Appli_Taxi.Data;
 using Appli_Taxi.Models;
 using Appli_Taxi.Models.ViewModels;
 using Appli_Taxi.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Appli_taxi.Areas.Admin.Controllers
 {
+    [Authorize(Roles = SD.ManagerUser)]
     [Area("Admin")]
     public class CategoriesController : Controller
     {

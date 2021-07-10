@@ -12,6 +12,8 @@ namespace Appli_Taxi.Models.ViewModels
 
         [Display(Name="Catégorie")]
         public IList<Category> CategoriesList { get; set; }
+
+        [Display(Name = "Taxe")]
         public IList<Tax> TaxesList { get; set; }
     }
 }

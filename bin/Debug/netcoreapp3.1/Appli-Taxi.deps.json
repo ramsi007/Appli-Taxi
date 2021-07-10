@@ -32,6 +32,8 @@
       "Appli-Taxi/1.0.0": {
         "dependencies": {
           "Mailjet.Api": "1.2.3",
+          "Microsoft.AspNetCore.Authentication.Facebook": "3.1.16",
+          "Microsoft.AspNetCore.Authentication.Google": "3.1.16",
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "3.1.11",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "3.1.13",
           "Microsoft.AspNetCore.Identity.UI": "3.1.13",
@@ -323,6 +325,28 @@
         },
         "compile": {
           "lib/netstandard1.1/Mailjet.Client.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.Facebook/3.1.16": {
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.Facebook.dll": {
+            "assemblyVersion": "3.1.16.0",
+            "fileVersion": "3.100.1621.26305"
+          }
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.Facebook.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.Google/3.1.16": {
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "assemblyVersion": "3.1.16.0",
+            "fileVersion": "3.100.1621.26305"
+          }
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.Google.dll": {}
         }
       },
       "Microsoft.AspNetCore.Cryptography.Internal/3.1.13": {
@@ -3970,6 +3994,20 @@
       "sha512": "sha512-9QdI2cSjWFTqzT0PoBHyk3rr26klA/OOvfVwonxGlpbkc8Fn0xBf2Rys/2GazxfBIhkEMhPicfj6mzTCS6W0/Q==",
       "path": "mailjet.api/1.2.3",
       "hashPath": "mailjet.api.1.2.3.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.Facebook/3.1.16": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jt3VAEahCNnx3cExP74PlVH6pzqlFkua60uuL5fpb7MR5KwaA8cRoiELTYkz0jWFTL5cGQ43+sGNd6YdBH+G8A==",
+      "path": "microsoft.aspnetcore.authentication.facebook/3.1.16",
+      "hashPath": "microsoft.aspnetcore.authentication.facebook.3.1.16.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.Google/3.1.16": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QsZA3PuTGvXJw9XqP2tfT+lKRlJibFXKvvCtbLs5N2AH2bxZ+XfZZle3tL4xehevE6jDeVbMGgX7qCGYsXguOA==",
+      "path": "microsoft.aspnetcore.authentication.google/3.1.16",
+      "hashPath": "microsoft.aspnetcore.authentication.google.3.1.16.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Cryptography.Internal/3.1.13": {
       "type": "package",

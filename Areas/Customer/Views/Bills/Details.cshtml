@@ -34,7 +34,7 @@
     <div class="row  about-edit-item ltr-effect">
         <div class="col-md-12 about-item-content">
             <div class="row">
-                @if (Model.Bill.Status != SD.StatusPaid)
+                @if (User.IsInRole(SD.ManagerUser) && Model.Bill.Status != SD.StatusPaid)
                 {
                     <div class="col-md-4">
                         <span class="d-block mb-1">
@@ -54,7 +54,7 @@
                     </div>
                 }
 
-                @if (Model.Bill.Status != SD.StatusPaid)
+                @if (User.IsInRole(SD.ManagerUser) &&  Model.Bill.Status != SD.StatusPaid)
                 {
                     <div class="col-md-4 about-item-content">
                         <a asp-action="SendBill"
@@ -86,7 +86,7 @@
                         <span class=" badge badge-info text-center">@Model.Bill.Status</span>
 
                     }
-                    else if (Model.Bill.Status == SD.StatusCanceled)
+                    else if (Model.Bill.Status == SD.StatusDeclined)
                     {
                         <span class=" badge badge-warning text-center">@Model.Bill.Status</span>
                     }

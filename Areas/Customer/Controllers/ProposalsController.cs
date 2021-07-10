@@ -47,6 +47,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             return View(ListProposal);
         }
 
+        [Authorize(Roles = SD.ManagerUser)]
         [HttpGet]
         public async Task<IActionResult> Create(string id)
         {
@@ -152,7 +153,6 @@ namespace Appli_Taxi.Areas.Customer.Controllers
         }
 
         /// Add To Cart
-        /// 
         [HttpGet]
         public async Task<IActionResult> AddToCart(string id, int proposalId)
         {
@@ -242,9 +242,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             }
         }
 
-        /// <param"> Remove from Cart</param>
-        /// <returns></returns>
-
+        /// Remove from Cart
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveCart(int productId)
@@ -259,7 +257,6 @@ namespace Appli_Taxi.Areas.Customer.Controllers
 
             return RedirectToAction("Create", new { id = shoopingCart.ApplicationUserId });
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -285,6 +282,8 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             return new JsonResult(product);
         }
 
+
+        //Ajax Json
         [HttpGet]
         public async Task<IActionResult> getUserById(string id)
         {
@@ -292,9 +291,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             return new JsonResult(user);
         }
 
-        //////////
-        /// Detail et paerçu de la proposition
-        ////
+        /// Detail et aperçu de la proposition
 
         public async Task<IActionResult> Details(int proposalId)
         {
@@ -309,11 +306,8 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             return View(UserProDetailVM);
         }
 
-
-        //////////
         /// Edit proposition
-        ////
-        ///
+
         public async Task<IActionResult> Edit(int? proposalId)
         {
             if (proposalId == null)
@@ -338,10 +332,8 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             return View(UserProDetailVM);
         }
 
-        //////////
-        /// Edit proposition
-        ////
-        ///
+        /// Modifier une proposition
+
 
         public async Task<IActionResult> Plus(int productId, int id,UserProposalDetailsViewModel model, int cartId)
         {
@@ -436,6 +428,8 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             }
         }
 
+
+        // Supprimer un proposition
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProposal(int proposalId)
@@ -460,7 +454,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             });
         }
 
-
+        // Convertir en facture
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConvertToBill(int? proposalId)
@@ -480,7 +474,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
                 UserId = proposal.UserId,
                 IssueDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
-                Status = SD.StatusInProcess,
+                Status = SD.StatusNotPaid,
                 PhoneNumber = proposal.PhoneNumber,
                 BillType = proposal.PoposalType,
                 BillTotal = proposal.ProposalTotal,
@@ -538,7 +532,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
                                 "Bonjour : " + user.FirstName + " " + user.LastName + "<br/>" +
                                 "Vous avez une nouvelle proposition de la part de AppliTaxi <br/>" +
                                 "Cliquer sur le lien si dessous pour voir ta proposition <br/>" +
-                                "https://localhost:44300/Customer/Proposals/Overview/" + id + "<br/>" + "<hr>" +
+                                "https://localhost:44301/Customer/Proposals/Overview/" + id + "<br/>" + "<hr>" +
                                 "<div class='col-md-12'><div class='row ml-1'>" +
                                 "<span><img class='pb-2' " +
                                 "src='https://is1-ssl.mzstatic.com/image/thumb/Purple118/v4/1b/29/f2/1b29f20e-3004-5715-d070-5356ad545b21/source/512x512bb.jpg' " +
@@ -570,6 +564,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             return View(UserProDetailVM);
         }
 
+
         public async Task<IActionResult> Confirm(int id)
         {
             var proposal = await db.Proposals.FindAsync(id);
@@ -578,10 +573,18 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-        /// <summary>
-        /// 
 
-       // HttpGet
+        public async Task<IActionResult> Reject(int id)
+        {
+            var proposal = await db.Proposals.FindAsync(id);
+            proposal.Status = SD.StatusDeclined;
+            db.Proposals.Update(proposal);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+        
+        [Authorize(Roles = SD.ManagerUser)]
+        // HttpGet
         public async Task<IActionResult> ShoopingCart()
         {
 

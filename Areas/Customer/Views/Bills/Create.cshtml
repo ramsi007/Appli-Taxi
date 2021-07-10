@@ -11,26 +11,30 @@
     <div class="col-md-6">
         <h4 class="text-success text-center">Nouvelle facture</h4>
     </div>
-    <div class="col-md-5 text-right">
-        @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoopingCartCount) == null)
-        {
-            <a asp-action="ShoopingCart">
-                <i class="fas fa-shopping-cart bag"></i>
-                <span class="mb-5 bag" style="color:#ff6a00">(0)</span>
-            </a>
-        }
-        else
-        {
-            <a asp-action="ShoopingCart">
-                <span>
+    @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.VendorUser))
+    {
+        <div class="col-md-5 text-right">
+            @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoopingCartCount) == null)
+            {
+                <a asp-action="ShoopingCart">
                     <i class="fas fa-shopping-cart bag"></i>
-                    <span class="mb-5 bag" style="color:#ff6a00">
-                        (@HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoopingCartCount))
+                    <span class="mb-5 bag" style="color:#ff6a00">(0)</span>
+                </a>
+            }
+            else
+            {
+                <a asp-action="ShoopingCart">
+                    <span>
+                        <i class="fas fa-shopping-cart bag"></i>
+                        <span class="mb-5 bag" style="color:#ff6a00">
+                            (@HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoopingCartCount))
+                        </span>
                     </span>
-                </span>
-            </a>
-        }
-    </div>
+                </a>
+            }
+        </div>
+    }
+
 </div>
 <br />
 <form method="post">

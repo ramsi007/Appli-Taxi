@@ -91,18 +91,18 @@
                 <div class="col-md-12">
                     <div class="row form-group">
                         <div class="col-md-6">
-                            <input id="btnAdd" type="submit" value="Ajouter" class="btn btn-primary form-control" />
+                            <input type="submit" value="Ajouter" class="btn-add pb-2" />
                         </div>
                         @if (Model.Receipt.BillId == 0)
                         {
                             <div class="col-md-6">
-                                <a class="btn btn-success form-control" asp-action="Index">Annuler</a>
+                                <a class="btn-cancel" asp-action="Index">Annuler</a>
                             </div>
                         }
                         else
                         {
                             <div class="col-md-6">
-                                <a class="btn btn-success form-control" asp-action="Edit" asp-route-billId="@Model.Receipt.BillId" asp-controller="Bills">Annuler</a>
+                                <a class="btn-cancel" asp-action="Edit" asp-route-billId="@Model.Receipt.BillId" asp-controller="Bills">Annuler</a>
                             </div>
                         }
                     </div>

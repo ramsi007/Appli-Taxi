@@ -222,7 +222,7 @@ namespace Appli_Taxi.Areas.UserServices.Controllers
             }
             else
             {
-                holiday.Status = SD.StatusCanceled;
+                holiday.Status = SD.StatusDeclined;
             }
 
             db.Holidays.Update(holiday);

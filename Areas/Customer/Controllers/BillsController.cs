@@ -48,10 +48,11 @@ namespace Appli_taxi.Areas.Customer.Controllers
             return View(ListBills);
         }
 
+        [Authorize(Roles = SD.ManagerUser + "," + SD.VendorUser)]
         public async Task<IActionResult> Create(string id)
         {
             Bill bill = new Bill();
-            bill.NumBill = ("#Fact/" + DateTime.Now.ToFileTime().ToString()).Substring(1, 18);
+            bill.NumBill = ("#Fact/" + DateTime.Now.ToFileTime().ToString()).Substring(1,18);
             bill.DueDate = Convert.ToDateTime(DateTime.Now.ToString("dd-MMMM-yyyy"));
             bill.IssueDate = Convert.ToDateTime(DateTime.Now.ToString("dd-MMMM-yyyy"));
             bill.UserId = id;
@@ -72,11 +73,18 @@ namespace Appli_taxi.Areas.Customer.Controllers
 
             if (id == null)
             {
-                UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole != SD.EmployeeUser).ToListAsync();
+                if (User.IsInRole(SD.ManagerUser))
+                {
+                    UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole != SD.EmployeeUser).ToListAsync();
+                }
+                else if (User.IsInRole(SD.VendorUser))
+                {
+                    UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole.Equals(SD.ManagerUser)).ToListAsync();
+                }
             }
             else
             {
-                UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.Id == id).ToListAsync();
+                    UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.Id == id).ToListAsync();
             }
             UserProposalVM.ListShoopingCart = ListCartFromDb;
 
@@ -85,10 +93,21 @@ namespace Appli_taxi.Areas.Customer.Controllers
 
 
             Users = db.ShooppingCarts.Where(m => m.NumBill != null).Select(m => m.ApplicationUserId).ToList();
+            IQueryable<ApplicationUser> ListUsers;
 
-            IQueryable<ApplicationUser> ListUsers = from u in db.ApplicationUsers
-                                                    where (Users.Contains(u.Id))
-                                                    select u;
+            if (User.IsInRole(SD.VendorUser))
+            {
+                    ListUsers = from u in db.ApplicationUsers
+                    where (Users.Contains(u.Id) && u.UserRole.Equals(SD.ManagerUser))
+                    select u;
+            }
+            else
+            {
+                    ListUsers = from u in db.ApplicationUsers
+                    where (Users.Contains(u.Id) && !u.UserRole.Equals(SD.ManagerUser))
+                    select u;
+            }
+
 
             HttpContext.Session.SetInt32(SD.ShoopingCartCount, ListUsers.Count());
             return View(UserProposalVM);
@@ -98,9 +117,20 @@ namespace Appli_taxi.Areas.Customer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserProposalViewModel model)
         {
-            var user = await db.ApplicationUsers.Where(m => m.Id == model.Bill.UserId).FirstOrDefaultAsync();
-            var shoopingcartList = await db.ShooppingCarts.Where(m => m.ApplicationUserId
-                                 == user.Id && m.NumBill != null).ToListAsync();
+            var user = new ApplicationUser();
+            if(User.IsInRole(SD.VendorUser))
+            {
+                 user = await db.ApplicationUsers.Where(m => m.Id == model.Bill.UserId
+                                    && m.UserRole.Equals(SD.ManagerUser)).FirstOrDefaultAsync();
+            }else
+            {
+                 user = await db.ApplicationUsers.Where(m => m.Id == model.Bill.UserId
+                            && !m.UserRole.Equals(SD.ManagerUser)).FirstOrDefaultAsync();
+            }
+
+            var shoopingcartList = await db.ShooppingCarts.Where(m => m.ApplicationUserId 
+                                    == user.Id && m.NumBill != null).ToListAsync();
+                                
 
             Bill bill = new Bill();
 
@@ -250,6 +280,7 @@ namespace Appli_taxi.Areas.Customer.Controllers
         /// Modifier une facture
         ////
         ///
+        [Authorize(Roles = SD.ManagerUser)]
         public async Task<IActionResult> Edit(int billId)
         {
             Bill bill = await db.Bills.FindAsync(billId);
@@ -506,9 +537,13 @@ namespace Appli_taxi.Areas.Customer.Controllers
                                 "<b> SIRET :</ b > 83138505900017 <br/>France</p>" +
                                 "</div></div>");
 
-            bill.Status = SD.StatusSend;
-            db.Bills.Update(bill);
-            await db.SaveChangesAsync();
+            if(bill.Status.Equals(SD.StatusNotPaid))
+            {
+                bill.Status = SD.StatusSend;
+                db.Bills.Update(bill);
+                await db.SaveChangesAsync();
+
+            }
 
             return RedirectToAction("Details", new { id = id });
         }
@@ -530,44 +565,6 @@ namespace Appli_taxi.Areas.Customer.Controllers
             return View(UserBillDetailVM);
         }
 
-        public async Task<IActionResult> Confirm(int id)
-        {
-            var bill = await db.Bills.FindAsync(id);
-            bill.Status = SD.StatusAccepted;
-            db.Bills.Update(bill);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-
-        /// Shopping Cart ///
-
-        public async Task<IActionResult> ShoopingCart()
-        {
-
-            List<string> Users = new List<string>();
-            Users = db.ShooppingCarts.Where(m=>m.NumBill != null).Select(m => m.ApplicationUserId).ToList();
-
-            IQueryable<ApplicationUser> ListUsers = from u in db.ApplicationUsers
-                                                    where (Users.Contains(u.Id))
-                                                    select u;
-            IList<ShoppingCartViewModel> ListShoppingCartVM = new List<ShoppingCartViewModel>();
-
-
-            foreach (var user in ListUsers)
-            {
-                ShoppingCartViewModel ShoppingCartVM = new ShoppingCartViewModel()
-                {
-                    ListBilllShooppingCarts = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id && m.NumBill != null).ToListAsync(),
-                    User = await db.ApplicationUsers.FindAsync(user.Id)
-                };
-
-                ShoppingCartVM.ListProducts = await db.Produits.ToListAsync();
-                ListShoppingCartVM.Add(ShoppingCartVM);
-            }
-
-            return View(ListShoppingCartVM);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Overview(UserBillDetailViewModel model, string stripeToken)
@@ -576,7 +573,7 @@ namespace Appli_taxi.Areas.Customer.Controllers
             var options = new Stripe.ChargeCreateOptions
             {
                 Amount = Convert.ToInt32(bill.Rest * 100),
-                Currency = "usd",
+                Currency = "eur",
                 Description = "Order ID : " + model.Bill.Id,
                 Source = stripeToken
             };
@@ -608,9 +605,62 @@ namespace Appli_taxi.Areas.Customer.Controllers
             await db.SaveChangesAsync();
 
 
-            return RedirectToAction("Details", new {id = model.Bill.Id });
-            //return RedirectToAction("Confirm", "Orders", new { id = OrderDetailsVM.OrderHeader.Id });
+            return RedirectToAction("Details", new { id = model.Bill.Id });
         }
+
+
+        public async Task<IActionResult> Confirm(int id)
+        {
+            var bill = await db.Bills.FindAsync(id);
+            bill.Status = SD.StatusAccepted;
+            db.Bills.Update(bill);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        /// Shopping Cart ///
+
+        [Authorize(Roles = SD.ManagerUser + "," + SD.VendorUser)]
+        public async Task<IActionResult> ShoopingCart()
+        {
+
+            List<string> Users = new List<string>();
+            List<ShooppingCart> billsInShooppingCart = new List<ShooppingCart>();
+
+            Users = db.ShooppingCarts.Where(m=>m.NumBill != null).Select(m => m.ApplicationUserId).ToList();
+
+            IQueryable<ApplicationUser> ListUsers = from u in db.ApplicationUsers
+                                                    where (Users.Contains(u.Id))
+                                                    select u;
+            IList<ShoppingCartViewModel> ListShoppingCartVM = new List<ShoppingCartViewModel>();
+           
+            foreach (var user in ListUsers)
+            {
+                if (User.IsInRole(SD.VendorUser))
+                {
+                    billsInShooppingCart = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id && m.NumBill != null 
+                                            && user.UserRole.Equals(SD.ManagerUser)).ToListAsync();
+                }
+                else
+                {
+                    billsInShooppingCart = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id && m.NumBill != null
+                                           && !user.UserRole.Equals(SD.ManagerUser)).ToListAsync();
+                }
+
+                ShoppingCartViewModel ShoppingCartVM = new ShoppingCartViewModel()
+                {
+                    ListBilllShooppingCarts = billsInShooppingCart,
+                    User = await db.ApplicationUsers.FindAsync(user.Id)
+                };
+
+                ShoppingCartVM.ListProducts = await db.Produits.ToListAsync();
+                ListShoppingCartVM.Add(ShoppingCartVM);
+            }
+
+            return View(ListShoppingCartVM);
+        }
+
+
         //// Get User By Id
         //
         public string GetUserId()

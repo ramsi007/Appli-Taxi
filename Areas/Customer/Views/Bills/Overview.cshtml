@@ -228,13 +228,12 @@
             </div>
         </div>
         <div class="row">
-            @if (User.IsInRole(SD.ManagerUser))
-            {
+
                 <div class="col-md-4">
-                    <a asp-action="Index" class="btn-cart" style="margin:20px 0;">Retour à la liste des propositions</a>
+                    <a asp-action="Index" class="btn-cart" style="margin:20px 0;">Retour à la liste des factures</a>
                 </div>
-            }
-            @if (Model.Bill.Rest > 0)
+            
+            @if (Model.Bill.Rest > 0 && User.IsInRole(SD.CustomerUser))
             {
                 <div class="col-md-4">
                     @{ var billTotalForStripe = Model.Bill.Rest * 100;}
@@ -251,7 +250,7 @@
                     <script>
                         document.getElementsByClassName("stripe-button-el")[0].style.display = "none";
                     </script>
-                    <button asp-action="Edit" type="submit" class="btn-cart">Finaliser le reglément</button>
+                    <button asp-action="Edit" type="submit" class="btn-cart">Finaliser le règlement</button>
                 </div>
             }
         </div>

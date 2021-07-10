@@ -176,7 +176,6 @@ namespace Appli_taxi.Areas.Identity.Pages.Account
                     HiringDate = Input.HiringDate
                 };
 
-
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

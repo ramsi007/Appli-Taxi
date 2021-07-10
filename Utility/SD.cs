@@ -19,7 +19,7 @@ namespace Appli_Taxi.Utility
         public const string StatusDeclined = "refusé";
         public const string StatusCompleted = "archivée";
         public const string StatusSend = "Envoyé";
-        public const string StatusCanceled = "annulé";
+        //public const string StatusCanceled = "annulé";
         public const string StatusNotPaid = "Non Payé";
         public const string StatusPaid = "Payé";
         public const string StatusPrePaid = "Partiellement payé";

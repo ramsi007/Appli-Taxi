@@ -17,12 +17,12 @@ namespace Appli_Taxi.Models
 
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Ce champ est obligatoire")]
+        [Required(ErrorMessage = "Ce champ est obligatoire"), Display(Name="Prix de vente")]
         //[DisplayFormat(DataFormatString = "{0:C}")]
         //[Range(1, int.MaxValue, ErrorMessage = " Prix de vente ne doit pas être inférieur à {1}€")]
         public double SalePrice { get; set; }
 
-        [Required(ErrorMessage = "Ce champ est obligatoire")]
+        [Required(ErrorMessage = "Ce champ est obligatoire"), Display(Name = "Prix d'achat")]
         //[DisplayFormat(DataFormatString = "{0:C}")]
         //[Range(1, int.MaxValue, ErrorMessage = " Prix d'achat ne doit pas être inférieur à {1}€")]
         public double PurchasePrice { get; set; }

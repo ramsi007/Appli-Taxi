@@ -63,6 +63,18 @@ namespace Appli_taxi
             }
             );
 
+            //services.AddAuthentication().AddFacebook(options =>
+            //{
+            //    options.AppId = "395528865233123";
+            //    options.AppSecret = "a9621eb4c8e4f89a235007487ccbabe0";
+            //});
+            //services.AddAuthentication().AddGoogle(options =>
+            //{
+            //    options.ClientId = "238191954213-8vflvu9opo9rl8v9t8b5t7cf6gkg2oh6.apps.googleusercontent.com";
+            //    options.ClientSecret = "vOhIHDkMAoKiotie-tw-y_vj";
+
+            //});
+
             services.Configure<StripesSettings>(Configuration.GetSection("Stripe"));
 
         }

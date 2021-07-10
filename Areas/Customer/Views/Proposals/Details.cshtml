@@ -36,12 +36,16 @@
     </div>
     <div class="row  about-edit-item ltr-effect">
         <div class="col-md-4 about-item-content">
-            <span class="d-block mb-1">
-                Modifier la Proposition&nbsp;&nbsp;
-                <a asp-action="Edit" asp-route-proposalId="@Model.Proposal.Id">
-                    <i class="far fa-edit icon"></i>
-                </a>
-            </span>
+            @if (User.IsInRole(SD.ManagerUser))
+            {
+                <span class="d-block mb-1">
+                    Modifier la Proposition&nbsp;&nbsp;
+                    <a asp-action="Edit" asp-route-proposalId="@Model.Proposal.Id">
+                        <i class="far fa-edit icon"></i>
+                    </a>
+                </span>
+            }
+
             <span class="text-center">
                 <i class="far fa-clock icon">&nbsp;&nbsp;</i>
                 <span style="color: #2e232c">
@@ -83,7 +87,7 @@
                 <span class=" badge badge-success text-center">@Model.Proposal.Status</span>
 
             }
-            else if (Model.Proposal.Status == SD.StatusCanceled)
+            else if (Model.Proposal.Status == SD.StatusDeclined)
             {
                 <span class=" badge badge-danger text-center">@Model.Proposal.Status</span>
             }

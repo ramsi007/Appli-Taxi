@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "TtjKUHWgz0afeBfnHkRQZ4AnB9A9lJMsxzOBNxdJjtyI9GRr6D8s6BqsgEhX5TgYHmZaCF9CMqYH4hmmzUHw6g==",
+  "dgSpecHash": "zXI2H2A9jkCyN5H2ZknBev2XJajmmaQtCr3olq8reEqgBKrLfxAy3q8STIyJsjwcs4deCJN1GbmcmABG4hALEg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Oujdi\\Desktop\\Projet C#\\Projet C#\\ASP.NET Core\\Application-Taxi\\Appli-taxi\\Appli-Taxi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Oujdi\\.nuget\\packages\\mailjet.api\\1.2.3\\mailjet.api.1.2.3.nupkg.sha512",
+    "C:\\Users\\Oujdi\\.nuget\\packages\\microsoft.aspnetcore.authentication.facebook\\3.1.16\\microsoft.aspnetcore.authentication.facebook.3.1.16.nupkg.sha512",
+    "C:\\Users\\Oujdi\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\3.1.16\\microsoft.aspnetcore.authentication.google.3.1.16.nupkg.sha512",
     "C:\\Users\\Oujdi\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.13\\microsoft.aspnetcore.cryptography.internal.3.1.13.nupkg.sha512",
     "C:\\Users\\Oujdi\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.13\\microsoft.aspnetcore.cryptography.keyderivation.3.1.13.nupkg.sha512",
     "C:\\Users\\Oujdi\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\3.1.11\\microsoft.aspnetcore.diagnostics.entityframeworkcore.3.1.11.nupkg.sha512",
