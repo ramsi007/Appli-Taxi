@@ -222,7 +222,7 @@
                                                     <div class="col-md-1 offset-md-1 mt-5">
                                                         <button type="submit" asp-action="RemoveCart" asp-controller="Proposals" asp-area="Customer"
                                                                 class="btn btn-danger"
-                                                                asp-route-productId="@item.ProduitId">
+                                                                asp-route-productId="@item.ProduitId" asp-route-userId="@item.ApplicationUserId">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </div>

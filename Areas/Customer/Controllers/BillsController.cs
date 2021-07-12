@@ -263,9 +263,10 @@ namespace Appli_taxi.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveCart(int productId)
+        public async Task<IActionResult> RemoveCart(int productId, string userId)
         {
-            var shoopingCart = await db.ShooppingCarts.Where(m => m.ProduitId == productId && m.NumBill != null).FirstOrDefaultAsync();
+            var shoopingCart = await db.ShooppingCarts.Where(m => m.ProduitId == productId && m.ApplicationUserId == userId
+                                        && m.NumBill != null).FirstOrDefaultAsync();
 
             if (shoopingCart != null)
             {

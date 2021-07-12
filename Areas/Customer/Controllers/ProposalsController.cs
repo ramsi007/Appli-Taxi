@@ -245,10 +245,12 @@ namespace Appli_Taxi.Areas.Customer.Controllers
         /// Remove from Cart
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveCart(int productId)
+        public async Task<IActionResult> RemoveCart(int productId, string userId)
         {
-            var shoopingCart = await db.ShooppingCarts.Where(m => m.ProduitId == productId && m.NumProposal != null).FirstOrDefaultAsync();
+            var shoopingCart = await db.ShooppingCarts.Where(m => m.ProduitId == productId 
+                                && m.NumBill != null && m.ApplicationUserId == userId).FirstOrDefaultAsync();
 
+                               
             if (shoopingCart != null)
             {
                 db.ShooppingCarts.Remove(shoopingCart);

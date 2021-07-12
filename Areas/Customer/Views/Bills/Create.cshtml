@@ -43,25 +43,25 @@
         <div class="row">
             <div class="col-md-12 form-group">
                 <div class="row mb-5">
-                    <div class="col-md-3">
-                        <label asp-for="Bill.NumBill" class="col-form-label text-dark h5"></label>
+                    <div class="col-md-3 text-center">
+                        <label class="col-form-label text-center text-dark h5">N° FACTURE</label>
                         <input asp-for="Bill.NumBill" class="form-control" readonly />
                         <span asp-validation-for="Bill.NumBill" class="text-danger"></span>
                     </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="Bill.IssueDate" class="col-form-label text-dark h5"></label>
+                     
+                    <div class="col-md-3 text-center">
+                        <label class="col-form-label text-dark h5">DATE D'ÉMISSION</label>
                         <input type="date" asp-for="Bill.IssueDate" class="form-control" />
                         <span asp-validation-for="Bill.IssueDate" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-3">
-                        <label asp-for="Bill.DueDate" class="col-form-label text-dark h5"></label>
+                    <div class="col-md-3 text-center">
+                        <label asp-for="Bill.DueDate" class="col-form-label text-dark h5">DATE D'ÉCHÉANCE</label>
                         <input type="date" asp-for="Bill.DueDate" class="form-control" />
                         <span asp-validation-for="Bill.DueDate" class="text-danger"></span>
                     </div>
-                    <div class="col-md-3">
-                        <label asp-for="Bill.BillType" class="col-form-label text-dark h5"></label>
+                    <div class="col-md-3 text-center">
+                        <label class="col-form-label text-dark h5">CATÉGORIE</label>
                         <select id="" class="form-control" asp-for="Bill.BillType"
                                 asp-items="@Html.GetEnumSelectList<Bill.PrType>()">
                         </select>
@@ -74,7 +74,7 @@
                     {
                         <div class="col-md-6" id="divUser">
 
-                            <label asp-for="ListUsers" class="col-form-label text-dark h5"></label>
+                            <label class="col-form-label text-dark h5">CLIENT</label>
                             <select id="ddlUser" class="form-control" asp-for="@Model.Bill.UserId"
                                     asp-items="@(new SelectList(Model.ListUsers, "Id", "FirstName"))">
                                 <option>-- Selectionner un client --</option>
@@ -199,9 +199,9 @@
                                                         <span asp-validation-for="@item.Description" class="text-danger"></span>
                                                     </div>
                                                     <div class="col-md-1 offset-md-1 mt-5">
-                                                        <button type="submit" asp-action="RemoveCart" asp-controller="Proposals" asp-area="Customer"
+                                                        <button type="submit" asp-action="RemoveCart" asp-controller="Bills" asp-area="Customer"
                                                                 class="btn btn-danger"
-                                                                asp-route-productId="@item.ProduitId">
+                                                                asp-route-productId="@item.ProduitId"  asp-route-userId="@item.ApplicationUserId">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </div>
