@@ -15,5 +15,6 @@ namespace Appli_Taxi.Models.ViewModels
         public ApplicationUser ApplicationUser { get; set; }
         public Proposal Proposal { get; set; }
         public Bill Bill { get; set; }
+        public string StatusMessage { get; set; }
     }
 }

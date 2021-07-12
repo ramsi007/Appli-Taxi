@@ -23,7 +23,11 @@
                     <input type="hidden" asp-for="@Model.ShooppingCart.ApplicationUserId" />
                     <input type="hidden" asp-for="@Model.Bill.Id" />
                 </div>
-
+                <br />
+                <br />
+                <span class="err-message">@Model.StatusMessage</span>
+                <br />
+                <br />
                 <div class="card-body">
                     <div class="row col-md-12">
                         <label asp-for="ListProduct" class="col-form-label text-dark h5"></label>

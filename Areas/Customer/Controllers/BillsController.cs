@@ -23,6 +23,9 @@ namespace Appli_taxi.Areas.Customer.Controllers
         private readonly ApplicationDbContext db;
         private readonly IEmailSender _emailSender;
 
+        //[TempData]
+        //public string StatusMessage { get; set; }
+
         public BillsController(ApplicationDbContext _db, IEmailSender emailSender)
         {
             this.db = _db;
@@ -222,42 +225,53 @@ namespace Appli_taxi.Areas.Customer.Controllers
                             .FirstOrDefaultAsync();
             var tax = await db.Taxes.Where(m => m.Id == product.TaxId).FirstOrDefaultAsync();
             var total = ((model.ShooppingCart.Count * product.SalePrice) + ((model.ShooppingCart.Count * product.SalePrice) * tax.Discount) / 100);
-            if (model.Bill.Id == 0)
+
+            if (Convert.ToDouble(model.ShooppingCart.Remise) > total)
             {
-                ShooppingCart cart = new ShooppingCart()
-                {
-                    ApplicationUserId = model.ShooppingCart.ApplicationUserId,
-                    ProduitId = product.Id,
-                    Description = model.ShooppingCart.Description,
-                    Count = model.ShooppingCart.Count,
-                    NumProposal = null,
-                    NumBill = ("#Fact/" + DateTime.Now.ToFileTime().ToString()).Substring(1, 18),
-                    Price = product.SalePrice,
-                    Tax = tax.Discount,
-                    Remise = model.ShooppingCart.Remise,
-                    Montant = Math.Round(total,2)
-                };
-                await db.ShooppingCarts.AddAsync(cart);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Create", new { id = model.ShooppingCart.ApplicationUserId });
+                model.ApplicationUser = await db.ApplicationUsers.Where(m => m.Id == model.ShooppingCart.ApplicationUserId).FirstOrDefaultAsync();
+                model.StatusMessage = "Erreur : La remise saisi ne doit pas dépasser le montant total : " + total;
+                return View(model);
             }
             else
             {
-                BillDetail billDetail = new BillDetail()
+                if (model.Bill.Id == 0)
                 {
-                    BillId = model.Bill.Id,
-                    ProduitId = product.Id,
-                    Remise = Convert.ToDouble(model.ShooppingCart.Remise),
-                    Count = model.ShooppingCart.Count,
-                    Name = product.Name,
-                    Description = model.ShooppingCart.Description,
-                    Price = product.SalePrice,
-                    Tax = tax.Discount
-                };
-                await db.BillDetails.AddAsync(billDetail);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Edit", new { billId = model.Bill.Id });
+                    ShooppingCart cart = new ShooppingCart()
+                    {
+                        ApplicationUserId = model.ShooppingCart.ApplicationUserId,
+                        ProduitId = product.Id,
+                        Description = model.ShooppingCart.Description,
+                        Count = model.ShooppingCart.Count,
+                        NumProposal = null,
+                        NumBill = ("#Fact/" + DateTime.Now.ToFileTime().ToString()).Substring(1, 18),
+                        Price = product.SalePrice,
+                        Tax = tax.Discount,
+                        Remise = model.ShooppingCart.Remise,
+                        Montant = Math.Round(total,2)
+                    };
+                    await db.ShooppingCarts.AddAsync(cart);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Create", new { id = model.ShooppingCart.ApplicationUserId });
+                }
+                else
+                {
+                    BillDetail billDetail = new BillDetail()
+                    {
+                        BillId = model.Bill.Id,
+                        ProduitId = product.Id,
+                        Remise = Convert.ToDouble(model.ShooppingCart.Remise),
+                        Count = model.ShooppingCart.Count,
+                        Name = product.Name,
+                        Description = model.ShooppingCart.Description,
+                        Price = product.SalePrice,
+                        Tax = tax.Discount
+                    };
+                    await db.BillDetails.AddAsync(billDetail);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Edit", new { billId = model.Bill.Id });
+                }
             }
+
         }
 
 
