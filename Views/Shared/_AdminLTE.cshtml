@@ -27,7 +27,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link href="~/css/responsive.bootstrap4.min.css" rel="stylesheet" />
     <link href="~/css/buttons.bootstrap4.min.css" rel="stylesheet" />
     <!-- -->
-
     <!-- Css-->
     <link href="~/css/Style.css" rel="stylesheet" />
 </head>
@@ -75,7 +74,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
+                        with font-awesome or any other icon font library -->
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
                                 <i class="nav-icon fas fa-th"></i>
@@ -149,129 +148,128 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </li>
 
                                     @*<li class="nav-item">
-                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Users">
-                            <p>&nbsp;&nbsp;&nbsp;Tous les comptes</p>
-                        </a>
-                    </li>*@
+                                            <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Users">
+                                                <p>&nbsp;&nbsp;&nbsp;Tous les comptes</p>
+                                            </a>
+                                        </li>*@
                                     @*<li class="nav-item">
-                        <a asp-page="/Account/Register" asp-area="Identity" class="nav-link">
-                            <p>&nbsp;&nbsp;&nbsp;Nouveau compte</p>
-                        </a>
-                    </li>*@
+                                            <a asp-page="/Account/Register" asp-area="Identity" class="nav-link">
+                                                <p>&nbsp;&nbsp;&nbsp;Nouveau compte</p>
+                                            </a>
+                                        </li>*@
                                 </ul>
                             </li>
                         }
-                        @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.CustomerUser))
-                         {
-                            <li class="nav-item menu-open">
-                                <a class="nav-link btn-effect" asp-area="Customer" asp-action="Index" asp-controller="Proposals">
-                                    <i class="fas fa-receipt"></i>
-                                    <p>&nbsp;&nbsp;&nbsp;Propositions</p>
-                                </a>
-                            </li>
-                         }
+
+                        <li class="nav-item menu-open">
+                            <a class="nav-link btn-effect" asp-area="Customer" asp-action="Index" asp-controller="Proposals">
+                                <i class="fas fa-receipt"></i>
+                                <p>&nbsp;&nbsp;&nbsp;Propositions</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item menu-open">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-file-invoice"></i>
+                                <p>&nbsp;&nbsp;&nbsp;Revenus</p>
+                                <i class="right fas fa-angle-left"></i>
+                            </a>
+                            <ul class="nav nav-treeview">
+
+                                <li class="nav-item menu-open">
+                                    <a class="nav-link" asp-area="Customer" asp-action="Index" asp-controller="Bills">
+                                        <p>&nbsp;&nbsp;&nbsp;Factures</p>
+                                    </a>
+                                </li>
+                                @if (User.IsInRole(SD.ManagerUser))
+                                {
+                                    <li class="nav-item menu-open">
+                                        <a class="nav-link" asp-area="Customer" asp-action="Index" asp-controller="CreditNotes">
+                                            <p>&nbsp;&nbsp;&nbsp;Notes de crédit</p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item menu-open">
+                                        <a class="nav-link" asp-area="Customer" asp-action="Index" asp-controller="Receipts">
+                                            <p>&nbsp;&nbsp;&nbsp;Réceptions</p>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                        @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.EmployeeUser))
+                        {
                             <li class="nav-item menu-open">
                                 <a class="nav-link active" href="#">
-                                    <i class="fas fa-file-invoice"></i>
-                                    <p>&nbsp;&nbsp;&nbsp;Revenus</p>
+                                    <i class="fas fa-tasks"></i>
+                                    <p>&nbsp;&nbsp;&nbsp;Services</p>
                                     <i class="right fas fa-angle-left"></i>
                                 </a>
                                 <ul class="nav nav-treeview">
-
                                     <li class="nav-item menu-open">
-                                        <a class="nav-link" asp-area="Customer" asp-action="Index" asp-controller="Bills">
-                                            <p>&nbsp;&nbsp;&nbsp;Factures</p>
+                                        <a class="nav-link" asp-area="UserServices" asp-action="Index" asp-controller="HolidayTypes">
+                                            <p>&nbsp;&nbsp;&nbsp;Type congé</p>
                                         </a>
                                     </li>
-                                    @if (User.IsInRole(SD.ManagerUser))
-                                    {
-                                        <li class="nav-item menu-open">
-                                            <a class="nav-link" asp-area="Customer" asp-action="Index" asp-controller="CreditNotes">
-                                                <p>&nbsp;&nbsp;&nbsp;Notes de crédit</p>
-                                            </a>
-                                        </li>
 
-                                        <li class="nav-item menu-open">
-                                            <a class="nav-link" asp-area="Customer" asp-action="Index" asp-controller="Receipts">
-                                                <p>&nbsp;&nbsp;&nbsp;Réceptions</p>
-                                            </a>
-                                        </li>
-                                    }
+                                    <li class="nav-item menu-open mb-2">
+                                        <a class="nav-link d-inline" asp-area="UserServices" asp-action="Index" asp-controller="Holidays">
+                                            <p>&nbsp;&nbsp;&nbsp;Congés</p>
+                                        </a>
+                                        @if (User.IsInRole(SD.ManagerUser))
+                                        {
+                                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.HolidaysDemandCount) == null)
+                                            {
+                                                <a class="nav-link d-inline" asp-area="UserServices" asp-action="ShowHolidaysinDemand" asp-controller="Holidays">
+                                                    <span class="badge badge-success badge-holiday">0</span>
+                                                </a>
+
+                                            }
+                                            else
+                                            {
+                                                <a class="nav-link d-inline" asp-area="UserServices" asp-action="ShowHolidaysinDemand" asp-controller="Holidays">
+                                                    <span class="badge badge-success badge-holiday">
+                                                        @HttpContextAccessor.HttpContext.Session.GetInt32(SD.HolidaysDemandCount)
+                                                    </span>
+                                                </a>
+                                            }
+                                        }
+                                    </li>
+
+                                    <li class="nav-item menu-open d-inline mt-5">
+                                        <a class="nav-link d-inline" asp-area="UserServices" asp-action="Index" asp-controller="ExpenseReports">
+                                            <p>&nbsp;&nbsp;&nbsp;Note des frais</p>
+                                        </a>
+                                        @if (User.IsInRole(SD.ManagerUser))
+                                        {
+                                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ExpensesDemandCount) == null)
+                                            {
+                                                <a class="nav-link d-inline ml-2" asp-area="UserServices" asp-action="ShowExpensesinDemand" asp-controller="ExpenseReports">
+                                                    <span class="badge badge-info ">0</span>
+                                                </a>
+
+                                            }
+                                            else
+                                            {
+                                                <a class="nav-link d-inline ml-2" asp-area="UserServices" asp-action="ShowExpensesinDemand" asp-controller="ExpenseReports">
+                                                    <span class="badge badge-info">
+                                                        @HttpContextAccessor.HttpContext.Session.GetInt32(SD.ExpensesDemandCount)
+                                                    </span>
+                                                </a>
+                                            }
+                                        }
+
+                                    </li>
+
+                                    <li class="nav-item menu-open">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Contrats">
+                                            <p>&nbsp;&nbsp;&nbsp;Contrats</p>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
-                            @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.EmployeeUser))
-                            {
-                                <li class="nav-item menu-open">
-                                    <a class="nav-link active" href="#">
-                                        <i class="fas fa-tasks"></i>
-                                        <p>&nbsp;&nbsp;&nbsp;Services</p>
-                                        <i class="right fas fa-angle-left"></i>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        <li class="nav-item menu-open">
-                                            <a class="nav-link" asp-area="UserServices" asp-action="Index" asp-controller="HolidayTypes">
-                                                <p>&nbsp;&nbsp;&nbsp;Type congé</p>
-                                            </a>
-                                        </li>
-
-                                        <li class="nav-item menu-open mb-2">
-                                            <a class="nav-link d-inline" asp-area="UserServices" asp-action="Index" asp-controller="Holidays">
-                                                <p>&nbsp;&nbsp;&nbsp;Congés</p>
-                                            </a>
-                                            @if (User.IsInRole(SD.ManagerUser))
-                                            {
-                                                @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.HolidaysDemandCount) == null)
-                                                {
-                                                    <a class="nav-link d-inline" asp-area="UserServices" asp-action="ShowHolidaysinDemand" asp-controller="Holidays">
-                                                        <span class="badge badge-success badge-holiday">0</span>
-                                                    </a>
-
-                                                }
-                                                else
-                                                {
-                                                    <a class="nav-link d-inline" asp-area="UserServices" asp-action="ShowHolidaysinDemand" asp-controller="Holidays">
-                                                        <span class="badge badge-success badge-holiday">
-                                                            @HttpContextAccessor.HttpContext.Session.GetInt32(SD.HolidaysDemandCount)
-                                                        </span>
-                                                    </a>
-                                                }
-                                            }
-                                        </li>
-
-                                        <li class="nav-item menu-open d-inline mt-5">
-                                            <a class="nav-link d-inline" asp-area="UserServices" asp-action="Index" asp-controller="ExpenseReports">
-                                                <p>&nbsp;&nbsp;&nbsp;Note des frais</p>
-                                            </a>
-                                            @if (User.IsInRole(SD.ManagerUser))
-                                            {
-                                                @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ExpensesDemandCount) == null)
-                                                {
-                                                    <a class="nav-link d-inline ml-2" asp-area="UserServices" asp-action="ShowExpensesinDemand" asp-controller="ExpenseReports">
-                                                        <span class="badge badge-info ">0</span>
-                                                    </a>
-
-                                                }
-                                                else
-                                                {
-                                                    <a class="nav-link d-inline ml-2" asp-area="UserServices" asp-action="ShowExpensesinDemand" asp-controller="ExpenseReports">
-                                                        <span class="badge badge-info">
-                                                            @HttpContextAccessor.HttpContext.Session.GetInt32(SD.ExpensesDemandCount)
-                                                        </span>
-                                                    </a>
-                                                }
-                                            }
-
-                                        </li>
-
-                                        <li class="nav-item menu-open">
-                                            <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Contrats">
-                                                <p>&nbsp;&nbsp;&nbsp;Contrats</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            }
-                        </ul>
+                        }
+                    </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
             </div>

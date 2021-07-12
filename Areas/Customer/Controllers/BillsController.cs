@@ -651,7 +651,6 @@ namespace Appli_taxi.Areas.Customer.Controllers
         [Authorize(Roles = SD.ManagerUser + "," + SD.VendorUser)]
         public async Task<IActionResult> ShoopingCart()
         {
-
             List<string> Users = new List<string>();
             List<ShooppingCart> billsInShooppingCart = new List<ShooppingCart>();
 

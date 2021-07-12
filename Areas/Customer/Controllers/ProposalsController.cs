@@ -49,7 +49,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             return View(ListProposal);
         }
 
-        [Authorize(Roles = SD.ManagerUser)]
+        [Authorize(Roles = SD.ManagerUser + "," + SD.VendorUser)]
         [HttpGet]
         public async Task<IActionResult> Create(string id)
         {
@@ -94,12 +94,22 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             List<string> Users = new List<string>();
             //ApplicationUser ListUsers = new ApplicationUser();
 
-
             Users = db.ShooppingCarts.Where(m=>m.NumProposal!=null).Select(m => m.ApplicationUserId).ToList();
 
-            IQueryable<ApplicationUser> ListUsers = from u in db.ApplicationUsers
-                                                    where (Users.Contains(u.Id))
-                                                    select u;
+            IQueryable<ApplicationUser> ListUsers;
+
+            if (User.IsInRole(SD.VendorUser))
+            {
+                ListUsers = from u in db.ApplicationUsers
+                            where (Users.Contains(u.Id) && u.UserRole.Equals(SD.ManagerUser))
+                            select u;
+            }
+            else
+            {
+                ListUsers = from u in db.ApplicationUsers
+                            where (Users.Contains(u.Id) && !u.UserRole.Equals(SD.ManagerUser))
+                            select u;
+            }
 
             HttpContext.Session.SetInt32(SD.ShoopingCartCount, ListUsers.Count());
             //
@@ -612,13 +622,14 @@ namespace Appli_Taxi.Areas.Customer.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-        
-        [Authorize(Roles = SD.ManagerUser)]
+
+        [Authorize(Roles = SD.ManagerUser + "," + SD.VendorUser)]
         // HttpGet
         public async Task<IActionResult> ShoopingCart()
         {
 
             List<string> Users = new List<string>();
+            List<ShooppingCart> proposalsInShooppingCart = new List<ShooppingCart>();
             Users = db.ShooppingCarts.Where(m => m.NumProposal != null).Select(m => m.ApplicationUserId).ToList();
 
             IQueryable<ApplicationUser> ListUsers = from u in db.ApplicationUsers
@@ -629,12 +640,20 @@ namespace Appli_Taxi.Areas.Customer.Controllers
 
             foreach (var user in ListUsers)
             {
+                if (User.IsInRole(SD.VendorUser))
+                {
+                   proposalsInShooppingCart = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id && m.NumProposal != null
+                                            && user.UserRole.Equals(SD.ManagerUser)).ToListAsync();
+                }
+                else
+                {
+                    proposalsInShooppingCart = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id && m.NumProposal != null
+                                           && user.UserRole.Equals(SD.CustomerUser)).ToListAsync();
+                }
+
                 ShoppingCartViewModel ShoppingCartVM = new ShoppingCartViewModel()
                 {
-                    ListProposalShooppingCarts = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id 
-                                                && m.NumProposal != null).ToListAsync(),
-                    ListBilllShooppingCarts = await db.ShooppingCarts.Where(m => m.ApplicationUserId == user.Id 
-                                               && m.NumBill != null).ToListAsync(),
+                    ListProposalShooppingCarts = proposalsInShooppingCart,
                     User = await db.ApplicationUsers.FindAsync(user.Id)
                 };
 

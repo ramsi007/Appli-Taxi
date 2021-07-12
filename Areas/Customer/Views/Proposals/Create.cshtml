@@ -12,7 +12,7 @@
         <h4 class="text-success text-center">CRÉER UNE PROPOSITION</h4>
     </div>
 
-    @if (User.IsInRole(SD.ManagerUser))
+    @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.VendorUser))
     {
         <div class="col-md-5 text-right">
             @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoopingCartCount) == null)

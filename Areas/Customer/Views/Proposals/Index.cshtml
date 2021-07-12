@@ -10,7 +10,7 @@
             <div class="col-md-6">
                 <h3 class="text-info">Liste des Propositions</h3>
             </div>
-            @if (User.IsInRole(SD.ManagerUser))
+            @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.VendorUser))
             {
                 <div class="col-md-6 text-right">
                     <partial name="_CreateButtonPartial" />
