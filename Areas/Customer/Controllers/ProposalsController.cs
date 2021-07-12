@@ -22,6 +22,8 @@ namespace Appli_Taxi.Areas.Customer.Controllers
     {
         private readonly ApplicationDbContext db;
         private readonly IEmailSender _emailSender;
+        [TempData]
+        public string StatusMessage { get; set; }
 
         public ProposalsController(ApplicationDbContext _db, IEmailSender emailSender)
         {
@@ -73,7 +75,14 @@ namespace Appli_Taxi.Areas.Customer.Controllers
 
             if (id == null)
             {
-                UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole != SD.EmployeeUser && m.UserRole != SD.VendorUser).ToListAsync();
+                if (User.IsInRole(SD.ManagerUser))
+                {
+                    UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole.Equals(SD.CustomerUser)).ToListAsync();
+                }
+                else if (User.IsInRole(SD.VendorUser))
+                {
+                    UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole.Equals(SD.ManagerUser)).ToListAsync();
+                }
             }
             else
             {
@@ -204,6 +213,24 @@ namespace Appli_Taxi.Areas.Customer.Controllers
                             .FirstOrDefaultAsync();
             var tax = await db.Taxes.Where(m => m.Id == product.TaxId).FirstOrDefaultAsync();
             var total = ((model.ShooppingCart.Count * product.SalePrice) + ((model.ShooppingCart.Count * product.SalePrice) * tax.Discount) / 100);
+
+            if (Convert.ToDouble(model.ShooppingCart.Remise) > total)
+            {
+                List<int> ListproductInShoppingCart = new List<int>();
+                ListproductInShoppingCart = db.ShooppingCarts
+                                                 .Where(m => m.ApplicationUserId == model.ShooppingCart.ApplicationUserId
+                                                  && m.NumBill != null)
+                                                 .Select(m => m.ProduitId).ToList();
+                
+                IQueryable<Produit> Products = from s in db.Produits
+                                               where !(ListproductInShoppingCart.Contains(s.Id))
+                                               select s;
+                model.ListProduct = Products.ToList();
+                model.ApplicationUser = await db.ApplicationUsers.Where(m => m.Id == model.ShooppingCart.ApplicationUserId).FirstOrDefaultAsync();
+                model.StatusMessage = "Erreur : La remise saisi ne doit pas dépasser le montant total : " + total;
+                return View(model);
+            }else
+            {
             if (model.Proposal.Id == 0)
             {
                 ShooppingCart cart = new ShooppingCart()
@@ -240,6 +267,8 @@ namespace Appli_Taxi.Areas.Customer.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Edit", new { proposalId = model.Proposal.Id });
             }
+            }
+
         }
 
         /// Remove from Cart
@@ -247,10 +276,9 @@ namespace Appli_Taxi.Areas.Customer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveCart(int productId, string userId)
         {
-            var shoopingCart = await db.ShooppingCarts.Where(m => m.ProduitId == productId 
-                                && m.NumBill != null && m.ApplicationUserId == userId).FirstOrDefaultAsync();
+            var shoopingCart = await db.ShooppingCarts.Where(m => m.ProduitId == productId && m.ApplicationUserId == userId
+                            && m.NumProposal != null).FirstOrDefaultAsync();
 
-                               
             if (shoopingCart != null)
             {
                 db.ShooppingCarts.Remove(shoopingCart);

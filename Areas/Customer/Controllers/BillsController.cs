@@ -78,7 +78,7 @@ namespace Appli_taxi.Areas.Customer.Controllers
             {
                 if (User.IsInRole(SD.ManagerUser))
                 {
-                    UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole != SD.EmployeeUser).ToListAsync();
+                    UserProposalVM.ListUsers = await db.ApplicationUsers.Where(m => m.UserRole.Equals(SD.CustomerUser)).ToListAsync();
                 }
                 else if (User.IsInRole(SD.VendorUser))
                 {
