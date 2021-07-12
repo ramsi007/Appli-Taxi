@@ -23,8 +23,8 @@ namespace Appli_taxi.Areas.Customer.Controllers
         private readonly ApplicationDbContext db;
         private readonly IEmailSender _emailSender;
 
-        //[TempData]
-        //public string StatusMessage { get; set; }
+        [TempData]
+        public string StatusMessage { get; set; }
 
         public BillsController(ApplicationDbContext _db, IEmailSender emailSender)
         {
@@ -228,6 +228,19 @@ namespace Appli_taxi.Areas.Customer.Controllers
 
             if (Convert.ToDouble(model.ShooppingCart.Remise) > total)
             {
+                List<int> ListproductInShoppingCart = new List<int>();
+
+                if (model.Bill.Id == 0)
+                {
+                    ListproductInShoppingCart = db.ShooppingCarts
+                                                 .Where(m => m.ApplicationUserId == model.ShooppingCart.ApplicationUserId 
+                                                  && m.NumBill != null)
+                                                 .Select(m => m.ProduitId).ToList();
+                }
+                IQueryable<Produit> Products = from s in db.Produits
+                                               where !(ListproductInShoppingCart.Contains(s.Id))
+                                               select s;
+                model.ListProduct = Products.ToList();
                 model.ApplicationUser = await db.ApplicationUsers.Where(m => m.Id == model.ShooppingCart.ApplicationUserId).FirstOrDefaultAsync();
                 model.StatusMessage = "Erreur : La remise saisi ne doit pas dépasser le montant total : " + total;
                 return View(model);
