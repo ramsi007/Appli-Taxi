@@ -5,7 +5,11 @@
 }
 
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 
 <div class="row mb-5 ml-3 mt-3">
     <div class="col-md-4">
@@ -39,59 +43,66 @@
     </div>
 </div>
 
-<div id="piechart_div"></div>
+<div>
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+        <p class="highcharts-description">
+            Les Diagrammes circulaire sont très populaires pour montrer un aperçu compact d'un
+            composition ou comparaison. Bien qu'ils puissent être plus difficiles à lire que
+            histogrammes, ils restent un choix populaire pour les petits ensembles de données.
+        </p>
+    </figure>
+</div>
 
-@*<script type="text/javascript">
 
-    google.charts.load('current', {
-        packages: ['corechart', 'bar']
+<script>
+
+    $(document).ready(function () {
+        $.getJSON("/Customer/Home/GetBillsByStatus", function (data) {
+            Highcharts.chart('container', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Taux de facturation par Statut'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Taux',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Payé',
+                        y: data.paidBills
+                    }, {
+                        name: 'Partiellement payé',
+                        y: data.prePaidBills
+                    }, {
+                        name: 'Non Payé',
+                        y: data.notPaidBills
+                    }]
+                }]
+            });
+        });
     });
-    google.charts.setOnLoadCallback(LoadData);
 
-    function LoadData() {
-        $.ajax({
-
-            url: 'ColumnChart/BillsLineChart',
-            dataType: "json",
-            type: "GET",
-            error: function (xhr, status, error) {
-                var err = eval("(" + xhr.responseText + ")");
-                toastr.error(err.message);
-            },
-            success: function (data) {
-                BillsLineChart(data);
-                return false;
-            }
-        });
-        return false;
-    }
-
-    function BillsLineChart(data) {
-        var dataArray = [
-            ['Statut', 'Total']
-        ];
-        $.each(data, function (i, item) {
-            dataArray.push([item.status, item.to]);
-        });
-        var data = google.visualization.arrayToDataTable(dataArray);
-        var options = {
-            title: 'Population of Largest Cities of Odisha ',
-            chartArea: {
-                width: '70%'
-            },
-            colors: ['#b0120a', '#7b1fa2', '#ffab91', '#d95f02'],
-            hAxis: {
-                title: 'City',
-                minValue: 0
-            },
-            vAxis: {
-                title: 'Total Population'
-            }
-        };
-        var chart = new google.visualization.PieChart(document.getElementById('piechart_div'));
-
-        chart.draw(data, options);
-        return false;
-    }
-</script>*@
-
+</script>

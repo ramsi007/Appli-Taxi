@@ -1,4 +1,5 @@
-﻿using Appli_Taxi.Data;
+﻿using Appli_taxi.Utility;
+using Appli_Taxi.Data;
 using Appli_Taxi.Models;
 using Appli_Taxi.Utility;
 using Microsoft.AspNetCore.Http;
@@ -63,29 +64,18 @@ namespace Appli_taxi.Controllers
         }
 
         [HttpGet]
-        public List<Bill> GetBillsByStatus()
+        public IActionResult GetBillsByStatus()
         {
-            List<Bill> list = new List<Bill>();
-            var paidBills = db.Bills.Where(m => m.Status.Equals(SD.StatusPaid)).ToList();
-            var notPaidBills = db.Bills.Where(m => m.Status.Equals(SD.StatusNotPaid)).ToList();
-            var prePaidBills = db.Bills.Where(m => m.Status.Equals(SD.StatusPrePaid)).ToList();
+            int paidBills = db.Bills.Where(m => m.Status.Equals(SD.StatusPaid)).Count();
+            int notPaidBills = db.Bills.Where(m => m.Status.Equals(SD.StatusNotPaid)).Count();
+            int prePaidBills = db.Bills.Where(m => m.Status.Equals(SD.StatusPrePaid)).Count();
 
-            foreach (var item in paidBills)
-            {
-                list.Add(item);
-            }
+            Ratio obj = new Ratio();
+            obj.PaidBills = paidBills;
+            obj.NotPaidBills = notPaidBills;
+            obj.PrePaidBills = prePaidBills;
 
-            foreach (var item in notPaidBills)
-            {
-                list.Add(item);
-            }
-
-            foreach (var item in prePaidBills)
-            {
-                list.Add(item);
-            }
-
-            return list;
+            return new JsonResult(obj);
         }
 
 
