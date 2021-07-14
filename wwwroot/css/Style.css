@@ -152,6 +152,12 @@ cursor: pointer;
     margin-left: 50px;
 }
 
+.icon {
+    border-radius: 5px;
+    padding: 10px;
+    background:#eed7d7;
+}
+
 .rec-bill {
     transition: all .3s ease;
     text-transform: uppercase;
