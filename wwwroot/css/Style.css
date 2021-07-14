@@ -10,6 +10,79 @@
 cursor: pointer;
 }
 
+/*    */
+.header .nav {
+    width: 60%;
+    float: left;
+    list-style: none;
+    text-align: right;
+}
+
+.clear {
+    clear: both; /* To slove Float problem*/
+}
+
+.header .nav > li {
+    display: inline-block;
+    text-align: center;
+}
+
+    .header .nav > li > a:after,
+    header .nav > li > a.active:after {
+        content: "";
+        display: block;
+        height: 3px;
+        background-color: #619fff;
+        transition: width 0.5s;
+    }
+
+    .header .nav > li > a:after {
+        width: 0;
+    }
+
+    .header .nav > li > a.active:after {
+        width: 100%;
+    }
+
+    .header .nav > li > a:hover:after {
+        width: 100%;
+    }
+
+    .header .nav > li > a {
+        color: white;
+        display: block;
+        padding: 30px 10px;
+        font-size: 17px;
+    }
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    width: 150px;
+    top: 75%;
+    text-align: center;
+    left: -50%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s, visibility 1s
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 5px;
+    color: black;
+}
+
+/*    */
+
 .empBorder{
     border : none;
 }
