@@ -45,21 +45,26 @@
 
 <div>
     <figure class="highcharts-figure">
-        <div id="container"></div>
-        <p class="highcharts-description">
-            Les Diagrammes circulaire sont très populaires pour montrer un aperçu compact d'un
-            composition ou comparaison. Bien qu'ils puissent être plus difficiles à lire que
-            histogrammes, ils restent un choix populaire pour les petits ensembles de données.
-        </p>
+        <div id="pieChart"></div>
+        <p class="mb-5"></p>
+    </figure>
+
+    <figure class="highcharts-figure mt-5">
+        <div id="lineIncomeChart"></div>
+        <p class="mb-5"></p>
+    </figure>
+
+    <figure class="highcharts-figure mt-5">
+        <div id="lineDepenseChart"></div>
+        <p class="mb-5"></p>
     </figure>
 </div>
 
 
 <script>
-
     $(document).ready(function () {
         $.getJSON("/Customer/Home/GetBillsByStatus", function (data) {
-            Highcharts.chart('container', {
+            Highcharts.chart('pieChart', {
                 chart: {
                     plotBackgroundColor: null,
                     plotBorderWidth: null,
@@ -104,5 +109,168 @@
             });
         });
     });
+</script>
 
+<script>
+    $(document).ready(function () {
+        $.getJSON("/Customer/Home/GetIncomeAmount", function (data) {
+            var mounths = []
+            var paids = []
+            var dt = new Date();
+            for (var i = 0; i < data.length; i++) {
+                paids.push(data[i].count);
+                switch (data[i].mounth) {
+                    case 1:
+                        mounths.push("Jan");
+                        break;
+                    case 2:
+                        mounths.push("Fev");
+                        break;
+                    case 3:
+                        mounths.push("Mars");
+                        break;
+                    case 4:
+                        mounths.push("Avr");
+                        break;
+                    case 5:
+                        mounths.push("Mai");
+                        break;
+                    case 6:
+                        mounths.push("Juin");
+                        break;
+                    case 7:
+                        mounths.push("Juil");
+                        break;
+                    case 8:
+                        mounths.push("Août");
+                        break;
+                    case 9:
+                        mounths.push("Sept");
+                        break;
+                    case 10:
+                        mounths.push("Oct");
+                        break;
+                    case 11:
+                        mounths.push("Nov");
+                        break;
+                    case 12:
+                        mounths.push("Dec");
+                        break;
+                }
+            }
+            Highcharts.chart('lineIncomeChart', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Montant des revenues par mois'
+                },
+                subtitle: {
+                    text: 'Année en cours : ' + dt.getUTCFullYear()
+                },
+                xAxis: {
+                    categories: mounths
+                },
+                yAxis: {
+                    title: {
+                        text: 'REVENUES EN (€)'
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: false
+                        },
+                        enableMouseTracking: false
+                    }
+                },
+                series: [{
+                    name: 'Montant',
+                    data: paids
+                }]
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $.getJSON("/Customer/Home/GetDepenseAmount", function (data) {
+            var mounths = []
+            var paids = []
+            var dt = new Date();
+            for (var i = 0; i < data.length; i++) {
+                paids.push(data[i].count);
+                switch (data[i].mounth) {
+                    case 1:
+                        mounths.push("Jan");
+                        break;
+                    case 2:
+                        mounths.push("Fev");
+                        break;
+                    case 3:
+                        mounths.push("Mars");
+                        break;
+                    case 4:
+                        mounths.push("Avr");
+                        break;
+                    case 5:
+                        mounths.push("Mai");
+                        break;
+                    case 6:
+                        mounths.push("Juin");
+                        break;
+                    case 7:
+                        mounths.push("Juil");
+                        break;
+                    case 8:
+                        mounths.push("Août");
+                        break;
+                    case 9:
+                        mounths.push("Sept");
+                        break;
+                    case 10:
+                        mounths.push("Oct");
+                        break;
+                    case 11:
+                        mounths.push("Nov");
+                        break;
+                    case 12:
+                        mounths.push("Dec");
+                        break;
+                }
+            }
+            Highcharts.chart('lineDepenseChart', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Montant des dépenses par mois'
+                },
+                subtitle: {
+                    text: 'Année en cours : ' + dt.getUTCFullYear()
+                },
+                xAxis: {
+                    categories: mounths
+                },
+                yAxis: {
+                    title: {
+                        text: 'DÉPENSE EN (€)'
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        },
+                        enableMouseTracking: false
+                    }
+                },
+                series: [{
+                    name: 'Montant',
+                    data: paids
+                }]
+            });
+        });
+    });
 </script>

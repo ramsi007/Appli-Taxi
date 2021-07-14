@@ -38,11 +38,18 @@ namespace Appli_taxi.Areas.Customer.Controllers
         public async Task<IActionResult> Index()
         {
             var ListBills = new List<Bill>();
+            var userId = await db.ApplicationUsers.Where(u => u.UserRole.Equals(SD.ManagerUser))
+                        .Select(u => u.Id).FirstOrDefaultAsync();
+                        
             if (User.IsInRole(SD.ManagerUser))
             {
                 ListBills = await db.Bills.Include(m => m.ApplicationUser).ToListAsync();
             }
-            else
+            else if (User.IsInRole(SD.VendorUser))
+            {
+                ListBills = await db.Bills.Include(m => m.ApplicationUser)
+                            .Where(m=>m.UserId == userId).ToListAsync();
+            }else
             {
                 ListBills = await db.Bills.Include(m => m.ApplicationUser)
                        .Where(m => m.UserId == GetUserId()).ToListAsync();

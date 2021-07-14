@@ -78,8 +78,30 @@ namespace Appli_taxi.Controllers
             return new JsonResult(obj);
         }
 
+        [HttpGet]
+        public IActionResult GetIncomeAmount()
+        {
+            var userId = db.ApplicationUsers.Where(u => u.UserRole.Equals(SD.ManagerUser))
+                        .Select(u =>u.Id).FirstOrDefault();
+            var query = db.Bills.Where(p => p.UserId != userId).GroupBy(p => p.IssueDate.Month)
+                        .Select(g => new { mounth = g.Key, count = g.Sum(p =>p.Paid)})
+                        
+                        .ToList();
+            return new JsonResult(query);
+        }
 
 
+        [HttpGet]
+        public IActionResult GetDepenseAmount()
+        {
+            var userId = db.ApplicationUsers.Where(u => u.UserRole.Equals(SD.ManagerUser))
+                        .Select(u => u.Id).FirstOrDefault();
+            var query = db.Bills.Where(p => p.UserId == userId).GroupBy(p => p.IssueDate.Month)
+                        .Select(g => new { mounth = g.Key, count = g.Sum(p => p.Paid) })
+
+                        .ToList();
+            return new JsonResult(query);
+        }
         /// </summary>
         /// <returns></returns>
         /// 
