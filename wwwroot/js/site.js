@@ -36,7 +36,6 @@ jQueryAjaxPost = form => {
                     $('#form-modal .modal-title').html('');
                     $('#form-modal').modal('hide');   
                     toastr.success(res.message);
-                    $.notify('deleted succefully', { golbalPosition: 'top center', className: 'success' });
                     setTimeout(location.reload.bind(location), 2000);
                 }
                 else
@@ -78,7 +77,6 @@ jQueryAjaxDelete = form => {
                 processData: false,
                 success: function (res) {
                     $('#view-all').html(res.html);
-                    $.notify('deleted succefully', { golbalPosition: 'top center', className: 'success' });
                     Swal.fire(
                         'Supprimé!',
                         'Votre fichier a été supprimé!',
