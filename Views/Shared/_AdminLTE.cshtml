@@ -43,8 +43,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 @*<li class="nav-item d-none d-sm-inline-block">
-                        <a href="#" class="nav-link">Contact</a>
-                    </li>*@
+                    <a href="#" class="nav-link">Contact</a>
+                </li>*@
             </ul>
 
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse header">
@@ -60,7 +60,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <a class="text-dark" asp-area="Customer" asp-controller="Bills" asp-action="Index">Factures</a>
                     </li>
                     <li class="nav-item dropdown dmenu">
-                        <a class="nav-link">Utilisateurs</a>            
+                        <a class="nav-link">Utilisateurs</a>
                         <div class="dropdown-menu sm-menu">
                             <a class="dropdown-item" asp-area="Admin" asp-controller="Users" asp-action="Index">Liste des comptes</a>
                             <a class="dropdown-item" asp-page="/Account/Register" asp-area="Identity">Créer un compte</a>
@@ -89,7 +89,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
+                    with font-awesome or any other icon font library -->
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
                                 <i class="nav-icon fas fa-th"></i>
@@ -163,15 +163,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </li>
 
                                     @*<li class="nav-item">
-                                            <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Users">
-                                                <p>&nbsp;&nbsp;&nbsp;Tous les comptes</p>
-                                            </a>
-                                        </li>*@
+                                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Users">
+                                            <p>&nbsp;&nbsp;&nbsp;Tous les comptes</p>
+                                        </a>
+                                    </li>*@
                                     @*<li class="nav-item">
-                                            <a asp-page="/Account/Register" asp-area="Identity" class="nav-link">
-                                                <p>&nbsp;&nbsp;&nbsp;Nouveau compte</p>
-                                            </a>
-                                        </li>*@
+                                        <a asp-page="/Account/Register" asp-area="Identity" class="nav-link">
+                                            <p>&nbsp;&nbsp;&nbsp;Nouveau compte</p>
+                                        </a>
+                                    </li>*@
                                 </ul>
                             </li>
                         }
@@ -322,6 +322,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <p>Sidebar content</p>
             </div>
         </aside>
+
+        <div class="loaderbody" id="loaderbody">
+            <div class="loader"></div>
+        </div>
         <!-- /.control-sidebar -->
         <!-- Main Footer -->
         <footer class="main-footer">
@@ -357,6 +361,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="~/js/responsive.bootstrap4.min.js"></script>
     <script src="~/js/html2pdf.bundle.min.js"></script>
     <script src="~/js/jquery.priceformat.min.js"></script>
+    <script src="~/js/notify.min.js"></script>
     @*<script src="~/js/buttons.bootstrap4.min.js"></script>*@
     <script src="~/js/dataTables.buttons.min.js"></script>
     <script src="~/js/jszip.min.js"></script>

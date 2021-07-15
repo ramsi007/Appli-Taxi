@@ -1,4 +1,15 @@
-﻿showInPopup = (url, title) => {
+﻿$(function () {
+    $("#loaderbody").addClass('hide');
+
+    $(document).bind('ajaxStart', function () {
+        $("#loaderbody").removeClass('hide');
+    }).bind('ajaxStop', function () {
+        $("#loaderbody").addClass('hide');
+    });
+});
+
+
+showInPopup = (url, title) => {
     $.ajax({
         type: "GET",
         url: url,
@@ -25,7 +36,7 @@ jQueryAjaxPost = form => {
                     $('#form-modal .modal-title').html('');
                     $('#form-modal').modal('hide');   
                     toastr.success(res.message);
-
+                    $.notify('deleted succefully', { golbalPosition: 'top center', className: 'success' });
                     setTimeout(location.reload.bind(location), 2000);
                 }
                 else
@@ -67,6 +78,7 @@ jQueryAjaxDelete = form => {
                 processData: false,
                 success: function (res) {
                     $('#view-all').html(res.html);
+                    $.notify('deleted succefully', { golbalPosition: 'top center', className: 'success' });
                     Swal.fire(
                         'Supprimé!',
                         'Votre fichier a été supprimé!',
