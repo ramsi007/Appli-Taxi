@@ -67,18 +67,19 @@ jQueryAjaxDelete = form => {
                 processData: false,
                 success: function (res) {
                     $('#view-all').html(res.html);
-                    toastr.success(res.message);
-
                     Swal.fire(
                         'Supprimé!',
                         'Votre fichier a été supprimé!',
                         'success'
                     )
+                    toastr.success(res.message);
                 },
+
                 error: function (res) {
                     toastr.error(res.message);
                 }
             })
+/*            console.log(result);*/
         }
     })
 

@@ -49,17 +49,32 @@ namespace Appli_taxi.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await db.Produits.AddAsync(model.Produit);
-                await db.SaveChangesAsync();
+                var ExistingProduct = await db.Produits.Where(m => m.Name.ToLower().Equals(model.Produit.Name.ToLower()))
+                .ToListAsync();
 
-                return Json(new
+                if (ExistingProduct.Count == 0)
                 {
-                    success = true,
-                    message = "Produit ajouté !",
-                    isValid = true,
-                    html = Helper.RenderRazorViewToString(this, "_ViewAll",
-                    await db.Produits.Include(m => m.Category).Include(m => m.Tax).ToListAsync())
-                });
+                    await db.Produits.AddAsync(model.Produit);
+                    await db.SaveChangesAsync();
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Produit ajouté !",
+                        isValid = true,
+                        html = Helper.RenderRazorViewToString(this, "_ViewAll",
+                        await db.Produits.Include(m => m.Category).Include(m => m.Tax).ToListAsync())
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Erreur : ce nom de produit existe déja !",
+                        isValid = true,
+                        html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Produits.Include(m => m.Tax).Include(m => m.Category).ToListAsync())
+                    });
+                }
             }
 
             ProduitViewModel ProductVM = new ProduitViewModel()
@@ -101,9 +116,23 @@ namespace Appli_taxi.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Produits.Update(model.Produit);
-                await db.SaveChangesAsync();
-                return Json(new { success = true, message = "Produit modifié !", isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Produits.Include(m => m.Category).Include(m => m.Tax).ToListAsync()) });
+                var ExistingProduct = await db.Produits.Where(m => m.Name.ToLower().Equals(model.Produit.Name.ToLower()))
+                        .ToListAsync();
+
+                if (ExistingProduct.Count == 0)
+                {
+                    db.Produits.Update(model.Produit);
+                    await db.SaveChangesAsync();
+                    return Json(new { success = true, message = "Produit modifié !", isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Produits.Include(m => m.Category).Include(m => m.Tax).ToListAsync()) });
+                }
+                else
+                {
+                    return Json(new { 
+                        success = false, 
+                        message = "Erreur : ce nom de produit existe déja !", 
+                        isValid = true, 
+                        html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Produits.Include(m=>m.Tax).Include(m=>m.Category).ToListAsync()) });
+                }
             }
 
             ProduitViewModel ProductVM = new ProduitViewModel()
@@ -120,12 +149,18 @@ namespace Appli_taxi.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            Produit model = db.Produits.Find(id);
+            Produit model = await db.Produits.FindAsync(id);
+            var listProductsInCart = await db.ShooppingCarts.Where(m => m.ProduitId == id)
+                                        .ToListAsync();
             if (model == null)
             {
                 return Json(new { success = false, message = "Erreur lors de la suppression !", html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Produits.ToListAsync()) });
             }
-            db.Produits.Remove(db.Produits.Find(id));
+            db.Produits.Remove(model);
+            if(listProductsInCart.Count>0)
+            {
+                db.ShooppingCarts.RemoveRange(listProductsInCart);
+            }
             await db.SaveChangesAsync();
             return Json(new { success = true, message = "Produit supprimé !", html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Produits.ToListAsync()) });
         }

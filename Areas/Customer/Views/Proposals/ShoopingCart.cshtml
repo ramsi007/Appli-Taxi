@@ -23,7 +23,7 @@
                             @if (cartVm.ListProposalShooppingCarts.Count() > 0)
                             {
                                 <div class="row">
-                                    @{ var fullname = cartVm.User.FirstName + " " + cartVm.User.LastName;}                                   
+                                    @{ var fullname = cartVm.User.FirstName + " " + cartVm.User.LastName;}
                                     <div class="d-none d-lg-block col-md-12 py-2">
                                         <a asp-action="Create" asp-route-id="@cartVm.User.Id">
                                             <h5 class="text-info text-uppercase d-inline">@fullname</h5>
@@ -124,9 +124,9 @@
     }
     else
     {
-        <div class="white-Background">
-            <h4 class="text-danger"> Aucun article dans ce panier ...</h4>
-
+        <div class="white-Background m-5 text-center">
+            <h3 class="text-center mt-5 pt-5"> LE PANIER EST VIDE ...</h3>
+            <a asp-action="Create" class="btn-cart ">Créer une nouvelle proposition</a>
         </div>
     }
 </form>

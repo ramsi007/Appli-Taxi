@@ -136,31 +136,31 @@ namespace Appli_taxi.Areas.Admin.Controllers
             return Json(new { success = false, message = "Erreur ... !", isValid = false, html = Helper.RenderRazorViewToString(this, "Edit", model) });
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var produitList = await db.Produits.Include(m => m.Category)
-        //                   .Where(m => m.CategoryId == id).ToListAsync();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var produitList = await db.Produits.Include(m => m.Category)
+                           .Where(m => m.CategoryId == id).ToListAsync();
 
-        //    if (produitList.Count() > 0)
-        //    {
-        //        return Json(new
-        //        {
-        //            success = false,
-        //            message = "Ouups ...! vous pouvez pas supprimer cette catégorie " +
-        //            "car elle est lié à un ou plusieurs produits",
-        //            isValid = false,
-        //            html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Categories.Include(m => m.TypeCat).ToListAsync())
-        //        });
-        //    }
+            if (produitList.Count() > 0)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Ouups ...! vous pouvez pas supprimer cette catégorie " +
+                    "car elle est lié à un ou plusieurs produits",
+                    isValid = false,
+                    html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Categories.Include(m => m.TypeCat).ToListAsync())
+                });
+            }
 
-        //    var category = db.Categories.Find(id);
+            var category = db.Categories.Find(id);
 
-        //    db.Categories.Remove(category);
-        //    await db.SaveChangesAsync();
-        //    return Json(new { success = true, message = "Catégorie supprimé !", isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Categories.Include(m => m.TypeCat).ToListAsync()) });
-        //}
+            db.Categories.Remove(category);
+            await db.SaveChangesAsync();
+            return Json(new { success = true, message = "Catégorie supprimé !", isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.Categories.Include(m => m.TypeCat).ToListAsync()) });
+        }
 
         [HttpGet]
         public async Task<IActionResult> Details(int id)

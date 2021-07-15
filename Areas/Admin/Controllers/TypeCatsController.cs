@@ -140,12 +140,14 @@ namespace Appli_taxi.Areas.Admin.Controllers
                     html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.TypeCats.ToListAsync())
                 });
             }
+            else
+            {
+                var type = db.TypeCats.Find(id);
 
-            var type = db.TypeCats.Find(id);
-
-            db.TypeCats.Remove(type);
-            await db.SaveChangesAsync();
-            return Json(new { success = true, message = "type supprimé !", isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.TypeCats.ToListAsync()) });
+                db.TypeCats.Remove(type);
+                await db.SaveChangesAsync();
+                return Json(new { success = true, message = "type supprimé !", isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", await db.TypeCats.ToListAsync()) });
+            }
         }
 
     }
