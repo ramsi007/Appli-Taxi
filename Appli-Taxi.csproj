@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20210716085310_UpdateBillAndPropDetails.cs" />
+    <Compile Remove="Data\Migrations\20210716085310_UpdateBillAndPropDetails.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Mailjet.Api" Version="1.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.1.16" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.16" />

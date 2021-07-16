@@ -4,14 +4,16 @@ using Appli_Taxi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Appli_taxi.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210716195607_UpdateBillAndProposalDetails")]
+    partial class UpdateBillAndProposalDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,9 +95,6 @@ namespace Appli_taxi.Data.Migrations
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
-
-                    b.Property<int>("ProduitId")
-                        .HasColumnType("int");
 
                     b.Property<double>("Remise")
                         .HasColumnType("float");
@@ -373,9 +372,6 @@ namespace Appli_taxi.Data.Migrations
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
-
-                    b.Property<int>("ProduitId")
-                        .HasColumnType("int");
 
                     b.Property<int>("ProposalId")
                         .HasColumnType("int");

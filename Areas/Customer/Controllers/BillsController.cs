@@ -331,8 +331,6 @@ namespace Appli_taxi.Areas.Customer.Controllers
                 CreditNoteList = await db.CreeditNotes.Include(m => m.Bill).Where(m => m.BillId == bill.Id).ToListAsync(),
                 ReceiptList = await db.Receipts.Include(m => m.Bill).Where(m => m.BillId == bill.Id).ToListAsync()
             };
-
-            
             return View(UserBillDetailVM);
         }
 

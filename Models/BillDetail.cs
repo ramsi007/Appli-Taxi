@@ -17,13 +17,11 @@ namespace Appli_Taxi.Models
         [ForeignKey("BillId")]
         public virtual Bill Bill { get; set; }
 
-        [NotMapped]
+        [Required]
         public int ProduitId { get; set; }
-        [ForeignKey("ProduitId")]
-        public virtual Produit Produit { get; set; }
+        //[ForeignKey("ProduitId")]
+        //public virtual Produit Produit { get; set; }
 
-        //[Required]
-        //[DisplayFormat(DataFormatString = "{0:C}")]
         public double Remise { get; set; }
 
         [Display(Name = "Quantité")]

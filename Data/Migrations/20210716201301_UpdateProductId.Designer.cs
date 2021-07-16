@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Appli_taxi.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210716085310_UpdateBillAndPropDetails")]
-    partial class UpdateBillAndPropDetails
+    [Migration("20210716201301_UpdateProductId")]
+    partial class UpdateProductId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -108,8 +108,6 @@ namespace Appli_taxi.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BillId");
-
-                    b.HasIndex("ProduitId");
 
                     b.ToTable("BillDetails");
                 });
@@ -391,8 +389,6 @@ namespace Appli_taxi.Data.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProduitId");
 
                     b.HasIndex("ProposalId");
 
@@ -803,12 +799,6 @@ namespace Appli_taxi.Data.Migrations
                         .HasForeignKey("BillId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Appli_Taxi.Models.Produit", "Produit")
-                        .WithMany()
-                        .HasForeignKey("ProduitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Appli_Taxi.Models.Category", b =>
@@ -884,12 +874,6 @@ namespace Appli_taxi.Data.Migrations
 
             modelBuilder.Entity("Appli_Taxi.Models.ProposalDetail", b =>
                 {
-                    b.HasOne("Appli_Taxi.Models.Produit", "Produit")
-                        .WithMany()
-                        .HasForeignKey("ProduitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Appli_Taxi.Models.Proposal", "Proposal")
                         .WithMany()
                         .HasForeignKey("ProposalId")
