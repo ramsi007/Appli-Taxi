@@ -30,6 +30,6 @@ namespace Appli_Taxi.Data
         public DbSet<HolidayType> HolidayTypes { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<ExpenseReport> ExpenseReports { get; set; }
-
+        public object ApplicationUser { get; internal set; }
     }
 }

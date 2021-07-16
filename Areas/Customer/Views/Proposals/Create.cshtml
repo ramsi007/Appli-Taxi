@@ -45,52 +45,25 @@
         <div class="row">
             <div class="col-md-12 form-group">
                 <div class="row mb-5">
-                    <div class="col-md-4">
-                        <label asp-for="Proposal.NumProposal" class="col-form-label text-dark h5"></label>
+                    <div class="col-md-4 text-center">
+                        <label class="col-form-label text-dark h5">N° PROPOSITION</label>
                         <input asp-for="Proposal.NumProposal" class="form-control" readonly />
                         <span asp-validation-for="Proposal.NumProposal" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-4">
-                        <label asp-for="Proposal.ProposalDate" class="col-form-label text-dark h5"></label>
+                    <div class="col-md-4 text-center">
+                        <label class="col-form-label text-dark h5">DATE DE PROPOSITION</label>
                         <input type="date" asp-for="Proposal.ProposalDate" class="form-control" />
                         <span asp-validation-for="Proposal.ProposalDate" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-4">
-                        <label asp-for="Proposal.PoposalType" class="col-form-label text-dark h5"></label>
+                    <div class="col-md-4 text-center">
+                        <label class="col-form-label text-dark h5">TYPE</label>
                         <select id="" class="form-control" asp-for="Proposal.PoposalType"
                                 asp-items="@Html.GetEnumSelectList<Proposal.PrType>()">
                         </select>
                         <span asp-validation-for="Proposal.PoposalType"></span>
                     </div>
-                </div>
-                @*@if (User.IsInRole(SD.VendorUser))
-                {
-                    <div class="row col-md-12 ml-1">
-                        <div class="col-md-2 offset-md-3 text-secondary text-right mr-5">
-                            <span>
-                                <img class="pb-2" src="~/images/appliTaxi.jpg" style="width:120px; height:120px" />
-                            </span>
-                        </div>
-
-                        <div class="col-md-4 mt-3 text-secondary offset-md-1">
-                            <p>
-                                28 avenue de la résistance <br />
-                                91700 Sainte-Genevièves-des-bois <br />
-                                <b>SIRET :</b> 83138505900017 <br />
-                                France
-                            </p>
-                            <div class="col-md-2" id="addtoCart">
-                                <a asp-action="AddToCart" class="btn btn-outline-info btn-sm form-control text-white pt-2" style="cursor:pointer">
-                                    <i class="fas fa-plus"></i>&nbsp; Ajouter un produit</a>
-                            </div>
-                        </div>
-
-                    </div>
-                }
-                else
-                {*@
                     @if (Model.ListShoopingCart.Count() == 0)
                     {
                         <div class="col-md-12" id="divUser">

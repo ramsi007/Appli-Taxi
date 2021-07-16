@@ -17,7 +17,7 @@ namespace Appli_Taxi.Models
         [ForeignKey("BillId")]
         public virtual Bill Bill { get; set; }
 
-        [Required]
+        [NotMapped]
         public int ProduitId { get; set; }
         [ForeignKey("ProduitId")]
         public virtual Produit Produit { get; set; }

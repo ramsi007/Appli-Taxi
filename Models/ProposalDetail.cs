@@ -17,7 +17,7 @@ namespace Appli_Taxi.Models
         [ForeignKey("ProposalId")]
         public virtual Proposal Proposal { get; set; }
 
-        [Required]
+        [NotMapped]
         public int ProduitId { get; set; }
         [ForeignKey("ProduitId")]
         public virtual Produit Produit { get; set; }

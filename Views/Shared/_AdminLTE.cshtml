@@ -47,7 +47,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </li>*@
             </ul>
 
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse header">
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse header" style=" height: 15px;">
                 <partial name="_LoginPartial" />
                 <ul class="navbar-nav flex-grow-1 nav">
                     <li>
@@ -60,7 +60,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <a class="text-dark" asp-area="Customer" asp-controller="Bills" asp-action="Index">Factures</a>
                     </li>
                     <li class="nav-item dropdown dmenu">
-                        <a class="nav-link">Utilisateurs</a>
+                        <a class="text-dark">Utilisateurs</a>
                         <div class="dropdown-menu sm-menu">
                             <a class="dropdown-item" asp-area="Admin" asp-controller="Users" asp-action="Index">Liste des comptes</a>
                             <a class="dropdown-item" asp-page="/Account/Register" asp-area="Identity">Créer un compte</a>
