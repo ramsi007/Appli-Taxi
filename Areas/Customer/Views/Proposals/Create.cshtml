@@ -64,11 +64,13 @@
                         </select>
                         <span asp-validation-for="Proposal.PoposalType"></span>
                     </div>
+                </div>
+                <div class="row mb-5">
                     @if (Model.ListShoopingCart.Count() == 0)
                     {
-                        <div class="col-md-12" id="divUser ">
+                        <div class="col-md-12" id="divUser">
                             <label class="col-form-label text-dark h5 m-1">CLIENT</label>                            <select id="ddlUser" class="form-control" asp-for="@Model.Proposal.UserId"
-                                    asp-items="@(new SelectList(Model.ListUsers, "Id", "FirstName"))">
+                                                                                                                             asp-items="@(new SelectList(Model.ListUsers, "Id", "FirstName"))">
                                 <option>-- Selectionner un client --</option>
                             </select>
                             <span asp-validation-for="@Model.Proposal.UserId" class="text-danger"></span>
@@ -269,7 +271,7 @@
                         </div>
                     }
                 </div>
-
+            </div>
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-12 offset-md-2 mt-3">
@@ -286,7 +288,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
 </form>
 
@@ -312,11 +313,11 @@
 
                         $userbill.append(
                             '<p> ' + data.billingName + '</p> <p>' + data.billingPhone + '</p> <p>' + data.billingAdresse + '</p>' +
-                            '<span>' + data.billingPostalCode + '</span><span>' + data.billingCity + '</span>')
+                            '<span>' + data.billingPostalCode + '</span> <span>' + data.billingCity + '</span>')
 
                         $usership.append(
                             '<p> ' + data.shippingName + '</p> <p>' + data.shippingPhone + '</p> <p>' + data.shippingAdresse + '</p>' +
-                            '<span>' + data.shippingPostalCode + '</span><span>' + data.shippingCity + '</span>')
+                            '<span>' + data.shippingPostalCode + ' </span> <span>' +  data.shippingCity + ' </span>')
 
                         $addtocart.append('<a class="btn btn-outline-info btn-sm form-control text-white pt-2" style="cursor:pointer" href="/Customer/Proposals/AddToCart/' + data.id + '"' + '><i class="fas fa-plus"></i>&nbsp; AJOUTER UN PRODUIT')
                     }
