@@ -66,9 +66,8 @@
                     </div>
                     @if (Model.ListShoopingCart.Count() == 0)
                     {
-                        <div class="col-md-12" id="divUser">
-                            <label asp-for="ListUsers" class="col-form-label text-dark h5"></label>
-                            <select id="ddlUser" class="form-control" asp-for="@Model.Proposal.UserId"
+                        <div class="col-md-12" id="divUser ">
+                            <label class="col-form-label text-dark h5 m-1">CLIENT</label>                            <select id="ddlUser" class="form-control" asp-for="@Model.Proposal.UserId"
                                     asp-items="@(new SelectList(Model.ListUsers, "Id", "FirstName"))">
                                 <option>-- Selectionner un client --</option>
                             </select>
