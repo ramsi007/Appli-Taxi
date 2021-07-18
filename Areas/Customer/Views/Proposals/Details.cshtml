@@ -36,7 +36,7 @@
     </div>
     <div class="row  about-edit-item ltr-effect">
         <div class="col-md-4 about-item-content">
-            @if (User.IsInRole(SD.ManagerUser))
+            @if (User.IsInRole(SD.ManagerUser) && Model.Proposal.Status.Equals(SD.StatusInProcess))
             {
                 <span class="d-block mb-1">
                     Modifier la Proposition&nbsp;&nbsp;
@@ -47,7 +47,7 @@
             }
 
             <span class="text-center">
-                <i class="far fa-clock icon">&nbsp;&nbsp;</i>
+                <i class="far fa-clock">&nbsp;&nbsp;</i>
                 <span style="color: #2e232c">
                     Créé le :
                     @Model.Proposal.ProposalDate.ToString("dd MMMM, yyyy")
