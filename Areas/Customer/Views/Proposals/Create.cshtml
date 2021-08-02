@@ -280,7 +280,7 @@
                         <div class="col-md-12 offset-md-2 mt-3">
                             <div class="row">
                                 <div class="col-md-4 mb-2">
-                                    <input asp-action="Create" type="submit" class="btn btn-primary form-control" value="Créer la proposition" />
+                                    <input id="myBtn" asp-action="Create" type="submit" class="btn btn-primary form-control" value="Créer la proposition" />
                                 </div>
                                 <div class="col-md-4">
                                     <a class="btn btn-success form-control" asp-action="Index">Retour à la liste des propositions</a>
@@ -331,6 +331,28 @@
             });
         }
 
+/**   */
+    function disableBtn() {
+        var selectedUser = document.getElementById("ddlUser").value;
+        $.ajax({
+            url: '/Customer/Proposals/btnEnabled/' + selectedUser,
+            type: 'GET',
+            contentType: "text/html; charset=utf-8",
+            dataType: 'json',
+            success: function (data) {
+                if (data.length == 0) {
+                    document.getElementById("myBtn").disabled = true;
+                } else {
+                    document.getElementById("myBtn").disabled = false;
+                }
+
+                console.log(data);
+                console.log(data.length);
+            }
+        })
+    }
+ /**   */
+
         function removeUser() {
             $btnremove = $('#btnRemove')
             $userlist = $('#divUser');
@@ -353,6 +375,14 @@
 
         $("#ddlUser").on("change", function () {
             getUser();
+        });
+
+        $(document).ready(function () {
+            disableBtn();
+        });
+
+        $("#ddlUser").on("change", function () {
+            disableBtn();
         });
     </script>
 

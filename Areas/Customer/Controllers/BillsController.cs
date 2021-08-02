@@ -561,7 +561,7 @@ namespace Appli_taxi.Areas.Customer.Controllers
                                 "Bonjour : " + user.FirstName + " " + user.LastName + "<br/>" +
                                 "Vous avez une nouvelle facture de la part de AppliTaxi <br/>" +
                                 "Cliquer sur le lien si dessous pour voir les détails de votre facture <br/>" +
-                                "https://localhost:44331/Customer/Bills/Overview/" + id + "<br/>" + "<hr>" +
+                                "https://applitaxi.azurewebsites.net/Customer/Bills/Overview/" + id + "<br/>" + "<hr>" +
                                 "<div class='col-md-12'><div class='row ml-1'>" +
                                 "<span><img class='pb-2' " +
                                 "src='https://is1-ssl.mzstatic.com/image/thumb/Purple118/v4/1b/29/f2/1b29f20e-3004-5715-d070-5356ad545b21/source/512x512bb.jpg' " +
@@ -709,7 +709,6 @@ namespace Appli_taxi.Areas.Customer.Controllers
 
         public void UpdateBill(int? id)
         {
-            
             var bill = db.Bills.Find(id);
             if (bill.Status != SD.StatusPaid)
             {
@@ -759,8 +758,17 @@ namespace Appli_taxi.Areas.Customer.Controllers
                 db.Bills.Update(bill);
                 db.SaveChanges();
             }
-
         }
 
+        /* ---------------------------*/
+
+        [HttpGet]
+        public async Task<IActionResult> btnEnabled(string id)
+        {
+            var ListCartFromDb = await db.ShooppingCarts.Where(m => m.ApplicationUserId == id && m.NumBill != null).ToListAsync();
+            return new JsonResult(ListCartFromDb);
+        }
+
+        /* ---------------------------*/
     }
 }

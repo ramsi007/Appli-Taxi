@@ -54,7 +54,7 @@
                     </div>
                 }
 
-                @if (User.IsInRole(SD.ManagerUser) &&  Model.Bill.Status != SD.StatusPaid)
+                @if (User.IsInRole(SD.ManagerUser) && Model.Bill.Status != SD.StatusPaid)
                 {
                     <div class="col-md-4 about-item-content">
                         <a asp-action="SendBill"
@@ -357,6 +357,15 @@
             </div>
         </div>
     </div>
+    @if (Model.Bill.Rest > 0 && User.IsInRole(SD.CustomerUser))
+    {
+        <div class="offset-md-4 row">
+            <div class="col-md-12">
+                <a asp-action="Overview" class="btn-cart" asp-route-id="@Model.Bill.Id"> Finaliser le réglement</a>
+            </div>
+        </div>
+    }
+
 
 </div>
 

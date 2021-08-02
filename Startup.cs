@@ -1,4 +1,5 @@
 using Appli_taxi.Data;
+using Appli_taxi.Initializer;
 using Appli_Taxi.Data;
 using Appli_Taxi.Services;
 using Appli_Taxi.Utility;
@@ -77,10 +78,11 @@ namespace Appli_taxi
 
             services.Configure<StripesSettings>(Configuration.GetSection("Stripe"));
 
+            services.AddScoped<IDbInitializer, DbInitializer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -101,6 +103,7 @@ namespace Appli_taxi
 
             app.UseAuthentication();
             app.UseAuthorization();
+            dbInitializer.Initialize();
 
             // 
 

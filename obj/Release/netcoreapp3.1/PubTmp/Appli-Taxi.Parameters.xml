@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="Applitaxi" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\Oujdi\\Desktop\\Projet\ C\#\\Projet\ C\#\\ASP\.NET\ Core\\Application-Taxi\\Appli-taxi\\obj\\Release\\netcoreapp3\.1\\PubTmp\\Out\\$" />
+  </parameter>
+  <parameter name="Appli_Taxi.Data.ApplicationDbContext" description="" value="Data Source=tcp:appli-taxidbserver.database.windows.net,1433;Initial Catalog=Appli-Taxi_db;User Id=admin@gmail.com@appli-taxidbserver;Password=Marc1234*" tags="dbfullsql">
+    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^C:\\Users\\Oujdi\\Desktop\\Projet\ C\#\\Projet\ C\#\\ASP\.NET\ Core\\Application-Taxi\\Appli-taxi\\obj\\Release\\netcoreapp3\.1\\PubTmp\\EFSQLScripts\\Appli_Taxi\.Data\.ApplicationDbContext\.sql$" />
+  </parameter>
+</parameters>

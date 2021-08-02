@@ -103,7 +103,7 @@ namespace Appli_Taxi.Areas.UserServices.Controllers
                                     "Bonjour : <br/>" +
                                     "Vous avez une nouvelle demande de congé de la part du salarié : " + user.FirstName + " " + user.LastName + "<br/>" +
                                     "Cliquer sur le lien si dessous pour voir les détails de la demande <br/>" +
-                                    "https://localhost:44300/UserServices/ExpenseReports/Details/" + model.ExpenseReport.Id + "<br/>" + "<hr>" +
+                                    "https://applitaxi.azurewebsites.net/UserServices/ExpenseReports/Details/" + model.ExpenseReport.Id + "<br/>" + "<hr>" +
                                     "<div class='col-md-12'><div class='row ml-1'>" +
                                     "<span><img class='pb-2' " +
                                     "src='https://is1-ssl.mzstatic.com/image/thumb/Purple118/v4/1b/29/f2/1b29f20e-3004-5715-d070-5356ad545b21/source/512x512bb.jpg' " +

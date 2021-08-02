@@ -26,7 +26,7 @@
                         <span class="d-block mb-1">
                             Détail de la facture&nbsp;&nbsp;
                             <a asp-action="Details" asp-route-id="@Model.Bill.Id">
-                                <i class="fas fa-list-ul icon"></i>
+                                <i class="fas fa-list-ul"></i>
                             </a>
                         </span>
                     </div>
@@ -37,7 +37,7 @@
                                asp-route-id="@Model.Bill.Id" class="nav-link">
                                 <span>
                                     Envoyer la facture
-                                </span>&nbsp;&nbsp;<i class="far fa-paper-plane icon"></i>
+                                </span>&nbsp;&nbsp;<i class="far fa-paper-plane"></i>
                             </a>
                         </div>
                     }
@@ -76,7 +76,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <span class="text-center">
-                                <i class="far fa-clock icon">&nbsp;&nbsp;</i>
+                                <i class="far fa-clock">&nbsp;&nbsp;</i>
                                 <span style="color: #2e232c">
                                     Date d'émission :
                                     @Model.Bill.DueDate.ToString("dd MMMM, yyyy")
@@ -404,14 +404,7 @@
             </div>
         </div>
 
-        @if (Model.Bill.Rest > 0)
-        {
-            <div class="offset-md-4 row">
-                <div class="col-md-12">
-                    <a asp-action="Overview" class="btn-cart" asp-route-id="@Model.Bill.Id"> Finaliser le réglement</a>
-                </div>
-            </div>
-        }
+
     </div>
 </form>
 

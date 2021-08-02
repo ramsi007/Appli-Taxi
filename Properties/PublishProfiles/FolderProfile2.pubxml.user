@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\inetpub\wwwroot\applitaxi</_PublishTargetUrl>
+    <History>False|2021-07-30T09:58:41.2668572Z;False|2021-07-30T11:57:26.8238716+02:00;False|2021-07-30T11:56:02.6272383+02:00;False|2021-07-30T11:55:22.4911794+02:00;</History>
+  </PropertyGroup>
+</Project>

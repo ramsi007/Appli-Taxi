@@ -15,5 +15,6 @@
     <WebStackScaffolding_LayoutPageFile>~/Views/Shared/_AdminLTE.cshtml</WebStackScaffolding_LayoutPageFile>
     <_SelectedScaffolderID>IdentityScaffolder</_SelectedScaffolderID>
     <_SelectedScaffolderCategoryPath>root/Identity</_SelectedScaffolderCategoryPath>
+    <NameOfLastUsedPublishProfile>C:\Users\Oujdi\Desktop\Projet C#\Projet C#\ASP.NET Core\Application-Taxi\Appli-taxi\Properties\PublishProfiles\Applitaxi - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

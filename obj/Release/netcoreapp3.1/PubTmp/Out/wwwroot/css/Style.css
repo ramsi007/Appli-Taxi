@@ -1,0 +1,372 @@
+﻿.exchange {
+    background-color: #FFAB00;
+}
+
+.badge-holiday {
+    margin-left: 50px;
+}
+
+.nav-link{
+cursor: pointer;
+}
+
+/*    */
+.header .nav {
+    width: 60%;
+    float: left;
+    list-style: none;
+    text-align: right;
+}
+
+.clear {
+    clear: both; /* To slove Float problem*/
+}
+
+.header .nav > li {
+    display: inline-block;
+    text-align: center;
+}
+
+    .header .nav > li > a:after,
+    header .nav > li > a.active:after {
+        content: "";
+        display: block;
+        height: 3px;
+        background-color: #619fff;
+        transition: width 0.5s;
+    }
+
+    .header .nav > li > a:after {
+        width: 0;
+    }
+
+    .header .nav > li > a.active:after {
+        width: 100%;
+    }
+
+    .header .nav > li > a:hover:after {
+        width: 100%;
+    }
+
+    .header .nav > li > a {
+        color: white;
+        display: block;
+        padding: 30px 10px;
+        font-size: 17px;
+    }
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    width: 150px;
+    top: 75%;
+    text-align: center;
+    left: -50%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s, visibility 1s
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 5px;
+    color: black;
+}
+
+/*    */
+
+.empBorder{
+    border : none;
+}
+
+.err-message{
+    color:#FC013E;
+    font-weight:600;
+    margin-left: 150px;
+    background : none;
+}
+
+.btn-minus {
+    border: none;
+    background: none;
+    color: #FC013E;
+    margin-right: 5px;
+    font-size: 15px;
+}
+
+.btn-plus {
+    border: none;
+    background: none;
+    color: #495360;
+    font-size: 15px;
+}
+
+.btn-remove {
+    border: none;
+    background: none;
+    color: #FFAB00;
+    font-size: 15px;
+}
+
+.btn-minplus i{
+    width: 6px;
+}
+
+.bag{
+    cursor:pointer;
+    color:#000000;
+}
+
+/* btn style */
+
+.btn-cart {
+    transition: all .3s ease;
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #000;
+    padding: 15px;
+    max-width: 370px;
+    max-height: 40px;
+    background: #343a40;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin: 10px 0 0 370px;
+    border-radius: 5px;
+}
+
+.btn-cart:hover {
+    transition: all .9s ease;
+    background: #fff;
+    color: #000000;
+}
+
+.btn-cancel {
+    transition: all .3s ease;
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #000;
+    padding: 15px;
+    max-width: 370px;
+    max-height: 40px;
+    background: #09a01a;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+/*    margin: 10px 0 0 370px;*/
+    border-radius: 5px;
+}
+
+
+    .btn-cancel:hover {
+        transition: all .9s ease;
+        background: #fff;
+        color: #09a01a;
+    }
+
+.btn-add {
+    transition: all .3s ease;
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #000;
+    padding: 5px;
+    max-width: 370px;
+    max-height: 40px;
+    background: #6195ff;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    /*    margin: 10px 0 0 370px;*/
+    border-radius: 5px;
+}
+
+
+.btn-add:hover {
+    transition: all .9s ease;
+    background: #fff;
+    color: #355cf3;
+}
+
+.icon-box {
+    font-size: 30px;
+    border-radius: 50%;
+}
+
+.icon-count{
+    font-size: 25px;
+    font-weight:600;
+    color : #36095f;
+    margin-left: 50px;
+}
+
+.icon {
+    border-radius: 5px;
+    padding: 10px;
+    background:#eed7d7;
+}
+
+.rec-bill {
+    transition: all .3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #30666f;
+    color: #fff;
+    font-weight: 700;
+    padding: 15px;
+}
+
+.about-item {
+    width: 30%;
+    float: left;
+    text-align: center;
+    border: 1px solid #e8e8e8;
+    padding: 50px 20px;
+}
+
+.about-edit-item {
+    width: 98%;
+    text-align: center;
+    border: 1px solid #e8e8e8;
+    padding: 50px 20px;
+    margin-left: 1%;
+    margin-bottom: 10px;
+}
+
+.about-item-title {
+    text-transform: capitalize;
+    margin-bottom: 10px;
+    transition: 0.5s;
+    font-size:18px;
+    font-weight:600;
+    color: #808080;
+}
+
+.about-item-content {
+    text-transform: capitalize;
+    transition: 0.5s;
+    font-size: 16px;
+    color: gray;
+}
+
+.about-item .icon {
+    color: #6195ff;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.about-item-content .icon{
+    transition: 0.5s;
+    font-size: 16px;
+    color: blue;
+}
+
+.about-item-content input{
+    background:none;
+    border:none;
+}
+
+.about-item input {
+    color: #939181;
+    border: none;
+    margin-bottom: 10px;
+    background: none;
+    margin-left: -10px;
+    display: inline-block;
+}
+
+.about-item span {
+    color: #939181;
+    border: none;
+    margin-bottom: 10px;
+    background: none;
+    margin-left: -10px;
+}
+
+.ltr-effect {
+    position: relative;
+}
+
+    .ltr-effect:after {
+        position: absolute;
+        content: "";
+        background: rgba(0, 123, 255, 0.7);
+        width: 0;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /*        z-index: 1;
+*/ transition: 0.5s;
+    }
+
+    .ltr-effect:hover:after {
+        width: 100%;
+    }
+
+.about-item:hover .about-item-title {
+    color: white;
+    z-index:1;
+}
+
+.about-item:hover .icon {
+    color: greenyellow;
+    z-index: 1;
+}
+
+.about-item:hover input {
+    border: none;
+    background: none;
+}
+
+.ltr-effect:hover .about-item-title {
+    color: yellow;
+    z-index: 2;
+}
+
+.ltr-effect:hover .about-item-content {
+    color: white;
+    z-index: 2;
+}
+
+.ltr-effect:hover .about-item-content .icon{
+    color: yellow;
+    z-index: 2;
+}
+
+.btn-effect {
+    box-shadow: inset 0 0 0 0 #6195ff;
+    transition: ease-out 0.9s;
+}
+
+
+.btn-effect:hover {
+    box-shadow: inset 300px 0 0 0 #6195ff;
+    color: #ff6a00;
+}

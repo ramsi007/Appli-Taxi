@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=SQL5105.site4now.net%3bInitial Catalog=db_a77cb7_applitaxi%3bUser Id=db_a77cb7_applitaxi_admin%3bPassword=AppliTaxi007%2a</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="Appli_Taxi.Data.ApplicationDbContext">
+      <Value>Data Source=SQL5105.site4now.net%3bInitial Catalog=db_a77cb7_applitaxi%3bUser Id=db_a77cb7_applitaxi_admin%3bPassword=AppliTaxi007%2a</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

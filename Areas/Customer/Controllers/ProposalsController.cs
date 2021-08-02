@@ -572,7 +572,7 @@ namespace Appli_Taxi.Areas.Customer.Controllers
                                 "Bonjour : " + user.FirstName + " " + user.LastName + "<br/>" +
                                 "Vous avez une nouvelle proposition de la part de AppliTaxi <br/>" +
                                 "Cliquer sur le lien si dessous pour voir ta proposition <br/>" +
-                                "https://localhost:44301/Customer/Proposals/Overview/" + id + "<br/>" + "<hr>" +
+                                "https://applitaxi.azurewebsites.net/Customer/Proposals/Overview/" + id + "<br/>" + "<hr>" +
                                 "<div class='col-md-12'><div class='row ml-1'>" +
                                 "<span><img class='pb-2' " +
                                 "src='https://is1-ssl.mzstatic.com/image/thumb/Purple118/v4/1b/29/f2/1b29f20e-3004-5715-d070-5356ad545b21/source/512x512bb.jpg' " +
@@ -674,5 +674,15 @@ namespace Appli_Taxi.Areas.Customer.Controllers
         }
 
 
+        /* ---------------------------*/
+
+        [HttpGet]
+        public async Task<IActionResult> btnEnabled(string id)
+        {
+            var ListCartFromDb = await db.ShooppingCarts.Where(m => m.ApplicationUserId == id && m.NumProposal != null).ToListAsync();
+            return new JsonResult(ListCartFromDb);
+        }
+
+        /* ---------------------------*/
     }
 }
